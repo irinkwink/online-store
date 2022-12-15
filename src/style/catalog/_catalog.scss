@@ -1,0 +1,104 @@
+.catalog {
+  &__container {
+    position: relative;
+    display: grid;
+    grid-template-columns: 4fr 340px;
+    gap: 72px 30px;
+
+    @include desktop {
+      grid-template-columns: 3fr 340px;
+      column-gap: 20px;
+    }
+
+    @include laptop {
+      grid-template-columns: 2fr 310px;
+      row-gap: 80px;
+    }
+
+    @include tablet {
+      grid-template-columns: 1fr;
+      row-gap: 50px;
+    }
+  }
+
+  &__panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: 44px;
+    line-height: 54px;
+    margin-bottom: 10px;
+
+    @include mobile {
+      font-size: 30px;
+      line-height: 37px;
+    }
+  }
+
+  &__goods {
+    background-color: $color-main;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__filter-btn {
+    display: none;
+
+    @include tablet {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      position: absolute;
+      top: -10px;
+      right: 15px;
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 27px;
+      background-color: transparent;
+      border: none;
+
+      &:after {
+        content: '';
+        display: block;
+        width: 18px;
+        height: 18px;
+        background-image: url("img/arrow-down.svg");
+      }
+    }
+
+    @include mobile {
+      font-size: 14px;
+      line-height: 17px;
+      top: -10px;
+      right: 10px;
+    }
+  }
+
+  &__pagination {
+    grid-column: 2 span;
+
+    @include tablet {
+      grid-column: auto;
+    }
+  }
+}
+
+.display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  &__button {
+    color: $color-main;
+    width: 20px;
+    height: 20px;
+
+    &:hover {
+      color: $color-main-sub;
+    }
+  }
+}

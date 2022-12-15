@@ -1,0 +1,231 @@
+.filter {
+  padding-top: 100px;
+
+  @include tablet {
+    display: none;
+    position: absolute;
+    background-color: $color-secondary;
+    top: 0;
+    right: 0;
+    z-index: 555;
+    padding: 16px 20px 26px;
+
+    &_show {
+      display: block;
+    }
+  }
+
+  @include mobile {
+    padding: 10px 10px 15px;
+  }
+
+  &__form {
+    position: relative;
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 32px;
+    margin-bottom: 30px;
+
+    @include tablet {
+      font-size: 22px;
+      line-height: 27px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 5px;
+
+      &:after {
+        content: '';
+        display: block;
+        width: 18px;
+        height: 18px;
+        background-image: url("img/arrow-down.svg");
+        transform: rotate(180deg);
+      }
+    }
+
+    @include mobile {
+      font-size: 14px;
+      line-height: 17px;
+      margin-bottom: 10px;
+    }
+  }
+
+  &__fields-list {
+    margin-bottom: 40px;
+
+    @include mobile {
+      margin-bottom: 30px;
+    }
+  }
+
+  &__field {
+    margin-bottom: 30px;
+
+    @include mobile {
+      margin-bottom: 15px;
+    }
+
+    &:last-child {
+      margin-bottom: 0px;
+    }
+  }
+
+  &__field-title {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    margin-bottom: 10px;
+
+    @include mobile {
+      font-size: 16px;
+      line-height: 20px;
+      margin-bottom: 4px;
+    }
+  }
+
+  &__flex {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+
+    &_column {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 16px;
+      line-height: 20px;
+
+      @include mobile {
+        font-size: 14px;
+        line-height: 17px;
+      }
+    }
+
+  }
+
+  &__input {
+    width: 165px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    padding: 0 10px;
+    border: 1px solid $color-primary;
+    border-radius: 0;
+    height: 38px;
+    color: $color-grey;
+
+    @include laptop {
+      width: 145px;
+    }
+
+    @include mobile {
+      font-size: 14px;
+      line-height: 17px;
+      height: 35px;
+    }
+
+    &_select {
+      width: 100%;
+      appearance: none;
+
+      @include laptop {
+        width: 100%;
+      }
+    }
+
+    &:focus {
+      outline-color: $color-main;
+    }
+  }
+
+  &__range {
+    width: 100%;
+  }
+
+  &__range-label {
+    width: 100%;
+  }
+
+  &__select-label {
+    position: relative;
+
+    &:after {
+      content: '';
+      position: absolute;
+      right: 33px;
+      top: 50%;
+      transform: translateY(calc(-50% - 2px)) rotate(45deg);
+      display: block;
+      width: 10px;
+      height: 10px;
+      border-width: 2px;
+      border-style: solid;
+      border-color: transparent $color-primary $color-primary transparent;
+    }
+  }
+
+  &__copy {
+    display: block;
+    margin: 0 auto;
+    background-color: $color-primary;
+    color: $color-secondary;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    padding: 8px 20px 10px;
+    border: none;
+    transition: background-color 0.36s ease-in-out;
+
+    @include tablet {
+      margin-bottom: 15px;
+    }
+
+    @include mobile {
+      font-size: 12px;
+      line-height: 15px;
+    }
+
+    &:hover {
+      background-color: $color-main;
+    }
+
+    &:active {
+      background-color: $color-main-sub;
+    }
+  }
+
+  &__reset {
+    position: absolute;
+    top: 5px;
+    right: 4px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20px;
+    color: $color-grey;
+    background-color: transparent;
+    border: none;
+    transition: color 0.36s ease-in-out;
+
+    @include tablet {
+      position: static;
+      display: block;
+      margin: 0 auto;
+    }
+
+    @include mobile {
+      font-size: 12px;
+      line-height: 15px;
+    }
+
+    &:hover {
+      color: $color-main;
+    }
+  }
+
+}
