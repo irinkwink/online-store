@@ -15,6 +15,11 @@ export class AppView {
     const values = data?.products ? data?.products : [];
     this.products.draw(values);
 
+    const itemsCountElem = document.querySelector('.catalog__items-count');
+    if (itemsCountElem) {
+      itemsCountElem.textContent = values.length.toString();
+    }
+
     const brands = values.map((item) => item.brand);
 
     const brandSelectElem = document.querySelector('#brand');
@@ -44,6 +49,7 @@ export class AppView {
 
   showFilters() {
     this.overlay.showOverlay();
+    document.querySelector('.overlay')?.addEventListener('click', () => this.hideFilters());
     document.querySelector('.filter')?.classList.add('filter_show');
   }
 

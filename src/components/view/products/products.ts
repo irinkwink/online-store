@@ -19,7 +19,7 @@ const createProductHTML = (item: IProduct) => {
 
   const discountElem = document.createElement('p');
   discountElem.className = 'goods-item__discount';
-  discountElem.textContent = `- ${item.discountPercentage.toString()} %`;
+  discountElem.textContent = `-${item.discountPercentage.toString()}%`;
 
   const linkTitleElem = document.createElement('a');
   linkTitleElem.className = 'goods-item__link goods-item__link_title';
@@ -47,10 +47,11 @@ const createProductHTML = (item: IProduct) => {
 
   const ratingElem = document.createElement('div');
   ratingElem.className = 'goods-item__rating';
+  const ratingActivWidth = Math.round((item.rating * 100) / 5);
   ratingElem.innerHTML = `
     <div class="goods-item__stars stars">
       <div class="stars__row stars__row_inactive"></div>
-      <div class="stars__row stars__row_active"></div>
+      <div class="stars__row stars__row_active" style="width: ${ratingActivWidth.toString()}%"></div>
     </div>
     <p class="goods-item__rate">${item.rating.toString()}</p>
   `;
