@@ -1,20 +1,18 @@
 .contacts {
   font-weight: 500;
-  font-size: 14px;
-  line-height: 130%;
+  font-size: 1.4rem;
 
   @include mobile {
-    font-size: 12px;
+    font-size: 1.2rem;
   }
 
   &__title {
     font-weight: 500;
-    font-size: 16px;
-    line-height: 130%;
+    font-size: 1.6rem;
     margin-bottom: 5px;
   
     @include mobile {
-      font-size: 14px;
+      font-size: 1.4rem;
     }
   }
 

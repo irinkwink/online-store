@@ -1,4 +1,6 @@
+import App from './components/app/app';
 import './index.html';
 import './index.scss';
 
-console.log('Test');
+const app = new App();
+app.start();

@@ -45,15 +45,24 @@
     <section class="catalog">
       <div class="container catalog__container">
         <div class="catalog__wrapper">
-          <div class="catalog__panel">
+          <div class="catalog__panel catalog__panel_top">
             <h2 class="catalog__title">Catalog</h2>
 
             <p class="catalog__items-number">
               <span>Found:</span>
               <span>100</span>
             </p>
+          </div>
+
+          <div class="catalog__panel catalog__panel_bottom">
+            <label class="catalog__select-label">
+              <select class="catalog__input catalog__input_select" id="sort" name="sort" >
+                <option value="" selected>Sort by:</option>
+              </select>
+            </label>
+
             <div class="catalog__display display">
-              <button class="display__button" aria-label="display: list">
+              <button class="display__button display__button_active" aria-label="display: tiles">
                 <svg width="36" height="36" viewbox="0 0 36 36" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <rect x="1" y="1" width="16" height="16" rx="2"/>
                   <rect x="19" y="1" width="16" height="16" rx="2"/>
@@ -61,7 +70,7 @@
                   <rect x="19" y="19" width="16" height="16" rx="2"/>
                   </svg>                  
               </button>
-              <button class="display__button" aria-label="display: tiles">
+              <button class="display__button" aria-label="display: rows">
                 <svg width="36" height="36" viewbox="0 0 36 36" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <rect x="1" y="1" width="34" height="7" rx="2"/>
                   <rect x="1" y="10" width="34" height="7" rx="2"/>
@@ -70,12 +79,161 @@
                 </svg>
               </button>
             </div>
-           
-
           </div>
-          
+
           <div class="catalog__goods goods">
-            <ul class="goods__list"></ul>
+            <ul class="goods__list goods__rows">
+              <li class="goods__item" data-id="1">
+                <article class="goods-item">
+                  <a href="card.html?id=1" class="goods-item__link goods-item__link_image">
+                    <img class="goods-item__image"
+                      src="https://i.dummyjson.com/data/products/1/thumbnail.jpg"
+                      alt="${item.title}"
+                      width="340"
+                      height="340"
+                    >
+                    <p class="goods-item__discount">- 12.96 %</p>
+                  </a>
+                  <a href="card.html?id=1" class="goods-item__link goods-item__link_title">
+                    <h3 class="goods-item__title">iPhone 9</h3>
+                  </a>
+
+                  <p class="goods-item__description">An apple mobile which is nothing like apple</p>
+                  <div class="goods-item__row goods-item__row_price">
+                    <p class="goods-item__price goods-item__price_new">320$</p>
+                    <p class="goods-item__price goods-item__price_old">549$</p>
+                  </div>
+                  <div class="goods-item__rating">
+                    <div class="goods-item__stars stars">
+                      <div class="stars__row stars__row_inactive"></div>
+                      <div class="stars__row stars__row_active"></div>
+                    </div>
+                    <p class="goods-item__rate">4.56</p>
+                  </div>
+
+                  <p class="goods-item__stock">
+                    <span class="goods-item__stock-text">goods in stock:</span> 
+                    <span class="goods-item__stock-count">45</span>
+                  </p>
+
+                  <button class="goods-item__to-cart" data-id-goods="1">Add to Cart</button>
+                </article>
+              </li>
+
+              <li class="goods__item" data-id="1">
+                <article class="goods-item">
+                  <a href="card.html?id=1" class="goods-item__link goods-item__link_image">
+                    <img class="goods-item__image"
+                      src="https://i.dummyjson.com/data/products/1/thumbnail.jpg"
+                      alt="${item.title}"
+                      width="340"
+                      height="340"
+                    >
+                    <p class="goods-item__discount">- 12.96 %</p>
+                  </a>
+                  <a href="card.html?id=1" class="goods-item__link goods-item__link_title">
+                    <h3 class="goods-item__title">iPhone 9</h3>
+                  </a>
+
+                  <p class="goods-item__description">An apple mobile which is nothing like apple</p>
+                  <div class="goods-item__row goods-item__row_price">
+                    <p class="goods-item__price goods-item__price_new">320$</p>
+                    <p class="goods-item__price goods-item__price_old">549$</p>
+                  </div>
+                  <div class="goods-item__rating">
+                    <div class="goods-item__stars stars">
+                      <div class="stars__row stars__row_inactive"></div>
+                      <div class="stars__row stars__row_active"></div>
+                    </div>
+                    <p class="goods-item__rate">4.56</p>
+                  </div>
+
+                  <p class="goods-item__stock">
+                    <span class="goods-item__stock-text">goods in stock:</span> 
+                    <span class="goods-item__stock-count">45</span>
+                  </p>
+
+                  <button class="goods-item__to-cart" data-id-goods="1">Add to Cart</button>
+                </article>
+              </li>
+
+              <li class="goods__item" data-id="1">
+                <article class="goods-item">
+                  <a href="card.html?id=1" class="goods-item__link goods-item__link_image">
+                    <img class="goods-item__image"
+                      src="https://i.dummyjson.com/data/products/1/thumbnail.jpg"
+                      alt="${item.title}"
+                      width="340"
+                      height="340"
+                    >
+                    <p class="goods-item__discount">- 12.96 %</p>
+                  </a>
+                  <a href="card.html?id=1" class="goods-item__link goods-item__link_title">
+                    <h3 class="goods-item__title">iPhone 9</h3>
+                  </a>
+
+                  <p class="goods-item__description">An apple mobile which is nothing like apple An apple mobile which is nothing like apple An apple mobile which is nothing like apple An apple mobile which is nothing like apple</p>
+                  <div class="goods-item__row goods-item__row_price">
+                    <p class="goods-item__price goods-item__price_new">320$</p>
+                    <p class="goods-item__price goods-item__price_old">549$</p>
+                  </div>
+                  <div class="goods-item__rating">
+                    <div class="goods-item__stars stars">
+                      <div class="stars__row stars__row_inactive"></div>
+                      <div class="stars__row stars__row_active"></div>
+                    </div>
+                    <p class="goods-item__rate">4.56</p>
+                  </div>
+
+                  <p class="goods-item__stock">
+                    <span class="goods-item__stock-text">goods in stock:</span> 
+                    <span class="goods-item__stock-count">45</span>
+                  </p>
+
+                  <button class="goods-item__to-cart" data-id-goods="1">Add to Cart</button>
+                </article>
+              </li>
+
+              <li class="goods__item" data-id="1">
+                <article class="goods-item">
+                  <a href="card.html?id=1" class="goods-item__link goods-item__link_image">
+                    <img class="goods-item__image"
+                      src="https://i.dummyjson.com/data/products/1/thumbnail.jpg"
+                      alt="${item.title}"
+                      width="340"
+                      height="340"
+                    >
+                    <p class="goods-item__discount">- 12.96 %</p>
+                  </a>
+                  <a href="card.html?id=1" class="goods-item__link goods-item__link_title">
+                    <h3 class="goods-item__title">iPhone 9</h3>
+                  </a>
+
+                  <p class="goods-item__description">An apple mobile which is nothing like apple</p>
+                  <div class="goods-item__row goods-item__row_price">
+                    <p class="goods-item__price goods-item__price_new">320$</p>
+                    <p class="goods-item__price goods-item__price_old">549$</p>
+                  </div>
+                  <div class="goods-item__rating">
+                    <div class="goods-item__stars stars">
+                      <div class="stars__row stars__row_inactive"></div>
+                      <div class="stars__row stars__row_active"></div>
+                    </div>
+                    <p class="goods-item__rate">4.56</p>
+                  </div>
+
+                  <p class="goods-item__stock">
+                    <span class="goods-item__stock-text">goods in stock:</span> 
+                    <span class="goods-item__stock-count">45</span>
+                  </p>
+
+                  <button class="goods-item__to-cart" data-id-goods="1">Add to Cart</button>
+                </article>
+              </li>
+
+
+
+            </ul>
           </div>
 
           <button class="catalog__filter-btn">Filters:</button>
