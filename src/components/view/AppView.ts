@@ -1,16 +1,55 @@
 import { IProductsData } from '../../types/interfaces';
+import Overlay from './overlay/overlay';
 import Products from './products/products';
 
 export class AppView {
   products: Products;
+  overlay: Overlay;
 
   constructor() {
     this.products = new Products();
+    this.overlay = new Overlay();
   }
 
   drawProducts(data: IProductsData) {
     const values = data?.products ? data?.products : [];
     this.products.draw(values);
+
+    const brands = values.map((item) => item.brand);
+
+    const brandSelectElem = document.querySelector('#brand');
+    const brandsItems = brands.map((item) => {
+      const option = document.createElement('option');
+      option.value = item;
+      option.textContent = item;
+
+      return option;
+    });
+
+    brandSelectElem?.append(...brandsItems);
+  }
+
+  drawCategories(data: string[]) {
+    const categorySelectElem = document.querySelector('#category');
+    const categoryItems = data.map((item) => {
+      const option = document.createElement('option');
+      option.value = item;
+      option.textContent = item;
+
+      return option;
+    });
+
+    categorySelectElem?.append(...categoryItems);
+  }
+
+  showFilters() {
+    this.overlay.showOverlay();
+    document.querySelector('.filter')?.classList.add('filter_show');
+  }
+
+  hideFilters() {
+    this.overlay.hideOverlay();
+    document.querySelector('.filter')?.classList.remove('filter_show');
   }
 
   checkDisplay(e: Event) {

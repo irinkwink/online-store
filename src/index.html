@@ -57,7 +57,11 @@
           <div class="catalog__panel catalog__panel_bottom">
             <label class="catalog__select-label">
               <select class="catalog__input catalog__input_select" id="sort" name="sort" >
-                <option value="" selected>Sort by:</option>
+                <option value="initial" selected>Sort by:</option>
+                <option value="priceLowtoHigh">Price: Low to High</option>
+                <option value="priceHightoLow">Price: High to Low</option>
+                <option value="rating">Rating</option>
+                <option value="discount">Discount</option>
               </select>
             </label>
 
@@ -102,7 +106,7 @@
 
                 <label class="filter__select-label">
                   <select class="filter__input filter__input_select" id="brand" name="brand" >
-                    <option value="" selected>All brands</option>
+                    <option value="initial" selected>All brands</option>
                   </select>
                 </label>
 
@@ -113,7 +117,7 @@
 
                 <label class="filter__select-label">
                   <select class="filter__input filter__input_select" id="category" name="category" >
-                    <option value="" selected>All categories</option>
+                    <option value="initial" selected>All categories</option>
                   </select>
                 </label>
 
@@ -156,9 +160,10 @@
               </fieldset>
             </div>
 
-            <button class="filter__reset" type="reset">Reset filters</button>
+            <button class="filter__btn filter__apply" type="submit">Apply filter</button>
+            <button class="filter__btn filter__copy" type="button">Copy link</button>
 
-            <button class="filter__copy" type="button">Copy link</button>
+            <button class="filter__reset" type="reset">Reset filters</button>
           </form>
         </aside>
       </div>
