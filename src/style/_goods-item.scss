@@ -4,6 +4,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: max-content max-content 1fr max-content max-content;
   grid-template-areas: 
     'image image'
     'title title'
@@ -101,10 +102,11 @@
 
   &__image {
     width: 100%;
+    aspect-ratio: 2/1.2;
+    object-fit: cover;
 
     .goods__rows & {
       height: 100%;
-      object-fit: cover;
     }
   }
 
