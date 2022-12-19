@@ -13,6 +13,7 @@ class App {
 
   start() {
     this.controller.getProducts((data: IProductsData) => this.view.drawProducts(data));
+    document.querySelector('.display')?.addEventListener('click', this.view.checkDisplay);
   }
 }
 

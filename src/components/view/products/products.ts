@@ -1,7 +1,6 @@
 import { IProduct } from '../../../types/interfaces';
 
 const createProductHTML = (item: IProduct) => {
-  console.log('item: ', item);
   const liElem = document.createElement('li');
   liElem.className = 'goods__item';
   liElem.dataset.id = item.id.toString();
@@ -81,8 +80,6 @@ const createProductHTML = (item: IProduct) => {
 
 class Products {
   draw(data: IProduct[]) {
-    console.log('data: ', data);
-
     const products = data.length >= 10 ? data.filter((_item, idx) => idx < 10) : data;
 
     const productsListElem: HTMLElement | null = document.querySelector('.goods__list');

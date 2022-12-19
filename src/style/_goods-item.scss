@@ -148,10 +148,11 @@
 
     &_price {
       grid-area: price;
+      place-self: start start;
       align-items: baseline;
 
       .goods__rows & {
-        place-self: center end;
+        place-self: start end;
         flex-direction: row-reverse;
       }
     }
