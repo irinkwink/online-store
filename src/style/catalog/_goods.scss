@@ -1,0 +1,57 @@
+.goods {
+  &__tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 340px));
+    gap: 40px 30px;
+
+    @include desktop {
+      gap: 20px 20px;
+      justify-content: space-evenly;
+    }
+
+    @include laptop {
+      grid-template-columns: repeat(auto-fill, 310px);
+    }
+
+    @include mobile {
+      grid-template-columns: repeat(auto-fill, 145px);
+      gap: 10px;
+    }
+  }
+
+  &__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    @include mobile {
+      gap: 15px;
+    }
+  }
+
+  &__message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 24px;
+    border: 2px solid $color-main;
+    font-weight: 400;
+    font-size: 3.4rem;
+
+    @include mobile {
+      font-size: 2.6rem;
+    }
+  }
+
+  &__preload {
+    grid-column: 1 / 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      transform: rotate(0);
+      animation: rotation 1s infinite linear;
+    }
+  }
+
+}
