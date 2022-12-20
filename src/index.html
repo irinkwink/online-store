@@ -66,7 +66,7 @@
             </label>
 
             <div class="catalog__display display">
-              <button class="display__button display__button_active" data-display="tiles" aria-label="display: tiles">
+              <button class="display__button display__button_tiles display__button_active" data-display="tiles" aria-label="display: tiles">
                 <svg width="36" height="36" viewbox="0 0 36 36" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <rect x="1" y="1" width="16" height="16" rx="2"/>
                   <rect x="19" y="1" width="16" height="16" rx="2"/>
@@ -74,7 +74,7 @@
                   <rect x="19" y="19" width="16" height="16" rx="2"/>
                   </svg>                  
               </button>
-              <button class="display__button" data-display="rows" aria-label="display: rows">
+              <button class="display__button display__button_rows" data-display="rows" aria-label="display: rows">
                 <svg width="36" height="36" viewbox="0 0 36 36" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <rect x="1" y="1" width="34" height="7" rx="2"/>
                   <rect x="1" y="10" width="34" height="7" rx="2"/>
@@ -129,13 +129,25 @@
                   <p class="filter__stock filter__stock-min">0$</p>
                   <label class="filter__range-label">
                     <input
-                      class="filter__range"
-                      type="range"
-                      name="price"
-                      step="100"
-                      min="0"
-                      max="10000"
-                    >
+                        class="filter__range filter__range_from"
+                        id="priceFromSlider"
+                        type="range"
+                        name="priceFrom"
+                        value="0"
+                        step="100"
+                        min="0"
+                        max="10000"
+                      >
+                      <input
+                        class="filter__range filter__range_to"
+                        id="priceToSlider"
+                        type="range"
+                        name="priceTo"
+                        value="10000"
+                        step="100"
+                        min="0"
+                        max="10000"
+                      >
                   </label>
                   <p class="filter__stock filter__stock-max">1000$</p>
                 </div>
@@ -147,9 +159,21 @@
                     <p class="filter__stock filter__stock-min">0</p>
                     <label class="filter__range-label">
                       <input
-                        class="filter__range"
+                        class="filter__range filter__range_from"
+                        id="stockFromSlider"
                         type="range"
                         name="stock"
+                        value="0"
+                        step="1"
+                        min="0"
+                        max="100"
+                      >
+                      <input
+                        class="filter__range filter__range_to"
+                        id="stockToSlider"
+                        type="range"
+                        name="stock"
+                        value="100"
                         step="1"
                         min="0"
                         max="100"

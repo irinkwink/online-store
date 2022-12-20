@@ -1,8 +1,9 @@
 import { IProductsData } from '../../types/interfaces';
+import State from '../app/state';
 import Overlay from './overlay/overlay';
 import Products from './products/products';
 
-export class AppView {
+export class CatalogPageView {
   products: Products;
   overlay: Overlay;
 
@@ -58,20 +59,41 @@ export class AppView {
     document.querySelector('.filter')?.classList.remove('filter_show');
   }
 
-  checkDisplay(e: Event) {
-    const target = e.target as Element;
+  checkDisplay(state: State) {
+    const display = state.getState().settings.catalogPage.display;
+    const productsListElem: HTMLElement | null = document.querySelector('.goods__list');
+    const displayButtonElems = document.querySelectorAll('.display__button');
 
-    if (target.closest('.display__button') && !target.closest('.display__button_active')) {
-      const btn = target.closest('.display__button') as HTMLButtonElement;
-      document.querySelectorAll('.display__button').forEach((btn) => btn.classList.remove('display__button_active'));
-      btn.classList.add('display__button_active');
+    const changeDisplay = (display: string) => {
+      displayButtonElems.forEach((btn) => {
+        btn.classList.remove('display__button_active');
+        if (display === (btn as HTMLButtonElement).dataset.display) {
+          btn.classList.add('display__button_active');
+        }
+      });
 
-      const productsListElem: HTMLElement | null = document.querySelector('.goods__list');
       if (productsListElem) {
-        productsListElem.className = `goods__list goods__${btn.dataset.display}`;
+        productsListElem.className = `goods__list goods__${display}`;
       }
+    };
+
+    if (display !== 'tiles') {
+      changeDisplay(display);
     }
+
+    document.querySelector('.display')?.addEventListener('click', (e) => {
+      const target = e.target as Element;
+
+      if (target.closest('.display__button') && !target.closest('.display__button_active')) {
+        const btn = target.closest('.display__button') as HTMLButtonElement;
+        const display = btn.dataset.display;
+        if (display) {
+          changeDisplay(display);
+          state.saveDisplay(display);
+        }
+      }
+    });
   }
 }
 
-export default AppView;
+export default CatalogPageView;
