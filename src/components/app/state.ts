@@ -8,16 +8,6 @@ class State {
       products: [],
       settings: {
         cart: [],
-        catalogPage: {
-          display: 'tiles',
-          sort: 'initial',
-          filters: {
-            brand: 'initial',
-            category: 'initial',
-            price: [0, 10000],
-            stock: [0, 100],
-          },
-        },
       },
     };
   }
@@ -40,11 +30,6 @@ class State {
 
   getState() {
     return this.state;
-  }
-
-  saveDisplay(display: string) {
-    this.state.settings.catalogPage.display = display;
-    this.saveState();
   }
 }
 

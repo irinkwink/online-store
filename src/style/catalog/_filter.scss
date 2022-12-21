@@ -65,7 +65,7 @@
   }
 
   &__field {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 
     @include mobile {
       margin-bottom: 15px;
@@ -92,18 +92,6 @@
     gap: 10px;
     justify-content: space-between;
     align-items: center;
-
-    &_column {
-      display: inline-flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 1.6rem;
-
-      @include mobile {
-        font-size: 1.4rem;
-      }
-    }
-
   }
 
   &__input {
@@ -139,8 +127,14 @@
     }
   }
 
-  &__stock {
+  &__range-wrapper {
+    display: flex;
+    padding: 10px 0;
+  }
+
+  &__range-text {
     font-size: 1.2rem;
+    font-weight: 500;
   }
 
   &__range-label {
