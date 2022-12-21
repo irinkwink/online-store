@@ -1,22 +1,24 @@
-import { IProductsData } from '../../types/interfaces';
-import AppController from '../controller/controller';
-import AppView from '../view/AppView';
+import CatalogPageController from '../controller/catalogPage/catalogPageController';
+import DataController from '../controller/dataController';
+import State from './state';
 
 class App {
-  controller: AppController;
-  view: AppView;
+  state: State;
+  dataController: DataController;
+  catalogPage: CatalogPageController;
 
   constructor() {
-    this.controller = new AppController();
-    this.view = new AppView();
+    this.state = new State();
+    this.dataController = new DataController();
+    this.catalogPage = new CatalogPageController();
   }
 
-  start() {
-    this.controller.getProducts((data: IProductsData) => this.view.drawProducts(data));
-    this.controller.getCategories((data: string[]) => this.view.drawCategories(data));
-    document.querySelector('.catalog__filter-btn')?.addEventListener('click', () => this.view.showFilters());
-    document.querySelector('.filter__title')?.addEventListener('click', () => this.view.hideFilters());
-    document.querySelector('.display')?.addEventListener('click', (e) => this.view.checkDisplay(e));
+  async start() {
+    this.state.loadState();
+    const data = await this.dataController.getProducts();
+    this.state.saveProducts(data.products);
+
+    this.catalogPage.start(this.state);
   }
 }
 

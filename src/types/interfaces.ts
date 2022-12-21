@@ -15,3 +15,19 @@ export interface IProduct {
 export interface IProductsData {
   products: IProduct[];
 }
+
+export interface ICartProduct {
+  id: number;
+  count: number;
+}
+
+export interface ICartProductsData {
+  cart: ICartProduct[];
+}
+
+export interface IState {
+  products: IProduct[];
+  settings: {
+    cart: ICartProduct[];
+  };
+}
