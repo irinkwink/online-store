@@ -16,6 +16,18 @@ export interface IProductsData {
   products: IProduct[];
 }
 
-export interface IProductLocalSt {
+export interface ICartProduct {
   id: number;
+  count: number;
+}
+
+export interface ICartProductsData {
+  cart: ICartProduct[];
+}
+
+export interface IState {
+  products: IProduct[];
+  settings: {
+    cart: ICartProduct[];
+  };
 }
