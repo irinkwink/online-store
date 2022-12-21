@@ -15,3 +15,7 @@ export interface IProduct {
 export interface IProductsData {
   products: IProduct[];
 }
+
+export interface IProductLocalSt {
+  id: number;
+}
