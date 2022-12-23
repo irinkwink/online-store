@@ -1,5 +1,6 @@
 .filter {
   padding-top: 58px;
+  min-width: 240px;
 
   @include tablet {
     display: none;
@@ -88,10 +89,9 @@
   }
 
   &__flex {
-    display: flex;
+    display: grid;
+    grid-template-columns: 25% 1fr 25%;
     gap: 10px;
-    justify-content: space-between;
-    align-items: center;
   }
 
   &__input {
@@ -116,6 +116,7 @@
     &_select {
       width: 100%;
       appearance: none;
+      cursor: pointer;
 
       @include laptop {
         width: 100%;
@@ -135,6 +136,18 @@
   &__range-text {
     font-size: 1.2rem;
     font-weight: 500;
+
+    &_min {
+      place-self: center start;
+    }
+
+    &_current {
+      place-self: center center;
+    }
+
+    &_max {
+      place-self: center end;
+    }
   }
 
   &__range-label {

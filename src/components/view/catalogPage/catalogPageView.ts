@@ -1,5 +1,5 @@
 import { IProduct } from '../../../types/interfaces';
-import { addSearchParamsToUrl, getSearchParamsFromUrl } from '../../routes/urlController';
+import { addSearchParamToUrl, getSearchParamsFromUrl } from '../../routes/urlController';
 import Products from './products';
 
 export class CatalogPageView {
@@ -23,9 +23,9 @@ export class CatalogPageView {
   }
 
   checkDisplay() {
-    const searchParams = getSearchParamsFromUrl(['display']);
-    const displayFromSearch = searchParams.filter((item) => item.param === 'display')[0];
-    const display = displayFromSearch.value === null ? 'tiles' : displayFromSearch.value;
+    const searchParams = getSearchParamsFromUrl();
+    const displayParam = searchParams.filter((item) => item.key === 'display');
+    const display = displayParam.length === 0 ? 'tiles' : displayParam[0].value;
     const productsListElem: HTMLElement | null = document.querySelector('.goods__list');
     const displayButtonElems = document.querySelectorAll('.display__button');
 
@@ -54,7 +54,7 @@ export class CatalogPageView {
         const display = btn.dataset.display;
         if (display) {
           changeDisplay(display);
-          addSearchParamsToUrl([{ param: 'display', value: display }]);
+          addSearchParamToUrl({ key: 'display', value: display });
         }
       }
     });

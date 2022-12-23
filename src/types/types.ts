@@ -3,7 +3,7 @@ export type MinMax = {
   max: number;
 };
 
-export type SearchParams = {
-  param: string;
+export type SearchParam = {
+  key: string;
   value: string;
 };
