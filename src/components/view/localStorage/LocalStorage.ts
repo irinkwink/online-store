@@ -1,35 +1,57 @@
-//import { IProductLocalSt } from '../../../types/interfaces';
+import { IProductInLS } from '../../../types/interfaces';
 export class LocalStorageUtility {
   keyName: string;
 
   constructor() {
     this.keyName = 'products';
   }
-  getProducts(): [] {
+  getProducts(): IProductInLS[] {
     const LocaleStorageProducts = localStorage.getItem(this.keyName);
     if (LocaleStorageProducts) {
-      console.log(JSON.parse(LocaleStorageProducts));
       return JSON.parse(LocaleStorageProducts);
-    }
-    //console.log([]);
-    return [];
-  }
-  putProducts(id: number): number[] | boolean {
-    const products: number[] = this.getProducts();
-    let isPushed = false;
-    const index: number = products.indexOf(id);
-    if (index === -1) {
-      products.push(id);
-      isPushed = true;
     } else {
-      products.splice(index, 1);
+      return [{ id: null, num: 0 }];
     }
-    localStorage.setItem(this.keyName, JSON.stringify(products));
-    console.log(products, isPushed);
-    return products && isPushed;
+  }
+  updateHeaderCart(products: number): void {
+    const headerCartNum: HTMLElement | null = document.querySelector('.header__cart-text.header__cart-number');
+    console.log(headerCartNum);
+    if (headerCartNum) {
+      headerCartNum.innerHTML = String(products);
+    }
+  }
+  addProductsToLS(id: number): void {
+    const products: IProductInLS[] = this.getProducts();
+    const ind: number = products.findIndex((product) => product.id === id);
+    const filtered = products.filter((product) => product.id === id);
+    if (filtered.length) {
+      products.splice(ind, 1);
+    } else {
+      products.push({ id: id, num: 1 });
+    }
+    localStorage.setItem('products', JSON.stringify(products));
+  }
+  isExist(id: number): boolean {
+    const products: IProductInLS[] = this.getProducts();
+    const ind: number = products.findIndex((product) => product.id === id);
+    let btnState;
+    if (ind === -1) {
+      btnState = false;
+    } else {
+      btnState = true;
+    }
+    return btnState;
+  }
+  updateCartBtn(btnState: boolean): string {
+    let textBtn: string;
+    if (btnState) {
+      textBtn = 'Add to cart';
+    } else {
+      textBtn = 'Remove from cart';
+    }
+    return textBtn;
   }
 }
-
 export const storageUtility = new LocalStorageUtility();
 
 export default LocalStorageUtility;

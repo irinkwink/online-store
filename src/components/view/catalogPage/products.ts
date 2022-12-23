@@ -1,4 +1,5 @@
 import { IProduct } from '../../../types/interfaces';
+import { storageUtility } from '../localStorage/LocalStorage';
 
 class Products {
   draw(data: IProduct[]) {
@@ -81,6 +82,7 @@ class Products {
     toCartBtnElem.className = 'goods-item__to-cart';
     toCartBtnElem.textContent = 'Add to Cart';
     toCartBtnElem.dataset.idGoods = item.id.toString();
+    toCartBtnElem.addEventListener('click', defineIdProduct);
 
     linkImageElem.append(imageElem, discountElem);
     linkTitleElem.append(titleElem);
@@ -99,6 +101,21 @@ class Products {
     liElem.append(articleElem);
 
     return liElem;
+  }
+}
+
+function defineIdProduct(e: Event): void {
+  const target = e.currentTarget as Element;
+  const id = Number(target.getAttribute('data-id-goods'));
+  const btnState = storageUtility.isExist(id);
+  console.log(btnState);
+  storageUtility.addProductsToLS(id);
+  target.innerHTML = storageUtility.updateCartBtn(btnState);
+  const productsInLS = storageUtility.getProducts();
+  const headerCartNum: HTMLElement | null = document.querySelector('.header__cart-text.header__cart-number');
+  console.log(headerCartNum);
+  if (headerCartNum) {
+    headerCartNum.innerHTML = String(productsInLS.length - 1);
   }
 }
 
