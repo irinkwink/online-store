@@ -31,3 +31,8 @@ export interface IState {
     cart: ICartProduct[];
   };
 }
+
+export interface IProductInLS {
+  id: number | null;
+  num: number;
+}
