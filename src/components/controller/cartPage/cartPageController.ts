@@ -1,5 +1,4 @@
 import State from '../../app/state';
-//import { IProduct } from '../../../types/interfaces';
 import Cart from '../../view/cart/cartPageView';
 import { storageUtility } from '../../view/localStorage/LocalStorage';
 
