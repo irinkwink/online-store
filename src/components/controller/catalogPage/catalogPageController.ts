@@ -16,10 +16,6 @@ class CatalogPageController {
 
     this.view.checkDisplay();
 
-    const products = state.getState().products;
-
-    this.view.drawProducts(products);
-
     this.filter.init(state, (products) => this.view.drawProducts(products));
   }
 }

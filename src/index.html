@@ -57,7 +57,7 @@
           <div class="catalog__panel catalog__panel_bottom">
             <label class="catalog__select-label">
               <select class="catalog__input catalog__input_select" id="sort" name="sort" >
-                <option value="initial" selected>Sort by:</option>
+                <option value="none" selected>Sort: none</option>
                 <option value="priceLowtoHigh">Price: Low to High</option>
                 <option value="priceHightoLow">Price: High to Low</option>
                 <option value="rating">Rating</option>
@@ -149,8 +149,9 @@
                 </div>
                 
                 <div class="filter__flex">
-                  <p class="filter__range-text filter__price filter__price_min">0$</p>
-                  <p class="filter__range-text filter__price filter__price_max">1000$</p>
+                  <p class="filter__range-text filter__range-text_min filter__price filter__price_min">0$</p>
+                  <p class="filter__range-text filter__range-text_current filter__price filter__price_current">0$-1000$</p>
+                  <p class="filter__range-text filter__range-text_max filter__price filter__price_max">1000$</p>
                 </div>
               </fieldset>
 
@@ -173,7 +174,7 @@
                       id="stockToSlider"
                       type="range"
                       name="stock"
-                      value="100"
+                      value="10000"
                       step="1"
                       min="0"
                       max="100"
@@ -182,13 +183,14 @@
                 </div>
                   
                   <div class="filter__flex">
-                    <p class="filter__range-text filter__stock filter__stock_min">0</p>
-                    <p class="filter__range-text filter__stock filter__stock_max">100</p>
+                    <p class="filter__range-text filter__range-text_min filter__stock filter__stock_min">0</p>
+                    <p class="filter__range-text filter__range-text_current filter__stock filter__stock_current">0-100</p>
+                    <p class="filter__range-text filter__range-text_max filter__stock filter__stock_max">100</p>
                   </div>
               </fieldset>
             </div>
 
-            <button class="filter__btn filter__apply" type="submit">Apply filter</button>
+            <!-- <button class="filter__btn filter__apply" type="submit">Apply filter</button> -->
             <button class="filter__btn filter__copy" type="button">Copy link</button>
 
             <button class="filter__reset" type="reset">Reset filters</button>

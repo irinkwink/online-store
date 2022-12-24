@@ -3,6 +3,11 @@ import { storageUtility } from '../localStorage/LocalStorage';
 
 class Products {
   draw(data: IProduct[]) {
+    const itemsCountElem = document.querySelector('.catalog__items-count');
+    if (itemsCountElem) {
+      itemsCountElem.textContent = data.length.toString();
+    }
+
     const products = data.length >= 10 ? data.filter((_item, idx) => idx < 10) : data;
 
     const productsListElem: HTMLElement | null = document.querySelector('.goods__list');
