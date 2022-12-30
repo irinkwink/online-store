@@ -21,6 +21,7 @@ class Filter {
   stock: MinMax;
   priceFilter: MinMax;
   stockFilter: MinMax;
+  search: string;
 
   constructor() {
     this.view = new FilterView();
@@ -29,6 +30,7 @@ class Filter {
     this.productsFilter = [];
     this.category = 'all';
     this.brand = 'all';
+    this.search = '';
     this.price = {
       min: 0,
       max: 0,
@@ -106,6 +108,23 @@ class Filter {
     this.checkUrlForFilters();
 
     this.filterProducts(callback);
+
+    document.querySelector('.header__search')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const searchInput = document.querySelector('.search__input');
+      if (searchInput instanceof HTMLInputElement) {
+        const searchStr = searchInput.value;
+        if (searchStr !== this.search) {
+          this.search = searchStr;
+          if (this.search) {
+            addSearchParamToUrl({ key: 'search', value: this.search });
+          } else {
+            deleteSearchParamFromUrl('search');
+          }
+          this.filterProducts(callback);
+        }
+      }
+    });
 
     document.querySelector('.catalog__filter-btn')?.addEventListener('click', () => this.view.showFilters());
     document.querySelector('.filter__title')?.addEventListener('click', () => this.view.hideFilters());
@@ -235,6 +254,21 @@ class Filter {
       }
       return false;
     });
+
+    if (this.search) {
+      const searchFields = ['title', 'description', 'brand', 'category'];
+      data = data.filter((item) =>
+        searchFields
+          .map((field) => {
+            const str = item[field as keyof IProduct];
+            if (typeof str === 'string') {
+              return str.toLowerCase().includes(this.search.toLowerCase());
+            }
+            return false;
+          })
+          .includes(true)
+      );
+    }
 
     switch (this.sort) {
       case 'priceLowtoHigh':
