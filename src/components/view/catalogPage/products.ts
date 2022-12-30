@@ -9,15 +9,32 @@ class Products {
     }
 
     const products = data.length >= 10 ? data.filter((_item, idx) => idx < 10) : data;
+    console.log('products: ', products);
 
     const productsListElem: HTMLElement | null = document.querySelector('.goods__list');
 
-    const productsElems = products.map(this.createProductHTML);
-
     if (productsListElem) {
       productsListElem.innerHTML = '';
-      productsListElem.append(...productsElems);
+      const messageElem = document.querySelector('.goods__empty');
+      if (products.length === 0) {
+        if (!messageElem) {
+          productsListElem.insertAdjacentElement('beforebegin', this.createProductsEmptyMessage());
+        }
+      } else {
+        if (messageElem) {
+          messageElem.remove();
+        }
+        const productsElems = products.map(this.createProductHTML);
+        productsListElem.append(...productsElems);
+      }
     }
+  }
+
+  createProductsEmptyMessage() {
+    const messageElem = document.createElement('p');
+    messageElem.className = 'goods__empty';
+    messageElem.textContent = `Sorry, we couldn't find products with these parameters. Try to set less restrictive filters or to change your search request.`;
+    return messageElem;
   }
 
   createProductHTML(item: IProduct) {
