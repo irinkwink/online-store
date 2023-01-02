@@ -8,6 +8,14 @@ class FilterView {
     this.overlay = new Overlay();
   }
 
+  drawSearchInput(value: string) {
+    const searchInput = document.querySelector('.search__input');
+
+    if (searchInput instanceof HTMLInputElement) {
+      searchInput.value = value;
+    }
+  }
+
   drawSortInput(value: string) {
     const sortInputElem = document.querySelector('#sort');
 

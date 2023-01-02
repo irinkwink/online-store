@@ -1,0 +1,51 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 21px;
+  font-size: 18px;
+  line-height: 22px;
+
+  &__arrow {
+    display: block;
+    width: 18px;
+    height: 18px;
+
+    &_inactive {
+      pointer-events: none;
+      opacity: 0.3;
+    }
+
+    &:hover {
+      color: $color-main;
+    }
+  }
+
+  &__list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    border: 2px solid transparent;
+    border-radius: 2px;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      color: $color-main;
+    }
+
+    &_active {
+      border-color: $color-main;
+      cursor: default;
+      pointer-events: none;
+    }
+  }
+}
