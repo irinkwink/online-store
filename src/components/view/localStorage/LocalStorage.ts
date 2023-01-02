@@ -31,6 +31,24 @@ export class LocalStorageUtility {
     }
     localStorage.setItem('products', JSON.stringify(products));
   }
+  increaseNum(productID: number) {
+    const products: IProductInLS[] = this.getProducts();
+    products.forEach(function (product) {
+      if (product.id === productID) {
+        product.num++;
+      }
+    });
+    localStorage.setItem('products', JSON.stringify(products));
+  }
+  decreaseNum(productID: number) {
+    const products: IProductInLS[] = this.getProducts();
+    products.forEach(function (product) {
+      if (product.id === productID) {
+        product.num--;
+      }
+    });
+    localStorage.setItem('products', JSON.stringify(products));
+  }
   isExist(id: number): boolean {
     const products: IProductInLS[] = this.getProducts();
     const ind: number = products.findIndex((product) => product.id === id);

@@ -1,5 +1,6 @@
 import { IProduct, IProductInLS } from '../../../types/interfaces';
 import State from '../../app/state';
+import { storageUtility } from '../localStorage/LocalStorage';
 
 export class Cart {
   products?: IProduct[];
@@ -15,7 +16,10 @@ export class Cart {
       for (let i = 0; i < arr.length; i++) {
         const products = state.getState().products;
         console.log(products);
+        console.log(arr[i]);
         const fined = products.filter((item) => item.id == arr[i].id);
+        const num = arr[i].num;
+        fined.forEach((item) => (item.num = num));
         if (fined.length > 0) {
           pickedProducts.push(...fined);
         }
@@ -39,6 +43,7 @@ export class Cart {
     if (cartTable) {
       productsInCart.forEach(function (product) {
         console.log(product);
+        const productID = product.id;
         const tableRow = document.createElement('div');
         tableRow.className = 'cart-table__row cart-table-row';
 
@@ -63,14 +68,17 @@ export class Cart {
 
         const productControls = document.createElement('div');
         productControls.className = 'cart-table-row__controls';
-        productControls.insertAdjacentHTML(
-          'afterbegin',
-          `
-                <button class="btn cart-table-row__btn">-</button>
-                <span class="cart-table-row__num">1</span>
-                <button class="btn cart-table-row__btn">+</button>
-            `
-        );
+        const plusBtn = document.createElement('button');
+        plusBtn.className = 'btn cart-table-row__btn btn-plus';
+        plusBtn.textContent = '+';
+        const minusBtn = document.createElement('button');
+        minusBtn.className = 'btn cart-table-row__btn btn-minus';
+        minusBtn.textContent = '-';
+        const productsNum = document.createElement('span');
+        productsNum.className = 'cart-table-row__num';
+        let numProducts = product.num;
+        productsNum.textContent = String(product.num);
+        productControls.append(minusBtn, productsNum, plusBtn);
         const productDelBtn = document.createElement('button');
         productDelBtn.className = 'btn cart-table-row__delete';
         productDelBtn.insertAdjacentHTML(
@@ -81,10 +89,26 @@ export class Cart {
         );
         tableRow.append(productImage, productInfo, productControls, productPrice, productDelBtn);
         cartTable.append(tableRow);
+        tableRow.addEventListener('click', function (e) {
+          const target = e.target as HTMLElement;
+          const curTarget = e.currentTarget as HTMLElement;
+          if (target.classList.contains('btn-plus')) {
+            if (numProducts) {
+              numProducts++;
+              storageUtility.increaseNum(productID);
+              productsNum.textContent = String(numProducts);
+            }
+          } else if (target.classList.contains('btn-minus') && numProducts !== 1) {
+            if (numProducts) {
+              numProducts--;
+              storageUtility.decreaseNum(productID);
+              productsNum.textContent = String(numProducts);
+            }
+          }
+        });
       });
       const total = document.createElement('div');
       total.className = 'total';
-
       const totalHeader = document.createElement('div');
       totalHeader.className = 'total__header';
       const totalPrice = document.createElement('span');

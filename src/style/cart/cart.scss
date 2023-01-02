@@ -49,6 +49,10 @@
     &__delete {
         margin-left: 1rem;
     }
+    &__controls {
+        display: flex;
+        align-items: center;
+    }
 }
 
 .total {
