@@ -2,23 +2,47 @@ import { IProduct } from '../../../types/interfaces';
 import { addSearchParamToUrl, getSearchParamsFromUrl } from '../../routes/urlController';
 import Products from './products';
 
-export class CatalogPageView {
+class CatalogPageView {
   products: Products;
 
   constructor() {
     this.products = new Products();
   }
 
-  drawProducts(data: IProduct[]) {
-    const products = data ? data : [];
+  drawProducts(products: IProduct[]) {
+    const messageElem = document.querySelector('.goods__empty');
+    if (messageElem) {
+      messageElem.remove();
+    }
     this.products.draw(products);
-    this.updateCount(products);
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
   }
 
-  updateCount(products: IProduct[]) {
+  drawProductsEmptyMessage() {
+    const productsListElem: HTMLElement | null = document.querySelector('.goods__list');
+
+    if (productsListElem) {
+      productsListElem.innerHTML = '';
+
+      const messageElem = document.querySelector('.goods__empty');
+      if (!messageElem) {
+        const messageElem = document.createElement('p');
+        messageElem.className = 'goods__empty';
+        messageElem.textContent = `Sorry, we couldn't find products with these parameters. Try to set less restrictive filters or to change your search request.`;
+
+        productsListElem.insertAdjacentElement('beforebegin', messageElem);
+      }
+    }
+  }
+
+  updateCount(count: number) {
     const itemsCountElem = document.querySelector('.catalog__items-count');
     if (itemsCountElem) {
-      itemsCountElem.textContent = products.length.toString();
+      itemsCountElem.textContent = count.toString();
     }
   }
 

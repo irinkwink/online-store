@@ -1,22 +1,19 @@
 import State from '../../app/state';
-import CatalogPageView from '../../view/catalogPage/catalogPageView';
 import Filter from './filterController';
+import ProductsList from './productsListController';
 
 class CatalogPageController {
-  view: CatalogPageView;
+  productsList: ProductsList;
   filter: Filter;
 
   constructor() {
-    this.view = new CatalogPageView();
+    this.productsList = new ProductsList();
     this.filter = new Filter();
   }
 
   start(state: State) {
     console.log('Catalog Page');
-
-    this.view.checkDisplay();
-
-    this.filter.init(state, (products) => this.view.drawProducts(products));
+    this.filter.init(state, (products) => this.productsList.init(products));
   }
 }
 

@@ -2,39 +2,14 @@ import { IProduct } from '../../../types/interfaces';
 import { storageUtility } from '../localStorage/LocalStorage';
 
 class Products {
-  draw(data: IProduct[]) {
-    const itemsCountElem = document.querySelector('.catalog__items-count');
-    if (itemsCountElem) {
-      itemsCountElem.textContent = data.length.toString();
-    }
-
-    const products = data.length >= 10 ? data.filter((_item, idx) => idx < 10) : data;
-    console.log('products: ', products);
-
+  draw(products: IProduct[]) {
     const productsListElem: HTMLElement | null = document.querySelector('.goods__list');
 
     if (productsListElem) {
       productsListElem.innerHTML = '';
-      const messageElem = document.querySelector('.goods__empty');
-      if (products.length === 0) {
-        if (!messageElem) {
-          productsListElem.insertAdjacentElement('beforebegin', this.createProductsEmptyMessage());
-        }
-      } else {
-        if (messageElem) {
-          messageElem.remove();
-        }
-        const productsElems = products.map(this.createProductHTML);
-        productsListElem.append(...productsElems);
-      }
+      const productsElems = products.map(this.createProductHTML);
+      productsListElem.append(...productsElems);
     }
-  }
-
-  createProductsEmptyMessage() {
-    const messageElem = document.createElement('p');
-    messageElem.className = 'goods__empty';
-    messageElem.textContent = `Sorry, we couldn't find products with these parameters. Try to set less restrictive filters or to change your search request.`;
-    return messageElem;
   }
 
   createProductHTML(item: IProduct) {

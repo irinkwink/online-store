@@ -123,7 +123,7 @@
         display: block;
         width: 18px;
         height: 18px;
-        background-image: url("img/arrow-down.svg");
+        background-image: url('img/arrow-down.svg');
       }
     }
 
@@ -134,12 +134,12 @@
     }
   }
 
-  &__pagination {
-    grid-column: 2 span;
+  &__goods {
+    margin-bottom: 30px;
+  }
 
-    @include tablet {
-      grid-column: auto;
-    }
+  &__pagination {
+
   }
 }
 
