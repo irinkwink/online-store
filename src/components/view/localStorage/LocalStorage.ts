@@ -13,11 +13,13 @@ export class LocalStorageUtility {
       return [{ id: null, num: 0 }];
     }
   }
-  updateHeaderCart(products: number): void {
+  updateHeaderCart(): void {
     const headerCartNum: HTMLElement | null = document.querySelector('.header__cart-text.header__cart-number');
-    console.log(headerCartNum);
+    const productsInCart: IProductInLS[] = this.getProducts();
+    let res = 0;
+    productsInCart.forEach((product) => (res += product.num));
     if (headerCartNum) {
-      headerCartNum.innerHTML = String(products);
+      headerCartNum.innerHTML = String(res);
     }
   }
   addProductsToLS(id: number): void {

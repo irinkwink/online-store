@@ -10,7 +10,10 @@ export interface IProduct {
   category: string;
   thumbnail: string;
   images: string[];
-  num?: number;
+}
+
+export interface IProductLS extends IProduct {
+  num: number;
 }
 
 export interface IProductsData {

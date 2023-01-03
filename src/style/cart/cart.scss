@@ -3,6 +3,10 @@
         font-size: 3.25rem;
         margin-bottom: 2.5rem;
     }
+    &__wr {
+        display: flex;
+        justify-content: space-between;
+    }
 }
 .cart-table-row {
     display: flex;
@@ -54,6 +58,7 @@
         align-items: center;
     }
 }
+
 
 .total {
     font-weight: 700;
