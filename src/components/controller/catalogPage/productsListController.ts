@@ -13,8 +13,6 @@ class ProductsList {
   }
 
   init(products: IProduct[]) {
-    console.log('products: ', products);
-
     this.view.checkDisplay();
     deleteSearchParamFromUrl('page');
 

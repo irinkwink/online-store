@@ -40,7 +40,6 @@ class Pagination {
         this.page = +pageParam[0].value;
       } else {
         this.page = 1;
-        addSearchParamToUrl({ key: 'page', value: '1' });
       }
 
       if (window.innerWidth < 670) {

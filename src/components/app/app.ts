@@ -1,3 +1,4 @@
+import CardPageController from '../controller/cardPage/cardPageController';
 import CartPageController from '../controller/cartPage/cartPageController';
 import CatalogPageController from '../controller/catalogPage/catalogPageController';
 import DataController from '../controller/dataController';
@@ -9,6 +10,7 @@ class App {
   dataController: DataController;
   catalogPage: CatalogPageController;
   cartPage: CartPageController;
+  cardPage: CardPageController;
   localStorage: LocalStorageUtility;
 
   constructor() {
@@ -16,6 +18,7 @@ class App {
     this.dataController = new DataController();
     this.catalogPage = new CatalogPageController();
     this.cartPage = new CartPageController();
+    this.cardPage = new CardPageController();
     this.localStorage = new LocalStorageUtility();
   }
 
@@ -25,6 +28,7 @@ class App {
     this.state.saveProducts(data.products);
     this.catalogPage.start(this.state);
     this.cartPage.start(this.state);
+    this.cardPage.start(this.state);
   }
 }
 
