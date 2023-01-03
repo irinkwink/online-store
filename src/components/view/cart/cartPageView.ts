@@ -1,6 +1,7 @@
 import { IProduct, IProductInLS, IProductLS } from '../../../types/interfaces';
 import State from '../../app/state';
 import { storageUtility } from '../localStorage/LocalStorage';
+import { myPromoCode } from '../localStorage/PromoCodes';
 
 export class Cart {
   products?: IProduct[];
@@ -19,8 +20,12 @@ export class Cart {
         console.log(arr[i]);
         const fined = products.filter((item) => item.id == arr[i].id);
         const num = arr[i].num;
+        const btnState = arr[i].btnState;
         const res: IProductLS[] = JSON.parse(JSON.stringify(fined));
-        res.forEach((item) => (item.num = num));
+        res.forEach(function (item) {
+          item.num = num;
+          item.btnState = btnState;
+        });
         if (res.length > 0) {
           pickedProducts.push(...res);
         }
@@ -148,7 +153,29 @@ export class Cart {
       if (cartTabeleWr) {
         cartTabeleWr.append(total);
       }
+      this.drawPromo();
     }
+  }
+  drawPromo() {
+    const total: HTMLElement | null = document.querySelector('.total');
+    const promoBlock = document.createElement('div');
+    promoBlock.className = 'promo-block';
+    const promoInput = document.createElement('input');
+    promoInput.type = 'text';
+    promoInput.className = 'promo-block__input';
+    promoInput.placeholder = 'Enter promo code';
+    const codeInfo = document.createElement('p');
+    codeInfo.textContent = "Promo for test: 'RSS', 'EPAM'";
+    promoBlock.append(promoInput, codeInfo);
+    if (total) {
+      total.insertAdjacentElement('beforeend', promoBlock);
+    }
+    promoInput.addEventListener('input', function (e) {
+      const inputVal = promoInput.value;
+      myPromoCode.checkEnteredCode(inputVal, promoBlock);
+    });
+
+    myPromoCode.drawPromoApplied();
   }
 }
 

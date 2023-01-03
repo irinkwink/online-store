@@ -110,7 +110,6 @@ function defineIdProduct(e: Event): void {
   target.innerHTML = storageUtility.updateCartBtn(btnState);
   const productsInLS = storageUtility.getProducts();
   const headerCartNum: HTMLElement | null = document.querySelector('.header__cart-text.header__cart-number');
-  console.log(headerCartNum);
   if (headerCartNum) {
     headerCartNum.innerHTML = String(productsInLS.length - 1);
   }
