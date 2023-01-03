@@ -2,20 +2,12 @@ import { IProduct } from '../../../types/interfaces';
 import { storageUtility } from '../localStorage/LocalStorage';
 
 class Products {
-  draw(data: IProduct[]) {
-    const itemsCountElem = document.querySelector('.catalog__items-count');
-    if (itemsCountElem) {
-      itemsCountElem.textContent = data.length.toString();
-    }
-
-    const products = data.length >= 10 ? data.filter((_item, idx) => idx < 10) : data;
-
+  draw(products: IProduct[]) {
     const productsListElem: HTMLElement | null = document.querySelector('.goods__list');
-
-    const productsElems = products.map(this.createProductHTML);
 
     if (productsListElem) {
       productsListElem.innerHTML = '';
+      const productsElems = products.map(this.createProductHTML);
       productsListElem.append(...productsElems);
     }
   }

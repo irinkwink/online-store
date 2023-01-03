@@ -29,16 +29,15 @@
     }
   }
 
-  &__message {
-    grid-column: 1 / -1;
+  &__empty {
     text-align: center;
-    padding: 24px;
+    padding: 16px;
     border: 2px solid $color-main;
-    font-weight: 400;
-    font-size: 3.4rem;
+    font-size: 2rem;
+    line-height: 1.6;
 
     @include mobile {
-      font-size: 2.6rem;
+      font-size: 1.6rem;
     }
   }
 
