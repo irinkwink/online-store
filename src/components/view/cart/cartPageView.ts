@@ -1,4 +1,4 @@
-import { IProduct, IProductInLS } from '../../../types/interfaces';
+import { IProduct, IProductInLS, IProductLS } from '../../../types/interfaces';
 import State from '../../app/state';
 import { storageUtility } from '../localStorage/LocalStorage';
 
@@ -10,18 +10,19 @@ export class Cart {
     this.products = [];
   }
 
-  identityProducts(arr: IProductInLS[], state: State): IProduct[] {
+  identityProducts(arr: IProductInLS[], state: State): IProductLS[] {
     const pickedProducts = [];
     if (arr.length > 0) {
-      for (let i = 0; i < arr.length; i++) {
+      for (let i = 1; i < arr.length; i++) {
         const products = state.getState().products;
         console.log(products);
         console.log(arr[i]);
         const fined = products.filter((item) => item.id == arr[i].id);
         const num = arr[i].num;
-        fined.forEach((item) => (item.num = num));
-        if (fined.length > 0) {
-          pickedProducts.push(...fined);
+        const res: IProductLS[] = JSON.parse(JSON.stringify(fined));
+        res.forEach((item) => (item.num = num));
+        if (res.length > 0) {
+          pickedProducts.push(...res);
         }
       }
     } else {
@@ -29,17 +30,25 @@ export class Cart {
     }
     return pickedProducts;
   }
-  getTotalPrice(productsInCart: IProduct[]): number {
+  getTotalPrice(productsInCart: IProductLS[]): number {
     let totalPrice = 0;
     for (let i = 0; i < productsInCart.length; i++) {
-      totalPrice += productsInCart[i].price;
+      const num = productsInCart[i].num;
+      totalPrice += productsInCart[i].price * num;
     }
     return totalPrice;
   }
 
-  render(productsInCart: IProduct[]) {
+  getTotalNum(productsInCart: IProductLS[]): number {
+    let totalNum = 0;
+    productsInCart.forEach((product) => (totalNum += product.num));
+    return totalNum;
+  }
+
+  render(productsInCart: IProductLS[]) {
     console.log('вывод');
     const cartTable: HTMLElement | null = document.querySelector('.cart-table');
+    const cartTabeleWr: HTMLElement | null = document.querySelector('.cart__wr');
     if (cartTable) {
       productsInCart.forEach(function (product) {
         console.log(product);
@@ -81,12 +90,10 @@ export class Cart {
         productControls.append(minusBtn, productsNum, plusBtn);
         const productDelBtn = document.createElement('button');
         productDelBtn.className = 'btn cart-table-row__delete';
-        productDelBtn.insertAdjacentHTML(
-          'afterbegin',
-          `
-                <img src="/asset/close.svg" alt="close icon">
-            `
-        );
+        const delBtnImg = new Image();
+        delBtnImg.src = 'img/logo.svg';
+        delBtnImg.alt = 'close icon';
+        productDelBtn.append(delBtnImg);
         tableRow.append(productImage, productInfo, productControls, productPrice, productDelBtn);
         cartTable.append(tableRow);
         tableRow.addEventListener('click', function (e) {
@@ -107,14 +114,20 @@ export class Cart {
           }
         });
       });
+
+      // summary
       const total = document.createElement('div');
       total.className = 'total';
-      const totalHeader = document.createElement('div');
-      totalHeader.className = 'total__header';
+
+      const totalHead = document.createElement('div');
+      totalHead.className = 'summary__head';
+      totalHead.textContent = 'Summary';
+      const totalSummary = document.createElement('div');
+      totalSummary.className = 'total__header';
       const totalPrice = document.createElement('span');
       totalPrice.className = 'total__price';
-      totalHeader.append(totalPrice);
-      totalHeader.insertAdjacentHTML(
+      totalSummary.append(totalPrice);
+      totalSummary.insertAdjacentHTML(
         'afterbegin',
         `
 
@@ -127,12 +140,14 @@ export class Cart {
       totalRow.insertAdjacentHTML(
         'afterbegin',
         `
-            <span>Numbers of products </span>
+            <span>Products:</span>
             <span class="total-num"></span>
         `
       );
-      total.append(totalHeader, totalRow);
-      cartTable.append(total);
+      total.append(totalHead, totalRow, totalSummary);
+      if (cartTabeleWr) {
+        cartTabeleWr.append(total);
+      }
     }
   }
 }
