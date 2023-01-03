@@ -29,7 +29,7 @@ export class LocalStorageUtility {
     if (filtered.length) {
       products.splice(ind, 1);
     } else {
-      products.push({ id: id, num: 1 });
+      products.push({ id: id, num: 1, btnState: true });
     }
     localStorage.setItem('products', JSON.stringify(products));
   }

@@ -26,6 +26,7 @@ export class PromoCodes {
       el.append(appliedCodesBlock);
       addCodeBtn.addEventListener('click', function () {
         codesEntered.push(val);
+        el.removeChild(promoInfo);
         localStorage.setItem('appliedCodes', JSON.stringify(codesEntered));
         const delCodeBtn = document.createElement('button');
         delCodeBtn.className = 'promo-block__btn delete-btn';
@@ -83,9 +84,9 @@ export class PromoCodes {
     });
     console.log(appliedCodes);
   }
-  drawPromo() {
+  drawPromoApplied() {
     const codes = this.checkCodesForLS();
-    console.log(codes);
+    console.log(codes.length);
     if (codes.length) {
       const promoBlock: HTMLElement | null = document.querySelector('.promo-block');
       const appliedCodesBlock = document.createElement('div');
