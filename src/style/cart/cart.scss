@@ -52,6 +52,10 @@
 
     &__delete {
         margin-left: 1rem;
+        background-image: url('/src/img/close.svg');
+        width: 2rem;
+        height: 2rem;
+        background-size: cover;
     }
     &__controls {
         display: flex;

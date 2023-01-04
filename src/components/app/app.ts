@@ -15,8 +15,8 @@ class App {
     this.state = new State();
     this.dataController = new DataController();
     this.catalogPage = new CatalogPageController();
-    this.cartPage = new CartPageController();
-    this.localStorage = new LocalStorageUtility();
+    this.cartPage = new CartPageController(this.state);
+    this.localStorage = new LocalStorageUtility(this.state);
   }
 
   async start() {
@@ -24,7 +24,7 @@ class App {
     const data = await this.dataController.getProducts();
     this.state.saveProducts(data.products);
     this.catalogPage.start(this.state);
-    this.cartPage.start(this.state);
+    this.cartPage.start();
   }
 }
 

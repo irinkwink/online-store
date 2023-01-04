@@ -1,9 +1,12 @@
 import { IProductInLS } from '../../../types/interfaces';
+import State from '../../app/state';
 export class LocalStorageUtility {
   keyName: string;
+  state: State;
 
-  constructor() {
+  constructor(state: State) {
     this.keyName = 'products';
+    this.state = state;
   }
   getProducts(): IProductInLS[] {
     const LocaleStorageProducts = localStorage.getItem(this.keyName);
@@ -72,6 +75,5 @@ export class LocalStorageUtility {
     return textBtn;
   }
 }
-export const storageUtility = new LocalStorageUtility();
 
 export default LocalStorageUtility;
