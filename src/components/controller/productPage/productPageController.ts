@@ -1,11 +1,11 @@
 import { IProduct } from '../../../types/interfaces';
 import State from '../../app/state';
 import { getSearchParamsFromUrl } from '../../routes/urlController';
-import CardPageView from '../../view/cardPage/cardPageView';
+import ProductPageView from '../../view/productPage/productPageView';
 
-class CardPageController {
+class ProductPageController {
   state: State;
-  view: CardPageView;
+  view: ProductPageView;
   id: number;
   count: number;
   stock: number;
@@ -13,7 +13,7 @@ class CardPageController {
 
   constructor(state: State) {
     this.state = state;
-    this.view = new CardPageView();
+    this.view = new ProductPageView();
     this.id = 0;
     this.count = 0;
     this.stock = 1;
@@ -21,7 +21,7 @@ class CardPageController {
   }
 
   start() {
-    console.log('card page');
+    console.log('product page');
 
     const searchParams = getSearchParamsFromUrl();
 
@@ -107,4 +107,4 @@ class CardPageController {
   }
 }
 
-export default CardPageController;
+export default ProductPageController;

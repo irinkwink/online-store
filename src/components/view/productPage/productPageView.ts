@@ -1,6 +1,6 @@
 import { IProduct } from '../../../types/interfaces';
 
-class CardPageView {
+class ProductPageView {
   private btnCartElem: HTMLButtonElement | null;
   private btnIncElem: HTMLButtonElement | null;
   private btnDecElem: HTMLButtonElement | null;
@@ -31,7 +31,7 @@ class CardPageView {
     const main = document.querySelector('main');
 
     if (main) {
-      const cardElem = this.createCardElement(product, isInCart);
+      const cardElem = this.createCardArticleElement(product, isInCart);
       const containerElem = this.createContainerElem();
       containerElem.append(cardElem);
       main.append(containerElem);
@@ -53,7 +53,7 @@ class CardPageView {
     return containerElem;
   }
 
-  private createCardElement(product: IProduct, isInCart: boolean): HTMLElement {
+  private createCardArticleElement(product: IProduct, isInCart: boolean): HTMLElement {
     const cardArticleElem = document.createElement('article');
     cardArticleElem.className = 'card';
 
@@ -80,8 +80,6 @@ class CardPageView {
     cardImageElem.src = product.images[0];
     cardImageElem.alt = product.title;
 
-    this.imageElem = cardImageElem;
-
     const cardThumbsElem = document.createElement('div');
     cardThumbsElem.className = 'card__thumbs';
 
@@ -90,8 +88,6 @@ class CardPageView {
 
       cardThumbsElem.append(...thumbImages);
     }
-
-    this.thumbsElem = cardThumbsElem;
 
     const cardInfoElem = document.createElement('div');
     cardInfoElem.className = 'card__info';
@@ -118,8 +114,6 @@ class CardPageView {
     const cardControlElem = document.createElement('div');
     cardControlElem.className = 'card__control';
 
-    this.controlElem = cardControlElem;
-
     const cardCountElem = document.createElement('div');
     cardCountElem.className = 'card__count';
 
@@ -136,10 +130,6 @@ class CardPageView {
     cardBtnIncElem.className = 'card__btn card__btn_inc';
     cardBtnIncElem.textContent = '+';
     cardBtnIncElem.id = 'cardBtnInc';
-
-    this.btnDecElem = cardBtnDecElem;
-    this.btnIncElem = cardBtnIncElem;
-    this.countNumberElem = cardCountNumberElem;
 
     const priceRowElem = document.createElement('div');
     priceRowElem.className = 'card__row card__row_price';
@@ -166,8 +156,6 @@ class CardPageView {
     toCartBtnElem.dataset.idGoods = product.id.toString();
     toCartBtnElem.id = 'cardBtnToCart';
 
-    this.btnCartElem = toCartBtnElem;
-
     const oneClickBtnElem = document.createElement('button');
     oneClickBtnElem.className = 'btn card__button card__button_one-click';
     oneClickBtnElem.textContent = 'Buy in One Click';
@@ -186,6 +174,14 @@ class CardPageView {
 
     cardDetailsElem.append(cardGalleryElem, cardInfoElem);
     cardArticleElem.append(cardBreadcrumbsElem, cardDetailsElem);
+
+    this.imageElem = cardImageElem;
+    this.thumbsElem = cardThumbsElem;
+    this.btnDecElem = cardBtnDecElem;
+    this.btnIncElem = cardBtnIncElem;
+    this.countNumberElem = cardCountNumberElem;
+    this.btnCartElem = toCartBtnElem;
+    this.controlElem = cardControlElem;
 
     return cardArticleElem;
   }
@@ -222,18 +218,4 @@ class CardPageView {
   }
 }
 
-export default CardPageView;
-
-// export interface IProduct {
-//   id: number;
-//   title: string;
-//   description: string;
-//   price: number;
-//   discountPercentage: number;
-//   rating: number;
-//   stock: number;
-//   brand: string;
-//   category: string;
-//   thumbnail: string;
-//   images: string[];
-// }
+export default ProductPageView;
