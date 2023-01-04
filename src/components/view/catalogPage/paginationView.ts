@@ -35,7 +35,7 @@ class PaginationView {
       }
 
       const firstItem = document.createElement('a');
-      firstItem.classList.add('pagination__arrow');
+      firstItem.classList.add('pagination__arrow', 'arrow');
       firstItem.ariaLabel = 'go to the first page';
       firstItem.dataset.page = '1';
       firstItem.innerHTML = `
@@ -45,7 +45,7 @@ class PaginationView {
       `;
 
       if (page === 1) {
-        firstItem.classList.add('pagination__arrow_inactive');
+        firstItem.classList.add('inactive');
       }
 
       const firstPageUrl = new URL(window.location.href);
@@ -54,7 +54,7 @@ class PaginationView {
       firstItem.href = firstPageUrl.toString();
 
       const lastItem = document.createElement('a');
-      lastItem.classList.add('pagination__arrow');
+      lastItem.classList.add('pagination__arrow', 'arrow');
       lastItem.ariaLabel = 'go to the last page';
       lastItem.dataset.page = pages.toString();
       lastItem.innerHTML = `
@@ -64,10 +64,11 @@ class PaginationView {
       `;
 
       if (page === pages) {
-        lastItem.classList.add('pagination__arrow_inactive');
+        lastItem.classList.add('inactive');
       }
 
       const lastPageUrl = new URL(window.location.href);
+      console.log('lastPageUrl: ', lastPageUrl);
       lastPageUrl.searchParams.set('page', pages.toString());
       lastItem.href = lastPageUrl.toString();
 

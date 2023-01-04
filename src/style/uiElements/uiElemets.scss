@@ -1,0 +1,10 @@
+.arrow {
+  display: block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+
+  &:hover {
+    color: $color-main;
+  }
+}

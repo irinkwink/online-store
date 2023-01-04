@@ -1,10 +1,14 @@
+import { DeviceWindowWidth } from '../../../types/enums';
 import { IProduct } from '../../../types/interfaces';
-
+import { WIDTH_THREE_ELEMS, WIDTH_TWO_ELEMS } from '../../app/const';
 class ProductPageView {
   private btnCartElem: HTMLButtonElement | null;
   private btnIncElem: HTMLButtonElement | null;
   private btnDecElem: HTMLButtonElement | null;
   private countNumberElem: HTMLOutputElement | null;
+  private sliderElem: HTMLDivElement | null;
+  private btnArrowPrev: HTMLButtonElement | null;
+  private btnArrowNext: HTMLButtonElement | null;
   private thumbsElem: HTMLDivElement | null;
   private imageElem: HTMLImageElement | null;
   private controlElem: HTMLDivElement | null;
@@ -14,13 +18,16 @@ class ProductPageView {
     this.btnDecElem = null;
     this.btnIncElem = null;
     this.countNumberElem = null;
+    this.sliderElem = null;
+    this.btnArrowPrev = null;
+    this.btnArrowNext = null;
     this.thumbsElem = null;
     this.imageElem = null;
     this.controlElem = null;
   }
 
-  public get cardThumbsElem(): HTMLDivElement | null {
-    return this.thumbsElem;
+  public get cardSliderElem(): HTMLDivElement | null {
+    return this.sliderElem;
   }
 
   public get cardControlElem(): HTMLDivElement | null {
@@ -31,11 +38,20 @@ class ProductPageView {
     const main = document.querySelector('main');
 
     if (main) {
-      const cardElem = this.createCardArticleElement(product, isInCart);
+      const cardElem = this.createCardArticleElem(product, isInCart);
       const containerElem = this.createContainerElem();
       containerElem.append(cardElem);
       main.append(containerElem);
+
+      this.updateArrowBtn('next', this.shouldInactivateNextArrow());
     }
+  }
+
+  private createContainerElem(): HTMLDivElement {
+    const containerElem = document.createElement('div');
+    containerElem.className = 'container';
+
+    return containerElem;
   }
 
   private createImageItem(url: string): HTMLImageElement {
@@ -46,14 +62,49 @@ class ProductPageView {
     return imageElem;
   }
 
-  private createContainerElem(): HTMLDivElement {
-    const containerElem = document.createElement('div');
-    containerElem.className = 'container';
+  private createCardSliderElem(imageURLs: string[]): HTMLDivElement {
+    const cardSliderElem = document.createElement('div');
+    cardSliderElem.className = 'card__slider';
 
-    return containerElem;
+    const cardArrowPrevBtnElem = document.createElement('button');
+    cardArrowPrevBtnElem.classList.add('card__arrow', 'arrow', 'btn', 'inactive');
+    cardArrowPrevBtnElem.id = 'arrowRrev';
+    cardArrowPrevBtnElem.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13.0918 3.49205L7.5958 9.00005L13.0918 14.508L11.3998 16.2L4.1998 9.00005L11.3998 1.80005L13.0918 3.49205Z"/>
+        </svg>
+      `;
+
+    const cardArrowNextBtnElem = document.createElement('button');
+    cardArrowNextBtnElem.classList.add('card__arrow', 'btn', 'arrow');
+    cardArrowNextBtnElem.id = 'arrowNext';
+    cardArrowNextBtnElem.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4.9082 3.49205L10.4042 9.00005L4.9082 14.508L6.6002 16.2L13.8002 9.00005L6.6002 1.80005L4.9082 3.49205Z"/>
+        </svg>
+      `;
+
+    const cardThumbsContainerElem = document.createElement('div');
+    cardThumbsContainerElem.className = 'card__thumbs-container';
+
+    const cardThumbsElem = document.createElement('div');
+    cardThumbsElem.className = 'card__thumbs';
+
+    const thumbImages = imageURLs.map((url) => this.createImageItem(url));
+
+    cardThumbsElem.append(...thumbImages);
+    cardThumbsContainerElem.append(cardThumbsElem);
+    cardSliderElem.append(cardArrowPrevBtnElem, cardThumbsContainerElem, cardArrowNextBtnElem);
+
+    this.sliderElem = cardSliderElem;
+    this.btnArrowPrev = cardArrowPrevBtnElem;
+    this.btnArrowNext = cardArrowNextBtnElem;
+    this.thumbsElem = cardThumbsElem;
+
+    return cardSliderElem;
   }
 
-  private createCardArticleElement(product: IProduct, isInCart: boolean): HTMLElement {
+  private createCardArticleElem(product: IProduct, isInCart: boolean): HTMLElement {
     const cardArticleElem = document.createElement('article');
     cardArticleElem.className = 'card';
 
@@ -80,13 +131,11 @@ class ProductPageView {
     cardImageElem.src = product.images[0];
     cardImageElem.alt = product.title;
 
-    const cardThumbsElem = document.createElement('div');
-    cardThumbsElem.className = 'card__thumbs';
+    cardMainImageElem.append(cardImageElem, cardDiscountElem);
+    cardGalleryElem.append(cardMainImageElem);
 
     if (product.images.length > 1) {
-      const thumbImages = product.images.map((url) => this.createImageItem(url));
-
-      cardThumbsElem.append(...thumbImages);
+      cardGalleryElem.append(this.createCardSliderElem(product.images));
     }
 
     const cardInfoElem = document.createElement('div');
@@ -162,9 +211,6 @@ class ProductPageView {
     oneClickBtnElem.dataset.idGoods = product.id.toString();
     oneClickBtnElem.id = 'cardBtnOneClick';
 
-    cardMainImageElem.append(cardImageElem, cardDiscountElem);
-    cardGalleryElem.append(cardMainImageElem, cardThumbsElem);
-
     cardCountElem.append(cardBtnDecElem, cardCountNumberElem, cardBtnIncElem);
     priceRowElem.append(priceNewElem, priceOldElem);
 
@@ -176,7 +222,6 @@ class ProductPageView {
     cardArticleElem.append(cardBreadcrumbsElem, cardDetailsElem);
 
     this.imageElem = cardImageElem;
-    this.thumbsElem = cardThumbsElem;
     this.btnDecElem = cardBtnDecElem;
     this.btnIncElem = cardBtnIncElem;
     this.countNumberElem = cardCountNumberElem;
@@ -189,6 +234,47 @@ class ProductPageView {
   public updateImage(url: string): void {
     if (this.imageElem) {
       this.imageElem.src = url;
+    }
+  }
+
+  public scrollSlider(position: number): boolean {
+    if (this.thumbsElem) {
+      this.thumbsElem.style.left = `${position}px`;
+
+      this.updateArrowBtn('prev', position === 0);
+      this.updateArrowBtn('next', this.shouldInactivateNextArrow(position));
+    }
+    return false;
+  }
+
+  private shouldInactivateNextArrow(position = 0): boolean {
+    if (this.thumbsElem) {
+      const width = this.thumbsElem.offsetWidth + position;
+      if (window.innerWidth <= DeviceWindowWidth.mobile || window.innerWidth > DeviceWindowWidth.tablet) {
+        return width <= WIDTH_THREE_ELEMS;
+      } else {
+        return width <= WIDTH_TWO_ELEMS;
+      }
+    }
+    return false;
+  }
+
+  private updateArrowBtn(arrow: string, shouldInactivate = false) {
+    switch (arrow) {
+      case 'prev':
+        if (shouldInactivate) {
+          this.btnArrowPrev?.classList.add('inactive');
+        } else {
+          this.btnArrowPrev?.classList.remove('inactive');
+        }
+        break;
+      case 'next':
+        if (shouldInactivate) {
+          this.btnArrowNext?.classList.add('inactive');
+        } else {
+          this.btnArrowNext?.classList.remove('inactive');
+        }
+        break;
     }
   }
 

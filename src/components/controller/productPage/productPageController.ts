@@ -1,4 +1,5 @@
 import { IProduct } from '../../../types/interfaces';
+import { SLIDER_MOVE } from '../../app/const';
 import State from '../../app/state';
 import { getSearchParamsFromUrl } from '../../routes/urlController';
 import ProductPageView from '../../view/productPage/productPageView';
@@ -10,14 +11,16 @@ class ProductPageController {
   count: number;
   stock: number;
   isInCart: boolean;
+  private sliderPosition: number;
 
   constructor(state: State) {
     this.state = state;
     this.view = new ProductPageView();
     this.id = 0;
-    this.count = 0;
+    this.count = 1;
     this.stock = 1;
     this.isInCart = false;
+    this.sliderPosition = 0;
   }
 
   start() {
@@ -40,12 +43,18 @@ class ProductPageController {
   }
 
   controlCardSlider() {
-    this.view.cardThumbsElem?.addEventListener('click', (e) => {
+    this.view.cardSliderElem?.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (target) {
         const thumb = target.closest('.card__thumb');
         if (thumb instanceof HTMLImageElement) {
           this.view.updateImage(thumb.src);
+        }
+
+        const arrow = target.closest('.card__arrow');
+        if (arrow instanceof HTMLButtonElement) {
+          this.sliderPosition += arrow.id === 'arrowRrev' ? SLIDER_MOVE : -SLIDER_MOVE;
+          this.view.scrollSlider(this.sliderPosition);
         }
       }
     });
@@ -77,30 +86,31 @@ class ProductPageController {
 
   updateCart() {
     this.view.updateBtnCart();
-    console.log('this.isInCart: ', this.isInCart);
     if (this.isInCart) {
       this.state.removeProductFromCart(this.id);
     } else {
       this.state.addProductToCart(this.id, this.count);
-      console.log('this.count: ', this.count);
     }
     this.isInCart = !this.isInCart;
   }
 
   changeCount(operation: string) {
+    console.log('operation: ', operation);
     switch (operation) {
       case 'dec': {
         if (this.count > 1) {
-          this.count = this.count - 1;
+          this.count -= 1;
           this.view.updateCountNumber(this.count);
         }
         break;
       }
       case 'inc': {
         if (this.count < this.stock) {
-          this.count = this.count + 1;
+          this.count += 1;
           this.view.updateCountNumber(this.count, this.count === this.stock);
         }
+        console.log('this.stock: ', this.stock);
+        console.log('this.count : ', this.count);
         break;
       }
     }
