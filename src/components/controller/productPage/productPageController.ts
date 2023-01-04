@@ -32,7 +32,7 @@ class ProductPageController {
     if (idParam.length !== 0) {
       this.id = +idParam[0].value;
       const product: IProduct = this.state.getState().products.filter((item) => item.id === this.id)[0];
-      this.isInCart = this.state.getState().cart.filter((item) => item.id === this.id).length !== 0;
+      this.isInCart = this.state.getState().onlineStoreSettings.cart.filter((item) => item.id === this.id).length !== 0;
       console.log('product: ', product);
 
       this.stock = product.stock;
@@ -85,7 +85,7 @@ class ProductPageController {
   }
 
   updateCart() {
-    this.view.updateBtnCart();
+    this.view.updateBtnToCart();
     if (this.isInCart) {
       this.state.removeProductFromCart(this.id);
     } else {
@@ -95,7 +95,6 @@ class ProductPageController {
   }
 
   changeCount(operation: string) {
-    console.log('operation: ', operation);
     switch (operation) {
       case 'dec': {
         if (this.count > 1) {
@@ -109,8 +108,6 @@ class ProductPageController {
           this.count += 1;
           this.view.updateCountNumber(this.count, this.count === this.stock);
         }
-        console.log('this.stock: ', this.stock);
-        console.log('this.count : ', this.count);
         break;
       }
     }

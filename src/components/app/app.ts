@@ -17,7 +17,7 @@ class App {
     this.state = new State();
     this.dataController = new DataController();
     this.catalogPage = new CatalogPageController(this.state);
-    this.cartPage = new CartPageController();
+    this.cartPage = new CartPageController(this.state);
     this.productPage = new ProductPageController(this.state);
     this.localStorage = new LocalStorageUtility();
   }
@@ -27,7 +27,7 @@ class App {
     const data = await this.dataController.getProducts();
     this.state.saveProducts(data.products);
     this.catalogPage.start();
-    this.cartPage.start(this.state);
+    this.cartPage.start();
     this.productPage.start();
   }
 }

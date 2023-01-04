@@ -40,6 +40,10 @@ class CatalogPageView {
     }
   }
 
+  updateBtnToCart(btn: HTMLButtonElement) {
+    btn.textContent = btn.textContent === 'Add to Cart' ? 'Remove from Cart' : 'Add to Cart';
+  }
+
   updateCount(count: number) {
     const itemsCountElem = document.querySelector('.catalog__items-count');
     if (itemsCountElem) {

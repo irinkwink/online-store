@@ -1,27 +1,28 @@
 import { IProduct } from '../../../types/interfaces';
 import State from '../../app/state';
-import { storageUtility } from '../localStorage/LocalStorage';
+// import { storageUtility } from '../localStorage/LocalStorage';
 
 class Products {
   private state: State;
-  toCartBtnElem: HTMLButtonElement | null;
+  productsListElem: HTMLUListElement | null;
 
   constructor(state: State) {
     this.state = state;
-    this.toCartBtnElem = null;
+    this.productsListElem = null;
   }
 
   public draw(products: IProduct[]): void {
-    const productsListElem: HTMLElement | null = document.querySelector('.goods__list');
+    const productsListElem: HTMLUListElement | null = document.querySelector('.goods__list');
 
     if (productsListElem) {
+      this.productsListElem = productsListElem;
       productsListElem.innerHTML = '';
-      const productsElems = products.map((product) => this.createProductHTML(product));
+      const productsElems = products.map((product) => this.createProductLiElem(product));
       productsListElem.append(...productsElems);
     }
   }
 
-  private createProductHTML(product: IProduct): HTMLLIElement {
+  private createProductLiElem(product: IProduct): HTMLLIElement {
     const liElem = document.createElement('li');
     liElem.className = 'goods__item';
     liElem.dataset.id = product.id.toString();
@@ -86,12 +87,13 @@ class Products {
 
     const toCartBtnElem = document.createElement('button');
     toCartBtnElem.className = 'goods-item__to-cart';
-    const isInCart = this.state.getState().cart.filter((cartProduct) => cartProduct.id === product.id).length !== 0;
+    const isInCart =
+      this.state.getState().onlineStoreSettings.cart.filter((cartProduct) => cartProduct.id === product.id).length !==
+      0;
     toCartBtnElem.textContent = isInCart ? 'Remove from Cart' : 'Add to Cart';
-    toCartBtnElem.dataset.idGoods = product.id.toString();
-    toCartBtnElem.addEventListener('click', defineIdProduct);
-
-    this.toCartBtnElem = toCartBtnElem;
+    toCartBtnElem.dataset.productId = product.id.toString();
+    toCartBtnElem.dataset.isInCart = isInCart.toString();
+    // toCartBtnElem.addEventListener('click', defineIdProduct);
 
     linkImageElem.append(imageElem, discountElem);
     linkTitleElem.append(titleElem);
@@ -113,17 +115,17 @@ class Products {
   }
 }
 
-function defineIdProduct(e: Event): void {
-  const target = e.currentTarget as Element;
-  const id = Number(target.getAttribute('data-id-goods'));
-  const btnState = storageUtility.isExist(id);
-  storageUtility.addProductsToLS(id);
-  target.innerHTML = storageUtility.updateCartBtn(btnState);
-  const productsInLS = storageUtility.getProducts();
-  const headerCartNum: HTMLElement | null = document.querySelector('.header__cart-text.header__cart-number');
-  if (headerCartNum) {
-    headerCartNum.innerHTML = String(productsInLS.length - 1);
-  }
-}
+// function defineIdProduct(e: Event): void {
+//   const target = e.currentTarget as Element;
+//   const id = Number(target.getAttribute('data-id-goods'));
+//   const btnState = storageUtility.isExist(id);
+//   storageUtility.addProductsToLS(id);
+//   target.innerHTML = storageUtility.updateCartBtn(btnState);
+//   const productsInLS = storageUtility.getProducts();
+//   const headerCartNum: HTMLElement | null = document.querySelector('.header__cart-text.header__cart-number');
+//   if (headerCartNum) {
+//     headerCartNum.innerHTML = String(productsInLS.length - 1);
+//   }
+// }
 
 export default Products;

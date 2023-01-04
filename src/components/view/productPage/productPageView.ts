@@ -296,7 +296,7 @@ class ProductPageView {
     }
   }
 
-  public updateBtnCart(): void {
+  public updateBtnToCart(): void {
     if (this.btnCartElem) {
       this.btnCartElem.textContent =
         this.btnCartElem.textContent === 'Add to Cart' ? 'Remove from Cart' : 'Add to Cart';

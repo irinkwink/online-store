@@ -68,7 +68,6 @@ class PaginationView {
       }
 
       const lastPageUrl = new URL(window.location.href);
-      console.log('lastPageUrl: ', lastPageUrl);
       lastPageUrl.searchParams.set('page', pages.toString());
       lastItem.href = lastPageUrl.toString();
 

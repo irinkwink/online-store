@@ -6,7 +6,10 @@ class State {
   constructor() {
     this.state = {
       products: [],
-      cart: [],
+      onlineStoreSettings: {
+        cart: [],
+        promoСodes: [],
+      },
     };
   }
 
@@ -15,14 +18,14 @@ class State {
   }
 
   public loadState() {
-    const dataJSON = localStorage.getItem('products');
+    const dataJSON = localStorage.getItem('online-store-settings');
     if (dataJSON) {
-      this.state.cart = JSON.parse(dataJSON);
+      this.state.onlineStoreSettings = JSON.parse(dataJSON);
     }
   }
 
   private saveState() {
-    localStorage.setItem('products', JSON.stringify(this.state.cart));
+    localStorage.setItem('online-store-settings', JSON.stringify(this.state.onlineStoreSettings));
   }
 
   public saveProducts(data: IProduct[]) {
@@ -30,21 +33,21 @@ class State {
   }
 
   public addProductToCart(id: number, count = 1) {
-    const index: number = this.state.cart.findIndex((cartItem) => cartItem.id === id);
+    const index: number = this.state.onlineStoreSettings.cart.findIndex((cartItem) => cartItem.id === id);
     if (index === -1) {
-      this.state.cart.push({ id: id, num: count });
+      this.state.onlineStoreSettings.cart.push({ id: id, num: count });
     } else {
-      this.state.cart[index].num += count;
+      this.state.onlineStoreSettings.cart[index].num += count;
     }
     this.saveState();
   }
 
   public removeProductFromCart(id: number) {
-    const index: number = this.state.cart.findIndex((cartItem) => cartItem.id === id);
+    const index: number = this.state.onlineStoreSettings.cart.findIndex((cartItem) => cartItem.id === id);
     if (index === -1) {
-      this.state.cart.push({ id: id, num: 1 });
+      this.state.onlineStoreSettings.cart.push({ id: id, num: 1 });
     } else {
-      this.state.cart.splice(index, 1);
+      this.state.onlineStoreSettings.cart.splice(index, 1);
     }
     this.saveState();
   }

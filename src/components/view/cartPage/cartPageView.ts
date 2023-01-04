@@ -1,9 +1,8 @@
 import { IProduct, IProductInLS, IProductLS } from '../../../types/interfaces';
-import State from '../../app/state';
 import { storageUtility } from '../localStorage/LocalStorage';
 import { myPromoCode } from '../localStorage/PromoCodes';
 
-export class Cart {
+export class CartPageView {
   products?: IProduct[];
   productsInLS? = [null];
 
@@ -11,11 +10,10 @@ export class Cart {
     this.products = [];
   }
 
-  identityProducts(arr: IProductInLS[], state: State): IProductLS[] {
+  identityProducts(arr: IProductInLS[], products: IProduct[]): IProductLS[] {
     const pickedProducts = [];
     if (arr.length > 0) {
-      for (let i = 1; i < arr.length; i++) {
-        const products = state.getState().products;
+      for (let i = 0; i < arr.length; i++) {
         console.log(products);
         console.log(arr[i]);
         const fined = products.filter((item) => item.id == arr[i].id);
@@ -104,6 +102,7 @@ export class Cart {
         tableRow.addEventListener('click', function (e) {
           const target = e.target as HTMLElement;
           const curTarget = e.currentTarget as HTMLElement;
+          console.log('curTarget: ', curTarget);
           if (target.classList.contains('btn-plus')) {
             if (numProducts) {
               numProducts++;
@@ -171,6 +170,7 @@ export class Cart {
       total.insertAdjacentElement('beforeend', promoBlock);
     }
     promoInput.addEventListener('input', function (e) {
+      console.log('e: ', e);
       const inputVal = promoInput.value;
       myPromoCode.checkEnteredCode(inputVal, promoBlock);
     });
@@ -179,4 +179,4 @@ export class Cart {
   }
 }
 
-export default Cart;
+export default CartPageView;

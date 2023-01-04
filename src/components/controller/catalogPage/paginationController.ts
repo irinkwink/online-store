@@ -50,8 +50,6 @@ class Pagination {
         this.type = 'desktop';
       }
 
-      console.log('this.type: ', this.type);
-
       this.drawPagination();
       this.showProducts();
 
