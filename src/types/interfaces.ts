@@ -1,0 +1,41 @@
+export interface IProduct {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  discountPercentage: number;
+  rating: number;
+  stock: number;
+  brand: string;
+  category: string;
+  thumbnail: string;
+  images: string[];
+}
+
+export interface IProductLS extends IProduct {
+  num: number;
+  btnState?: boolean;
+}
+
+export interface IProductsData {
+  products: IProduct[];
+}
+
+export interface ICartProduct {
+  id: number;
+  num: number;
+}
+
+export interface IState {
+  products: IProduct[];
+  onlineStoreSettings: {
+    cart: ICartProduct[];
+    promoСodes: string[];
+  };
+}
+
+export interface IProductInLS {
+  id: number | null;
+  num: number;
+  btnState?: boolean;
+}

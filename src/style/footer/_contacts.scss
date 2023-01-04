@@ -1,0 +1,38 @@
+.contacts {
+  font-weight: 500;
+  font-size: 1.4rem;
+
+  @include mobile {
+    font-size: 1.2rem;
+  }
+
+  &__title {
+    font-weight: 500;
+    font-size: 1.6rem;
+    margin-bottom: 5px;
+  
+    @include mobile {
+      font-size: 1.4rem;
+    }
+  }
+
+  &__person {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  &__link {
+    color: $color-main;
+    transition: color 0.36s ease-in-out;
+  
+    &:hover {
+      color: $color-main-sub;
+    }
+  }
+}
+
+
+
+
