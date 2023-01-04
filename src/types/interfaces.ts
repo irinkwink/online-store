@@ -12,6 +12,11 @@ export interface IProduct {
   images: string[];
 }
 
+export interface IProductLS extends IProduct {
+  num: number;
+  btnState?: boolean;
+}
+
 export interface IProductsData {
   products: IProduct[];
 }
@@ -35,4 +40,5 @@ export interface IState {
 export interface IProductInLS {
   id: number | null;
   num: number;
+  btnState?: boolean;
 }

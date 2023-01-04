@@ -15,8 +15,9 @@ class CartPageController {
     console.log(productsInLS);
     const productsToRender = this.cart.identityProducts(productsInLS, state);
     this.cart.render(productsToRender);
-    storageUtility.updateHeaderCart(productsInLS.length - 1);
+    storageUtility.updateHeaderCart();
     const totalPrice = this.cart.getTotalPrice(productsToRender);
+    const totalNum = this.cart.getTotalNum(productsToRender);
 
     const cartTotalPrice: HTMLElement | null = document.querySelector('.total-price');
     if (cartTotalPrice) {
@@ -25,7 +26,7 @@ class CartPageController {
 
     const cartTotalNumbers: HTMLElement | null = document.querySelector('.total-num');
     if (cartTotalNumbers) {
-      cartTotalNumbers.innerHTML = String(productsInLS.length - 1);
+      cartTotalNumbers.innerHTML = String(totalNum);
     }
   }
 }

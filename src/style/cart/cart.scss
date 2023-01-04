@@ -3,6 +3,10 @@
         font-size: 3.25rem;
         margin-bottom: 2.5rem;
     }
+    &__wr {
+        display: flex;
+        justify-content: space-between;
+    }
 }
 .cart-table-row {
     display: flex;
@@ -49,7 +53,12 @@
     &__delete {
         margin-left: 1rem;
     }
+    &__controls {
+        display: flex;
+        align-items: center;
+    }
 }
+
 
 .total {
     font-weight: 700;

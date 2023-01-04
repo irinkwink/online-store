@@ -1,5 +1,7 @@
-import { IProduct, IProductInLS } from '../../../types/interfaces';
+import { IProduct, IProductInLS, IProductLS } from '../../../types/interfaces';
 import State from '../../app/state';
+import { storageUtility } from '../localStorage/LocalStorage';
+import { myPromoCode } from '../localStorage/PromoCodes';
 
 export class Cart {
   products?: IProduct[];
@@ -9,15 +11,23 @@ export class Cart {
     this.products = [];
   }
 
-  identityProducts(arr: IProductInLS[], state: State): IProduct[] {
+  identityProducts(arr: IProductInLS[], state: State): IProductLS[] {
     const pickedProducts = [];
     if (arr.length > 0) {
-      for (let i = 0; i < arr.length; i++) {
+      for (let i = 1; i < arr.length; i++) {
         const products = state.getState().products;
         console.log(products);
+        console.log(arr[i]);
         const fined = products.filter((item) => item.id == arr[i].id);
-        if (fined.length > 0) {
-          pickedProducts.push(...fined);
+        const num = arr[i].num;
+        const btnState = arr[i].btnState;
+        const res: IProductLS[] = JSON.parse(JSON.stringify(fined));
+        res.forEach(function (item) {
+          item.num = num;
+          item.btnState = btnState;
+        });
+        if (res.length > 0) {
+          pickedProducts.push(...res);
         }
       }
     } else {
@@ -25,20 +35,29 @@ export class Cart {
     }
     return pickedProducts;
   }
-  getTotalPrice(productsInCart: IProduct[]): number {
+  getTotalPrice(productsInCart: IProductLS[]): number {
     let totalPrice = 0;
     for (let i = 0; i < productsInCart.length; i++) {
-      totalPrice += productsInCart[i].price;
+      const num = productsInCart[i].num;
+      totalPrice += productsInCart[i].price * num;
     }
     return totalPrice;
   }
 
-  render(productsInCart: IProduct[]) {
+  getTotalNum(productsInCart: IProductLS[]): number {
+    let totalNum = 0;
+    productsInCart.forEach((product) => (totalNum += product.num));
+    return totalNum;
+  }
+
+  render(productsInCart: IProductLS[]) {
     console.log('вывод');
     const cartTable: HTMLElement | null = document.querySelector('.cart-table');
+    const cartTabeleWr: HTMLElement | null = document.querySelector('.cart__wr');
     if (cartTable) {
       productsInCart.forEach(function (product) {
         console.log(product);
+        const productID = product.id;
         const tableRow = document.createElement('div');
         tableRow.className = 'cart-table__row cart-table-row';
 
@@ -63,34 +82,57 @@ export class Cart {
 
         const productControls = document.createElement('div');
         productControls.className = 'cart-table-row__controls';
-        productControls.insertAdjacentHTML(
-          'afterbegin',
-          `
-                <button class="btn cart-table-row__btn">-</button>
-                <span class="cart-table-row__num">1</span>
-                <button class="btn cart-table-row__btn">+</button>
-            `
-        );
+        const plusBtn = document.createElement('button');
+        plusBtn.className = 'btn cart-table-row__btn btn-plus';
+        plusBtn.textContent = '+';
+        const minusBtn = document.createElement('button');
+        minusBtn.className = 'btn cart-table-row__btn btn-minus';
+        minusBtn.textContent = '-';
+        const productsNum = document.createElement('span');
+        productsNum.className = 'cart-table-row__num';
+        let numProducts = product.num;
+        productsNum.textContent = String(product.num);
+        productControls.append(minusBtn, productsNum, plusBtn);
         const productDelBtn = document.createElement('button');
         productDelBtn.className = 'btn cart-table-row__delete';
-        productDelBtn.insertAdjacentHTML(
-          'afterbegin',
-          `
-                <img src="/asset/close.svg" alt="close icon">
-            `
-        );
+        const delBtnImg = new Image();
+        delBtnImg.src = 'img/logo.svg';
+        delBtnImg.alt = 'close icon';
+        productDelBtn.append(delBtnImg);
         tableRow.append(productImage, productInfo, productControls, productPrice, productDelBtn);
         cartTable.append(tableRow);
+        tableRow.addEventListener('click', function (e) {
+          const target = e.target as HTMLElement;
+          const curTarget = e.currentTarget as HTMLElement;
+          if (target.classList.contains('btn-plus')) {
+            if (numProducts) {
+              numProducts++;
+              storageUtility.increaseNum(productID);
+              productsNum.textContent = String(numProducts);
+            }
+          } else if (target.classList.contains('btn-minus') && numProducts !== 1) {
+            if (numProducts) {
+              numProducts--;
+              storageUtility.decreaseNum(productID);
+              productsNum.textContent = String(numProducts);
+            }
+          }
+        });
       });
+
+      // summary
       const total = document.createElement('div');
       total.className = 'total';
 
-      const totalHeader = document.createElement('div');
-      totalHeader.className = 'total__header';
+      const totalHead = document.createElement('div');
+      totalHead.className = 'summary__head';
+      totalHead.textContent = 'Summary';
+      const totalSummary = document.createElement('div');
+      totalSummary.className = 'total__header';
       const totalPrice = document.createElement('span');
       totalPrice.className = 'total__price';
-      totalHeader.append(totalPrice);
-      totalHeader.insertAdjacentHTML(
+      totalSummary.append(totalPrice);
+      totalSummary.insertAdjacentHTML(
         'afterbegin',
         `
 
@@ -103,13 +145,37 @@ export class Cart {
       totalRow.insertAdjacentHTML(
         'afterbegin',
         `
-            <span>Numbers of products </span>
+            <span>Products:</span>
             <span class="total-num"></span>
         `
       );
-      total.append(totalHeader, totalRow);
-      cartTable.append(total);
+      total.append(totalHead, totalRow, totalSummary);
+      if (cartTabeleWr) {
+        cartTabeleWr.append(total);
+      }
+      this.drawPromo();
     }
+  }
+  drawPromo() {
+    const total: HTMLElement | null = document.querySelector('.total');
+    const promoBlock = document.createElement('div');
+    promoBlock.className = 'promo-block';
+    const promoInput = document.createElement('input');
+    promoInput.type = 'text';
+    promoInput.className = 'promo-block__input';
+    promoInput.placeholder = 'Enter promo code';
+    const codeInfo = document.createElement('p');
+    codeInfo.textContent = "Promo for test: 'RSS', 'EPAM'";
+    promoBlock.append(promoInput, codeInfo);
+    if (total) {
+      total.insertAdjacentElement('beforeend', promoBlock);
+    }
+    promoInput.addEventListener('input', function (e) {
+      const inputVal = promoInput.value;
+      myPromoCode.checkEnteredCode(inputVal, promoBlock);
+    });
+
+    myPromoCode.drawPromoApplied();
   }
 }
 

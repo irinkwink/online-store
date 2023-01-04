@@ -13,11 +13,13 @@ export class LocalStorageUtility {
       return [{ id: null, num: 0 }];
     }
   }
-  updateHeaderCart(products: number): void {
+  updateHeaderCart(): void {
     const headerCartNum: HTMLElement | null = document.querySelector('.header__cart-text.header__cart-number');
-    console.log(headerCartNum);
+    const productsInCart: IProductInLS[] = this.getProducts();
+    let res = 0;
+    productsInCart.forEach((product) => (res += product.num));
     if (headerCartNum) {
-      headerCartNum.innerHTML = String(products);
+      headerCartNum.innerHTML = String(res);
     }
   }
   addProductsToLS(id: number): void {
@@ -27,8 +29,26 @@ export class LocalStorageUtility {
     if (filtered.length) {
       products.splice(ind, 1);
     } else {
-      products.push({ id: id, num: 1 });
+      products.push({ id: id, num: 1, btnState: true });
     }
+    localStorage.setItem('products', JSON.stringify(products));
+  }
+  increaseNum(productID: number) {
+    const products: IProductInLS[] = this.getProducts();
+    products.forEach(function (product) {
+      if (product.id === productID) {
+        product.num++;
+      }
+    });
+    localStorage.setItem('products', JSON.stringify(products));
+  }
+  decreaseNum(productID: number) {
+    const products: IProductInLS[] = this.getProducts();
+    products.forEach(function (product) {
+      if (product.id === productID) {
+        product.num--;
+      }
+    });
     localStorage.setItem('products', JSON.stringify(products));
   }
   isExist(id: number): boolean {
