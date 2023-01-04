@@ -1,8 +1,8 @@
 import State from '../../app/state';
 import Cart from '../../view/cart/cartPageView';
-import LocalStorageUtility from '../../view/localStorage/LocalStorage';
 import CartPageView from '../../view/cart/cartPageView';
 import { IProductInLS, IProductLS } from '../../../types/interfaces';
+import { storageUtility } from '../../view/localStorage/LocalStorage';
 
 class CartPageController {
   cart: Cart;
@@ -10,7 +10,6 @@ class CartPageController {
   view: CartPageView;
   count: number;
   stock: number;
-  storage: LocalStorageUtility;
 
   constructor(state: State) {
     this.cart = new Cart();
@@ -18,17 +17,18 @@ class CartPageController {
     this.view = new CartPageView();
     this.count = 1;
     this.stock = 1;
-    this.storage = new LocalStorageUtility(state);
   }
 
   start() {
     console.log('Cart Page');
     console.log(this.state.getState());
 
-    const productsInLS = this.storage.getProducts();
+    const productsInLS = storageUtility.getProducts();
+    console.log(productsInLS);
     const productsToRender = this.identityProducts(productsInLS, this.state);
     this.cart.render(productsToRender);
-    this.storage.updateHeaderCart();
+    storageUtility.updateHeaderCart(productsInLS.length - 1);
+    const totalPrice = this.getTotalPrice(productsToRender);
     // const totalPrice = this.getTotalPrice(productsToRender);
     // const totalNum = this.getTotalNum(productsToRender);
 

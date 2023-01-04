@@ -16,7 +16,7 @@ class App {
     this.dataController = new DataController();
     this.catalogPage = new CatalogPageController();
     this.cartPage = new CartPageController(this.state);
-    this.localStorage = new LocalStorageUtility(this.state);
+    this.localStorage = new LocalStorageUtility();
   }
 
   async start() {

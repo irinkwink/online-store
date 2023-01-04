@@ -1,12 +1,9 @@
 import { IProductInLS } from '../../../types/interfaces';
-import State from '../../app/state';
 export class LocalStorageUtility {
   keyName: string;
-  state: State;
 
-  constructor(state: State) {
+  constructor() {
     this.keyName = 'products';
-    this.state = state;
   }
   getProducts(): IProductInLS[] {
     const LocaleStorageProducts = localStorage.getItem(this.keyName);
@@ -16,13 +13,11 @@ export class LocalStorageUtility {
       return [{ id: null, num: 0 }];
     }
   }
-  updateHeaderCart(): void {
+  updateHeaderCart(products: number): void {
     const headerCartNum: HTMLElement | null = document.querySelector('.header__cart-text.header__cart-number');
-    const productsInCart: IProductInLS[] = this.getProducts();
-    let res = 0;
-    productsInCart.forEach((product) => (res += product.num));
+    console.log(headerCartNum);
     if (headerCartNum) {
-      headerCartNum.innerHTML = String(res);
+      headerCartNum.innerHTML = String(products);
     }
   }
   addProductsToLS(id: number): void {
@@ -32,26 +27,8 @@ export class LocalStorageUtility {
     if (filtered.length) {
       products.splice(ind, 1);
     } else {
-      products.push({ id: id, num: 1, btnState: true });
+      products.push({ id: id, num: 1 });
     }
-    localStorage.setItem('products', JSON.stringify(products));
-  }
-  increaseNum(productID: number) {
-    const products: IProductInLS[] = this.getProducts();
-    products.forEach(function (product) {
-      if (product.id === productID) {
-        product.num++;
-      }
-    });
-    localStorage.setItem('products', JSON.stringify(products));
-  }
-  decreaseNum(productID: number) {
-    const products: IProductInLS[] = this.getProducts();
-    products.forEach(function (product) {
-      if (product.id === productID) {
-        product.num--;
-      }
-    });
     localStorage.setItem('products', JSON.stringify(products));
   }
   isExist(id: number): boolean {
@@ -75,5 +52,6 @@ export class LocalStorageUtility {
     return textBtn;
   }
 }
+export const storageUtility = new LocalStorageUtility();
 
 export default LocalStorageUtility;
