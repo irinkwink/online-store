@@ -1,4 +1,5 @@
 import { IProduct } from '../../../types/interfaces';
+import State from '../../app/state';
 import { deleteSearchParamFromUrl } from '../../routes/urlController';
 import CatalogPageView from '../../view/catalogPage/catalogPageView';
 import Pagination from './paginationController';
@@ -7,8 +8,8 @@ class ProductsList {
   view: CatalogPageView;
   pagination: Pagination;
 
-  constructor() {
-    this.view = new CatalogPageView();
+  constructor(state: State) {
+    this.view = new CatalogPageView(state);
     this.pagination = new Pagination((products) => this.view.drawProducts(products));
   }
 

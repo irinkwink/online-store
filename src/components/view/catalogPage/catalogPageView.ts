@@ -1,12 +1,13 @@
 import { IProduct } from '../../../types/interfaces';
+import State from '../../app/state';
 import { addSearchParamToUrl, getSearchParamsFromUrl } from '../../routes/urlController';
 import Products from './products';
 
 class CatalogPageView {
   products: Products;
 
-  constructor() {
-    this.products = new Products();
+  constructor(state: State) {
+    this.products = new Products(state);
   }
 
   drawProducts(products: IProduct[]) {

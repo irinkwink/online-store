@@ -18,18 +18,12 @@ export interface IProductsData {
 
 export interface ICartProduct {
   id: number;
-  count: number;
-}
-
-export interface ICartProductsData {
-  cart: ICartProduct[];
+  num: number;
 }
 
 export interface IState {
   products: IProduct[];
-  settings: {
-    cart: ICartProduct[];
-  };
+  cart: ICartProduct[];
 }
 
 export interface IProductInLS {

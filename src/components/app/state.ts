@@ -1,35 +1,52 @@
 import { IProduct, IState } from '../../types/interfaces';
 
 class State {
-  state: IState;
+  private state: IState;
 
   constructor() {
     this.state = {
       products: [],
-      settings: {
-        cart: [],
-      },
+      cart: [],
     };
   }
 
-  loadState() {
-    const dataJSON = localStorage.getItem('online-store-settings');
+  public getState() {
+    return this.state;
+  }
+
+  public loadState() {
+    const dataJSON = localStorage.getItem('products');
     if (dataJSON) {
-      this.state.settings = JSON.parse(dataJSON);
+      this.state.cart = JSON.parse(dataJSON);
     }
   }
 
-  saveState() {
-    localStorage.setItem('online-store-settings', JSON.stringify(this.state.settings));
+  private saveState() {
+    localStorage.setItem('products', JSON.stringify(this.state.cart));
   }
 
-  saveProducts(data: IProduct[]) {
+  public saveProducts(data: IProduct[]) {
     this.state.products = data;
-    console.log('this.state: ', this.state);
   }
 
-  getState() {
-    return this.state;
+  public addProductToCart(id: number, count = 1) {
+    const index: number = this.state.cart.findIndex((cartItem) => cartItem.id === id);
+    if (index === -1) {
+      this.state.cart.push({ id: id, num: count });
+    } else {
+      this.state.cart[index].num += count;
+    }
+    this.saveState();
+  }
+
+  public removeProductFromCart(id: number) {
+    const index: number = this.state.cart.findIndex((cartItem) => cartItem.id === id);
+    if (index === -1) {
+      this.state.cart.push({ id: id, num: 1 });
+    } else {
+      this.state.cart.splice(index, 1);
+    }
+    this.saveState();
   }
 }
 

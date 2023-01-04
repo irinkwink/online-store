@@ -1,6 +1,5 @@
 import { IProduct } from '../../../types/interfaces';
 import { MinMax } from '../../../types/types';
-import State from '../../app/state';
 import {
   addSearchParamToUrl,
   copyToClipboard,
@@ -105,8 +104,8 @@ class Filter {
     this.updateFilters();
   }
 
-  init(state: State, cbProducts: (data: IProduct[]) => void) {
-    this.products = [...state.getState().products];
+  init(products: IProduct[], cbProducts: (data: IProduct[]) => void) {
+    this.products = products;
     this.productsFilter = [...this.products];
 
     this.updateFilters();

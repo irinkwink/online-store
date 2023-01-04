@@ -3,17 +3,19 @@ import Filter from './filterController';
 import ProductsList from './productsListController';
 
 class CatalogPageController {
+  state: State;
   productsList: ProductsList;
   filter: Filter;
 
-  constructor() {
-    this.productsList = new ProductsList();
+  constructor(state: State) {
+    this.state = state;
+    this.productsList = new ProductsList(state);
     this.filter = new Filter();
   }
 
-  start(state: State) {
+  start() {
     console.log('Catalog Page');
-    this.filter.init(state, (products) => this.productsList.init(products));
+    this.filter.init(this.state.getState().products, (products) => this.productsList.init(products));
   }
 }
 
