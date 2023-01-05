@@ -3,7 +3,7 @@ import State from '../../app/state';
 import { storageUtility } from '../localStorage/LocalStorage';
 import { myPromoCode } from '../localStorage/PromoCodes';
 
-export class Cart {
+export class CartPageView {
   products?: IProduct[];
   productsInLS? = [null];
 
@@ -170,7 +170,7 @@ export class Cart {
     if (total) {
       total.insertAdjacentElement('beforeend', promoBlock);
     }
-    promoInput.addEventListener('input', function (e) {
+    promoInput.addEventListener('input', function () {
       const inputVal = promoInput.value;
       myPromoCode.checkEnteredCode(inputVal, promoBlock);
     });
@@ -179,4 +179,4 @@ export class Cart {
   }
 }
 
-export default Cart;
+export default CartPageView;
