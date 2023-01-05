@@ -1,6 +1,6 @@
 import { ProductsPerPage } from '../../../types/enums';
 import { IProduct } from '../../../types/interfaces';
-import { addSearchParamToUrl, deleteSearchParamFromUrl, getSearchParamsFromUrl } from '../../routes/urlController';
+import { addSearchParamToUrl, deleteSearchParamFromUrl, getSearchParamsFromUrl } from '../../router/urlController';
 import PaginationView from '../../view/catalogPage/paginationView';
 
 class Pagination {
@@ -40,7 +40,6 @@ class Pagination {
         this.page = +pageParam[0].value;
       } else {
         this.page = 1;
-        addSearchParamToUrl({ key: 'page', value: '1' });
       }
 
       if (window.innerWidth < 670) {
@@ -50,8 +49,6 @@ class Pagination {
       } else {
         this.type = 'desktop';
       }
-
-      console.log('this.type: ', this.type);
 
       this.drawPagination();
       this.showProducts();

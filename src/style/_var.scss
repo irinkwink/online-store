@@ -10,6 +10,11 @@ $color-popup-border: #AFAFAF;
 $width-star: 18px;
 $height-star: 16px;
 
+$width-thumb: 80px;
+$gap-thumbs: 4px;
+
+$width-arrow: 18px;
+
 $desktop: 1600px;
 $laptop: 1200px;
 $tablet: 960px;
@@ -37,4 +42,10 @@ $mobile: 560px;
   @media (max-width: #{$mobile}) {
     @content
   }
+}
+
+@mixin transition($property) {
+  transition-property: $property;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
 }

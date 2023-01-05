@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const EslintPlugin = require('eslint-webpack-plugin');
 
-const PAGES = ['index', 'cart', 'card', 'page404'];
+const PAGES = ['index', 'cart', 'product', 'page404'];
 
 const baseConfig = {
   entry: path.resolve(__dirname, 'src/index'),

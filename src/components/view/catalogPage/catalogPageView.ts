@@ -1,12 +1,13 @@
 import { IProduct } from '../../../types/interfaces';
-import { addSearchParamToUrl, getSearchParamsFromUrl } from '../../routes/urlController';
+import State from '../../app/state';
+import { addSearchParamToUrl, getSearchParamsFromUrl } from '../../router/urlController';
 import Products from './products';
 
 class CatalogPageView {
   products: Products;
 
-  constructor() {
-    this.products = new Products();
+  constructor(state: State) {
+    this.products = new Products(state);
   }
 
   drawProducts(products: IProduct[]) {
@@ -37,6 +38,10 @@ class CatalogPageView {
         productsListElem.insertAdjacentElement('beforebegin', messageElem);
       }
     }
+  }
+
+  updateBtnToCart(btn: HTMLButtonElement) {
+    btn.textContent = btn.textContent === 'Add to Cart' ? 'Remove from Cart' : 'Add to Cart';
   }
 
   updateCount(count: number) {

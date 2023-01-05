@@ -1,23 +1,38 @@
 import State from '../../app/state';
-import Cart from '../../view/cart/cartPageView';
+import CartPageView from '../../view/cartPage/cartPageView';
 import { storageUtility } from '../../view/localStorage/LocalStorage';
+import PageController from '../pageController';
 
-class CartPageController {
-  cart: Cart;
+class CartPageController extends PageController {
+  view: CartPageView;
 
-  constructor() {
-    this.cart = new Cart();
+  constructor(state: State) {
+    super(state);
+    //todo тут заменила на вью, забирай оттуда всю логику и реализую её в методах тут, это и есть основной класс cart
+    this.view = new CartPageView();
   }
 
-  start(state: State) {
+  start() {
     console.log('Cart Page');
-    const productsInLS = storageUtility.getProducts();
+
+    const products = this.state.getState().products;
+
+    //!! теперь корзина берется из стейта.
+    //todo Лучше переименовать productsInLS на cart (там же не конкретные продукты, а список из id и количества)
+
+    const productsInLS = this.state.getState().onlineStoreSettings.cart;
+    // const productsInLS = storageUtility.getProducts();
+
     console.log(productsInLS);
-    const productsToRender = this.cart.identityProducts(productsInLS, state);
-    this.cart.render(productsToRender);
+
+    //!! отпляю в метод вторым параметром не state. а сразу продукты.
+
+    const productsToRender = this.view.identityProducts(productsInLS, products);
+    this.view.render(productsToRender);
     storageUtility.updateHeaderCart();
-    const totalPrice = this.cart.getTotalPrice(productsToRender);
-    const totalNum = this.cart.getTotalNum(productsToRender);
+
+    const totalPrice = this.view.getTotalPrice(productsToRender);
+    const totalNum = this.view.getTotalNum(productsToRender);
 
     const cartTotalPrice: HTMLElement | null = document.querySelector('.total-price');
     if (cartTotalPrice) {
@@ -26,6 +41,7 @@ class CartPageController {
 
     const cartTotalNumbers: HTMLElement | null = document.querySelector('.total-num');
     if (cartTotalNumbers) {
+      cartTotalNumbers.innerHTML = String(totalNum);
       cartTotalNumbers.innerHTML = String(totalNum);
     }
   }
