@@ -42,6 +42,7 @@ class CartPageController extends PageController {
     const cartTotalNumbers: HTMLElement | null = document.querySelector('.total-num');
     if (cartTotalNumbers) {
       cartTotalNumbers.innerHTML = String(totalNum);
+      cartTotalNumbers.innerHTML = String(totalNum);
     }
   }
 }
