@@ -1,41 +1,38 @@
 import State from '../../app/state';
-import Cart from '../../view/cart/cartPageView';
-import CartPageView from '../../view/cart/cartPageView';
-import { IProductInLS, IProductLS } from '../../../types/interfaces';
+import CartPageView from '../../view/cartPage/cartPageView';
 import { storageUtility } from '../../view/localStorage/LocalStorage';
+import PageController from '../pageController';
 
-class CartPageController {
-  cart: Cart;
-  state: State;
+class CartPageController extends PageController {
   view: CartPageView;
-  count: number;
-  stock: number;
 
   constructor(state: State) {
-    this.cart = new Cart();
-    this.state = state;
+    super(state);
+    //todo тут заменила на вью, забирай оттуда всю логику и реализую её в методах тут, это и есть основной класс cart
     this.view = new CartPageView();
-    this.count = 1;
-    this.stock = 1;
   }
 
   start() {
     console.log('Cart Page');
-    console.log(this.state.getState());
 
-    const productsInLS = storageUtility.getProducts();
+    const products = this.state.getState().products;
+
+    //!! теперь корзина берется из стейта.
+    //todo Лучше переименовать productsInLS на cart (там же не конкретные продукты, а список из id и количества)
+
+    const productsInLS = this.state.getState().onlineStoreSettings.cart;
+    // const productsInLS = storageUtility.getProducts();
+
     console.log(productsInLS);
-    const productsToRender = this.identityProducts(productsInLS, this.state);
-    this.cart.render(productsToRender);
-    storageUtility.updateHeaderCart(productsInLS.length - 1);
-    const totalPrice = this.getTotalPrice(productsToRender);
-    // const totalPrice = this.getTotalPrice(productsToRender);
-    // const totalNum = this.getTotalNum(productsToRender);
 
-    // const cartTotalPrice: HTMLElement | null = document.querySelector('.total-price');
-    // if (cartTotalPrice) {
-    //   cartTotalPrice.innerHTML = String(`Total price ${totalPrice} $`);
-    // }
+    //!! отпляю в метод вторым параметром не state. а сразу продукты.
+
+    const productsToRender = this.view.identityProducts(productsInLS, products);
+    this.view.render(productsToRender);
+    storageUtility.updateHeaderCart();
+
+    const totalPrice = this.view.getTotalPrice(productsToRender);
+    const totalNum = this.view.getTotalNum(productsToRender);
 
     // const cartTotalNumbers: HTMLElement | null = document.querySelector('.total-num');
     // if (cartTotalNumbers) {
@@ -76,66 +73,10 @@ class CartPageController {
     return totalPrice;
   }
 
-  getTotalNum(productsInCart: IProductLS[]): number {
-    let totalNum = 0;
-    productsInCart.forEach((product) => (totalNum += product.num));
-    return totalNum;
-  }
-
-  removeFromCart() {
-    this.count = 0;
-  }
-  control() {
-    console.log('click');
-    this.view.tableRow?.addEventListener('click', function (e) {
-      console.log('click');
-      console.log(e.target);
-    });
-  }
-  controlCartButtons() {
-    console.log(this.view.cartControlElem);
-    if (this.view.cartControlElem) {
-      console.log(true);
-    } else {
-      console.log(this.view.cartControlElem);
-    }
-    this.view.cartControlElem?.addEventListener('click', (e) => {
-      console.log('click');
-      const target = e.target as HTMLElement;
-      switch (target.id) {
-        case 'btn-plus': {
-          this.changeCount('dec');
-          break;
-        }
-        case 'btn-minus': {
-          this.changeCount('inc');
-          break;
-        }
-        // case 'btn-delete': {
-        //   this.updateCart();
-        //   break;
-        // }
-      }
-    });
-  }
-  changeCount(operation: string) {
-    switch (operation) {
-      case 'dec': {
-        if (this.count > 1) {
-          this.count = this.count - 1;
-          //this.view.updateCountNumber(this.count);
-          console.log(this.count);
-        }
-        break;
-      }
-      case 'inc': {
-        if (this.count < this.stock) {
-          this.count = this.count + 1;
-          console.log(this.count);
-          //this.view.updateCountNumber(this.count, this.count === this.stock);
-        }
-        break;
-      }
+    const cartTotalNumbers: HTMLElement | null = document.querySelector('.total-num');
+    if (cartTotalNumbers) {
+      cartTotalNumbers.innerHTML = String(totalNum);
+      cartTotalNumbers.innerHTML = String(totalNum);
     }
   }
 }

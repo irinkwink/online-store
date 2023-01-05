@@ -1,28 +1,60 @@
 import { IProduct, IProductInLS, IProductLS } from '../../../types/interfaces';
-import State from '../../app/state';
+import { storageUtility } from '../localStorage/LocalStorage';
 import { myPromoCode } from '../localStorage/PromoCodes';
 
 export class CartPageView {
   products?: IProduct[];
   productsInLS? = [null];
-  private controlElem: HTMLDivElement | null;
-  public tableRow: HTMLDivElement | null;
 
   constructor() {
     this.products = [];
-    this.controlElem = null;
-    this.tableRow = null;
   }
 
-  public get cartControlElem(): HTMLDivElement | null {
-    return this.controlElem;
+  identityProducts(arr: IProductInLS[], products: IProduct[]): IProductLS[] {
+    const pickedProducts = [];
+    if (arr.length > 0) {
+      for (let i = 0; i < arr.length; i++) {
+        console.log(products);
+        console.log(arr[i]);
+        const fined = products.filter((item) => item.id == arr[i].id);
+        const num = arr[i].num;
+        const btnState = arr[i].btnState;
+        const res: IProductLS[] = JSON.parse(JSON.stringify(fined));
+        res.forEach(function (item) {
+          item.num = num;
+          item.btnState = btnState;
+        });
+        if (res.length > 0) {
+          pickedProducts.push(...res);
+        }
+      }
+    } else {
+      return [];
+    }
+    return pickedProducts;
+  }
+  getTotalPrice(productsInCart: IProductLS[]): number {
+    let totalPrice = 0;
+    for (let i = 0; i < productsInCart.length; i++) {
+      const num = productsInCart[i].num;
+      totalPrice += productsInCart[i].price * num;
+    }
+    return totalPrice;
   }
 
-  public render(productsInCart: IProductLS[]) {
+  getTotalNum(productsInCart: IProductLS[]): number {
+    let totalNum = 0;
+    productsInCart.forEach((product) => (totalNum += product.num));
+    return totalNum;
+  }
+
+  render(productsInCart: IProductLS[]) {
+    console.log('вывод');
     const cartTable: HTMLElement | null = document.querySelector('.cart-table');
     const cartTabeleWr: HTMLElement | null = document.querySelector('.cart__wr');
     if (cartTable) {
-      productsInCart.forEach((product) => {
+      productsInCart.forEach(function (product) {
+        console.log(product);
         const productID = product.id;
         const tableRow = document.createElement('div');
         tableRow.className = 'cart-table__row cart-table-row';
@@ -46,46 +78,45 @@ export class CartPageView {
         productPrice.className = 'cart-table-row__price';
         productPrice.innerHTML = `${product.price}$`;
 
-        const cartControlElem = document.createElement('div');
-        cartControlElem.className = 'cart-table-row__controls';
+        const productControls = document.createElement('div');
+        productControls.className = 'cart-table-row__controls';
         const plusBtn = document.createElement('button');
-        this.controlElem = cartControlElem;
-
-        plusBtn.className = 'btn cart-table-row__btn';
-        plusBtn.id = 'btn-plus';
+        plusBtn.className = 'btn cart-table-row__btn btn-plus';
         plusBtn.textContent = '+';
         const minusBtn = document.createElement('button');
-        minusBtn.className = 'btn cart-table-row__btn';
-        minusBtn.id = 'btn-minus';
+        minusBtn.className = 'btn cart-table-row__btn btn-minus';
         minusBtn.textContent = '-';
         const productsNum = document.createElement('span');
         productsNum.className = 'cart-table-row__num';
-        const numProducts = product.num;
+        let numProducts = product.num;
         productsNum.textContent = String(product.num);
-        cartControlElem.append(minusBtn, productsNum, plusBtn);
-
+        productControls.append(minusBtn, productsNum, plusBtn);
         const productDelBtn = document.createElement('button');
         productDelBtn.className = 'btn cart-table-row__delete';
-        tableRow.append(productImage, productInfo, cartControlElem, productPrice, productDelBtn);
+        const delBtnImg = new Image();
+        delBtnImg.src = 'img/logo.svg';
+        delBtnImg.alt = 'close icon';
+        productDelBtn.append(delBtnImg);
+        tableRow.append(productImage, productInfo, productControls, productPrice, productDelBtn);
         cartTable.append(tableRow);
-        console.log(cartControlElem);
-        console.log(this.controlElem);
-        // tableRow.addEventListener('click', function (e) {
-        //   const target = e.target as HTMLElement;
-        //   if (target.classList.contains('btn-plus')) {
-        //     if (numProducts) {
-        //       numProducts++;
-        //       storageUtility.increaseNum(productID);
-        //       productsNum.textContent = String(numProducts);
-        //     }
-        //   } else if (target.classList.contains('btn-minus') && numProducts !== 1) {
-        //     if (numProducts) {
-        //       numProducts--;
-        //       storageUtility.decreaseNum(productID);
-        //       productsNum.textContent = String(numProducts);
-        //     }
-        //   }
-        // });
+        tableRow.addEventListener('click', function (e) {
+          const target = e.target as HTMLElement;
+          const curTarget = e.currentTarget as HTMLElement;
+          console.log('curTarget: ', curTarget);
+          if (target.classList.contains('btn-plus')) {
+            if (numProducts) {
+              numProducts++;
+              storageUtility.increaseNum(productID);
+              productsNum.textContent = String(numProducts);
+            }
+          } else if (target.classList.contains('btn-minus') && numProducts !== 1) {
+            if (numProducts) {
+              numProducts--;
+              storageUtility.decreaseNum(productID);
+              productsNum.textContent = String(numProducts);
+            }
+          }
+        });
       });
 
       // summary
@@ -138,7 +169,8 @@ export class CartPageView {
     if (total) {
       total.insertAdjacentElement('beforeend', promoBlock);
     }
-    promoInput.addEventListener('input', function () {
+    promoInput.addEventListener('input', function (e) {
+      console.log('e: ', e);
       const inputVal = promoInput.value;
       myPromoCode.checkEnteredCode(inputVal, promoBlock);
     });

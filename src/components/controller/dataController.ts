@@ -1,7 +1,7 @@
 import { IProductsData } from '../../types/interfaces';
 
 class DataController {
-  async getProducts() {
+  public async getProducts() {
     return fetch('https://dummyjson.com/products')
       .then((response) => response.json())
       .then((data: IProductsData) => {

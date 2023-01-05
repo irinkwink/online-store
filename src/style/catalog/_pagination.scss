@@ -6,21 +6,6 @@
   font-size: 18px;
   line-height: 22px;
 
-  &__arrow {
-    display: block;
-    width: 18px;
-    height: 18px;
-
-    &_inactive {
-      pointer-events: none;
-      opacity: 0.3;
-    }
-
-    &:hover {
-      color: $color-main;
-    }
-  }
-
   &__list {
     display: flex;
     justify-content: center;
