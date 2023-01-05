@@ -6,7 +6,7 @@ import {
   deleteSearchParamFromUrl,
   deleteSearchParamsFromUrl,
   getSearchParamsFromUrl,
-} from '../../routes/urlController';
+} from '../../router/urlController';
 import FilterView from '../../view/catalogPage/filterView';
 
 class Filter {

@@ -1,6 +1,6 @@
 import { IProduct } from '../../../types/interfaces';
 import State from '../../app/state';
-import { deleteSearchParamFromUrl } from '../../routes/urlController';
+import { deleteSearchParamFromUrl } from '../../router/urlController';
 import CatalogPageView from '../../view/catalogPage/catalogPageView';
 import Pagination from './paginationController';
 

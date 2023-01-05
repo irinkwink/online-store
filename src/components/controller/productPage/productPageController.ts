@@ -1,11 +1,11 @@
 import { IProduct } from '../../../types/interfaces';
 import { SLIDER_MOVE } from '../../app/const';
 import State from '../../app/state';
-import { getSearchParamsFromUrl } from '../../routes/urlController';
+import { getSearchParamsFromUrl } from '../../router/urlController';
 import ProductPageView from '../../view/productPage/productPageView';
+import PageController from '../pageController';
 
-class ProductPageController {
-  state: State;
+class ProductPageController extends PageController {
   view: ProductPageView;
   id: number;
   count: number;
@@ -14,7 +14,7 @@ class ProductPageController {
   private sliderPosition: number;
 
   constructor(state: State) {
-    this.state = state;
+    super(state);
     this.view = new ProductPageView();
     this.id = 0;
     this.count = 1;

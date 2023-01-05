@@ -1,6 +1,6 @@
 import { ProductsPerPage } from '../../../types/enums';
 import { IProduct } from '../../../types/interfaces';
-import { addSearchParamToUrl, deleteSearchParamFromUrl, getSearchParamsFromUrl } from '../../routes/urlController';
+import { addSearchParamToUrl, deleteSearchParamFromUrl, getSearchParamsFromUrl } from '../../router/urlController';
 import PaginationView from '../../view/catalogPage/paginationView';
 
 class Pagination {

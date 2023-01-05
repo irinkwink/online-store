@@ -1,14 +1,14 @@
 import State from '../../app/state';
+import PageController from '../pageController';
 import Filter from './filterController';
 import ProductsList from './productsListController';
 
-class CatalogPageController {
-  state: State;
+class CatalogPageController extends PageController {
   productsList: ProductsList;
   filter: Filter;
 
   constructor(state: State) {
-    this.state = state;
+    super(state);
     this.productsList = new ProductsList(state);
     this.filter = new Filter();
   }

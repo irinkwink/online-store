@@ -1,6 +1,6 @@
 import { IProduct } from '../../../types/interfaces';
 import State from '../../app/state';
-import { addSearchParamToUrl, getSearchParamsFromUrl } from '../../routes/urlController';
+import { addSearchParamToUrl, getSearchParamsFromUrl } from '../../router/urlController';
 import Products from './products';
 
 class CatalogPageView {
