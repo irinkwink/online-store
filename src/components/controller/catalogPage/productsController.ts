@@ -1,33 +1,33 @@
 import { IProduct } from '../../../types/interfaces';
 import State from '../../app/state';
 import { deleteSearchParamFromUrl } from '../../router/urlController';
-import CatalogPageView from '../../view/catalogPage/catalogPageView';
+import ProductsView from '../../view/catalogPage/productsView';
 import Pagination from './paginationController';
 
-class ProductsList {
+class ProductsController {
   state: State;
-  view: CatalogPageView;
+  cbUpdateCount: (number: number) => void;
+  cbUpdateCartTotal: () => void;
+  view: ProductsView;
   pagination: Pagination;
 
-  constructor(state: State) {
+  constructor(state: State, cbUpdateCount: (number: number) => void, cbUpdateCartTotal: () => void) {
+    this.cbUpdateCount = cbUpdateCount;
+    this.cbUpdateCartTotal = cbUpdateCartTotal;
     this.state = state;
-    this.view = new CatalogPageView(state);
-    this.pagination = new Pagination((products) => this.view.drawProducts(products));
+    this.view = new ProductsView(state);
+    this.pagination = new Pagination((products) => this.view.draw(products));
   }
 
   public init(products: IProduct[]) {
-    this.view.checkDisplay();
+    console.log('products: ', products);
     deleteSearchParamFromUrl('page');
 
     this.pagination.init(products);
 
-    if (products.length === 0) {
-      this.view.drawProductsEmptyMessage();
-    }
+    this.cbUpdateCount(products.length);
 
-    this.view.updateCount(products.length);
-
-    this.view.products.productsListElem?.addEventListener('click', (e) => {
+    this.view.productsList?.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (target && target.closest('.goods-item__to-cart')) {
         this.updateCart(target as HTMLButtonElement);
@@ -44,8 +44,9 @@ class ProductsList {
       } else {
         this.state.addProductToCart(+id);
       }
+      this.cbUpdateCartTotal();
     }
   }
 }
 
-export default ProductsList;
+export default ProductsController;

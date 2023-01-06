@@ -2,6 +2,7 @@ import { DeviceWindowWidth } from '../../../types/enums';
 import { IProduct } from '../../../types/interfaces';
 import { WIDTH_THREE_ELEMS, WIDTH_TWO_ELEMS } from '../../app/const';
 class ProductPageView {
+  private wrapperElem: HTMLElement | null;
   private btnCartElem: HTMLButtonElement | null;
   private btnIncElem: HTMLButtonElement | null;
   private btnDecElem: HTMLButtonElement | null;
@@ -14,6 +15,7 @@ class ProductPageView {
   private controlElem: HTMLDivElement | null;
 
   constructor() {
+    this.wrapperElem = null;
     this.btnCartElem = null;
     this.btnDecElem = null;
     this.btnIncElem = null;
@@ -26,6 +28,10 @@ class ProductPageView {
     this.controlElem = null;
   }
 
+  public set wrapper(element: HTMLElement | null) {
+    this.wrapperElem = element;
+  }
+
   public get cardSliderElem(): HTMLDivElement | null {
     return this.sliderElem;
   }
@@ -35,13 +41,11 @@ class ProductPageView {
   }
 
   public drawCard(product: IProduct, isInCart: boolean): void {
-    const main = document.querySelector('main');
-
-    if (main) {
+    if (this.wrapperElem) {
       const cardElem = this.createCardArticleElem(product, isInCart);
       const containerElem = this.createContainerElem();
       containerElem.append(cardElem);
-      main.append(containerElem);
+      this.wrapperElem.append(containerElem);
 
       this.updateArrowBtn('next', this.shouldInactivateNextArrow());
     }
@@ -67,7 +71,7 @@ class ProductPageView {
     cardSliderElem.className = 'card__slider';
 
     const cardArrowPrevBtnElem = document.createElement('button');
-    cardArrowPrevBtnElem.classList.add('card__arrow', 'arrow', 'btn', 'inactive');
+    cardArrowPrevBtnElem.className = 'card__arrow arrow btn inactive';
     cardArrowPrevBtnElem.id = 'arrowRrev';
     cardArrowPrevBtnElem.innerHTML = `
         <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -76,7 +80,7 @@ class ProductPageView {
       `;
 
     const cardArrowNextBtnElem = document.createElement('button');
-    cardArrowNextBtnElem.classList.add('card__arrow', 'btn', 'arrow');
+    cardArrowNextBtnElem.className = 'card__arrow btn arrow';
     cardArrowNextBtnElem.id = 'arrowNext';
     cardArrowNextBtnElem.innerHTML = `
         <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

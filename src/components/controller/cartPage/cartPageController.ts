@@ -7,7 +7,7 @@ class CartPageController extends PageController {
   view: CartPageView;
 
   constructor(state: State) {
-    super(state);
+    super(state, 'cart');
     //todo тут заменила на вью, забирай оттуда всю логику и реализую её в методах тут, это и есть основной класс cart
     this.view = new CartPageView();
   }

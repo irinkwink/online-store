@@ -6,27 +6,32 @@
   }
 
   &__container {
-    display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 20px;
 
-    @include desktop {
-      grid-template-columns: 1fr 2fr 1fr;
-    }
+    &_catalog {
+      display: grid;
+      grid-template-columns: 1fr 3fr 1fr;
 
-    @include laptop {
-      grid-template-columns: 1fr 3fr 2fr;
-    }
-
-    @include tablet {
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-
-    @include mobile {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+      @include desktop {
+        grid-template-columns: 1fr 2fr 1fr;
+      }
+  
+      @include laptop {
+        grid-template-columns: 1fr 3fr 2fr;
+      }
+  
+      @include tablet {
+        grid-template-columns: 1fr 1fr;
+      }
+  
+      @include mobile {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
     }
   }
 

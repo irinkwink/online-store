@@ -1,25 +1,72 @@
 import { IProduct } from '../../../types/interfaces';
 import State from '../../app/state';
-// import { storageUtility } from '../localStorage/LocalStorage';
 
-class Products {
+class ProductsView {
   private state: State;
-  productsListElem: HTMLUListElement | null;
+  private productsListElem: HTMLUListElement | null;
+  private wrapperElem: HTMLDivElement | null;
+  private displayType: string;
 
   constructor(state: State) {
     this.state = state;
     this.productsListElem = null;
+    this.wrapperElem = null;
+    this.displayType = 'tiles';
+  }
+
+  public set wrapper(element: HTMLDivElement | null) {
+    this.wrapperElem = element;
+  }
+
+  public set display(value: string) {
+    this.displayType = value;
+  }
+
+  public get productsList() {
+    return this.productsListElem;
   }
 
   public draw(products: IProduct[]): void {
-    const productsListElem: HTMLUListElement | null = document.querySelector('.goods__list');
+    if (this.wrapperElem) {
+      this.wrapperElem.innerHTML = '';
+      const productsElem = products.length === 0 ? this.drawProductsEmptyMessage() : this.drawProducts(products);
+      this.wrapperElem.append(productsElem);
 
-    if (productsListElem) {
-      this.productsListElem = productsListElem;
-      productsListElem.innerHTML = '';
-      const productsElems = products.map((product) => this.createProductLiElem(product));
-      productsListElem.append(...productsElems);
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
     }
+  }
+
+  private drawProducts(products: IProduct[]): HTMLUListElement {
+    const productsListElem = document.createElement('ul');
+    productsListElem.className = 'goods__list goods__tiles';
+
+    const productsElems = products.map((product) => this.createProductLiElem(product));
+    productsListElem.append(...productsElems);
+
+    this.productsListElem = productsListElem;
+
+    return productsListElem;
+  }
+
+  private drawProductsEmptyMessage(): HTMLParagraphElement {
+    const messageElem = document.createElement('p');
+    messageElem.className = 'goods__empty';
+    messageElem.textContent = `Sorry, we couldn't find products with these parameters. Try to set less restrictive filters or to change your search request.`;
+    return messageElem;
+  }
+
+  updateProductsDisplay(displayType: string) {
+    if (this.productsList) {
+      this.productsList.className = `goods__list goods__${displayType}`;
+    }
+  }
+
+  public updateBtnToCart(btn: HTMLButtonElement): void {
+    btn.textContent = btn.textContent === 'Add to Cart' ? 'Remove from Cart' : 'Add to Cart';
   }
 
   private createProductLiElem(product: IProduct): HTMLLIElement {
@@ -28,11 +75,11 @@ class Products {
     liElem.dataset.id = product.id.toString();
 
     const articleElem = document.createElement('article');
-    articleElem.classList.add('goods-item');
+    articleElem.className = 'goods-item';
 
     const linkImageElem = document.createElement('a');
     linkImageElem.className = 'goods-item__link goods-item__link_image';
-    linkImageElem.href = `product.html?id=${product.id.toString()}`;
+    linkImageElem.href = `product/${product.id.toString()}`;
 
     const imageElem = new Image();
     imageElem.className = 'goods-item__image';
@@ -45,7 +92,7 @@ class Products {
 
     const linkTitleElem = document.createElement('a');
     linkTitleElem.className = 'goods-item__link goods-item__link_title';
-    linkTitleElem.href = `product.html?id=${product.id.toString()}`;
+    linkTitleElem.href = `product/${product.id.toString()}`;
 
     const titleElem = document.createElement('h3');
     titleElem.className = 'goods-item__title';
@@ -75,8 +122,10 @@ class Products {
         <div class="stars__row stars__row_inactive"></div>
         <div class="stars__row stars__row_active" style="width: ${ratingActivWidth.toString()}%"></div>
       </div>
-      <p class="goods-item__rate">${product.rating.toString()}</p>
+
     `;
+
+    // <p class="goods-item__rate">${product.rating.toString()}</p>
 
     const stockElem = document.createElement('p');
     stockElem.className = 'goods-item__stock';
@@ -115,17 +164,4 @@ class Products {
   }
 }
 
-// function defineIdProduct(e: Event): void {
-//   const target = e.currentTarget as Element;
-//   const id = Number(target.getAttribute('data-id-goods'));
-//   const btnState = storageUtility.isExist(id);
-//   storageUtility.addProductsToLS(id);
-//   target.innerHTML = storageUtility.updateCartBtn(btnState);
-//   const productsInLS = storageUtility.getProducts();
-//   const headerCartNum: HTMLElement | null = document.querySelector('.header__cart-text.header__cart-number');
-//   if (headerCartNum) {
-//     headerCartNum.innerHTML = String(productsInLS.length - 1);
-//   }
-// }
-
-export default Products;
+export default ProductsView;

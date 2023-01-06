@@ -9,8 +9,10 @@ import {
 } from '../../router/urlController';
 import FilterView from '../../view/catalogPage/filterView';
 
-class Filter {
+class FilterController {
+  cbProductsInit: (data: IProduct[]) => void;
   view: FilterView;
+  filterBtn: HTMLButtonElement | null;
   sort: string;
   products: IProduct[];
   productsFilter: IProduct[];
@@ -22,8 +24,10 @@ class Filter {
   stockFilter: MinMax;
   search: string;
 
-  constructor() {
+  constructor(cbProductsInit: (products: IProduct[]) => void) {
+    this.cbProductsInit = cbProductsInit;
     this.view = new FilterView();
+    this.filterBtn = null;
     this.sort = 'none';
     this.products = [];
     this.productsFilter = [];
@@ -65,54 +69,49 @@ class Filter {
   checkUrlForFilters() {
     const searchParams = getSearchParamsFromUrl();
 
-    const minPriceParam = searchParams.filter((item) => item.key === 'minPrice');
-    this.priceFilter.min = minPriceParam.length !== 0 ? +minPriceParam[0].value : this.price.min;
+    const minPriceParam = searchParams.find((item) => item.key === 'minPrice');
+    this.priceFilter.min = minPriceParam ? +minPriceParam.value : this.price.min;
 
-    const maxPriceParam = searchParams.filter((item) => item.key === 'maxPrice');
-    this.priceFilter.max = maxPriceParam.length !== 0 ? +maxPriceParam[0].value : this.price.max;
+    const maxPriceParam = searchParams.find((item) => item.key === 'maxPrice');
+    this.priceFilter.max = maxPriceParam ? +maxPriceParam.value : this.price.max;
 
-    const minStockParam = searchParams.filter((item) => item.key === 'minStock');
-    this.stockFilter.min = minStockParam.length !== 0 ? +minStockParam[0].value : this.stock.min;
+    const minStockParam = searchParams.find((item) => item.key === 'minStock');
+    this.stockFilter.min = minStockParam ? +minStockParam.value : this.stock.min;
 
-    const maxStockParam = searchParams.filter((item) => item.key === 'maxStock');
-    this.stockFilter.max = maxStockParam.length !== 0 ? +maxStockParam[0].value : this.stock.max;
+    const maxStockParam = searchParams.find((item) => item.key === 'maxStock');
+    this.stockFilter.max = maxStockParam ? +maxStockParam.value : this.stock.max;
 
-    const categoryParam = searchParams.filter((item) => item.key === 'category');
-    if (categoryParam.length !== 0) {
-      this.category = categoryParam[0].value;
+    const categoryParam = searchParams.find((item) => item.key === 'category');
+    if (categoryParam) {
+      this.category = categoryParam.value;
       this.productsFilter = this.products.filter((item) => item.category === this.category);
     }
 
-    const brandParam = searchParams.filter((item) => item.key === 'brand');
-    if (brandParam.length !== 0) {
-      this.brand = brandParam[0].value;
+    const brandParam = searchParams.find((item) => item.key === 'brand');
+    if (brandParam) {
+      this.brand = brandParam.value;
     }
 
-    const searchParam = searchParams.filter((item) => item.key === 'search');
-    if (searchParam.length !== 0) {
-      this.search = searchParam[0].value;
-      this.view.drawSearchInput(this.search);
+    const searchParam = searchParams.find((item) => item.key === 'search');
+    if (searchParam) {
+      this.search = searchParam.value;
     }
 
-    const sortParam = searchParams.filter((item) => item.key === 'sort');
-    this.sort = sortParam.length !== 0 ? sortParam[0].value : 'none';
-
-    if (this.sort !== 'none') {
-      this.view.drawSortInput(this.sort);
-    }
+    const sortParam = searchParams.find((item) => item.key === 'sort');
+    this.sort = sortParam ? sortParam.value : 'none';
 
     this.updateFilters();
   }
 
-  init(products: IProduct[], cbProducts: (data: IProduct[]) => void) {
+  init(products: IProduct[]) {
     this.products = products;
     this.productsFilter = [...this.products];
 
-    this.updateFilters();
+    this.view.draw();
 
     this.checkUrlForFilters();
 
-    this.filterProducts(cbProducts);
+    this.filterProducts();
 
     document.querySelector('.header__search')?.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -126,15 +125,15 @@ class Filter {
           } else {
             deleteSearchParamFromUrl('search');
           }
-          this.filterProducts(cbProducts);
+          this.filterProducts();
         }
       }
     });
 
-    document.querySelector('.catalog__filter-btn')?.addEventListener('click', () => this.view.showFilters());
-    document.querySelector('.filter__title')?.addEventListener('click', () => this.view.hideFilters());
+    this.filterBtn?.addEventListener('click', () => this.view.showFilters());
+    this.view.title?.addEventListener('click', () => this.view.hideFilters());
 
-    document.querySelector('.filter__copy')?.addEventListener('click', () => {
+    this.view.copyBtn?.addEventListener('click', () => {
       copyToClipboard();
       this.view.showCopiedMessage();
     });
@@ -147,20 +146,18 @@ class Filter {
       } else {
         addSearchParamToUrl({ key: 'sort', value: this.sort });
       }
-      this.filterProducts(cbProducts);
+      this.filterProducts();
     });
 
-    const filterFormElem = document.querySelector('.filter__form');
-
-    if (filterFormElem) {
-      filterFormElem.addEventListener('reset', () => {
+    if (this.view.form) {
+      this.view.form.addEventListener('reset', () => {
         const params = ['category', 'brand', 'minPrice', 'maxPrice', 'minStock', 'maxStock'];
         deleteSearchParamsFromUrl(params);
         this.resetFilters();
-        this.filterProducts(cbProducts);
+        this.filterProducts();
       });
 
-      filterFormElem.addEventListener('input', (e) => {
+      this.view.form.addEventListener('input', (e) => {
         const target = e.target as HTMLInputElement;
         switch (target.id) {
           case 'priceFromSlider': {
@@ -182,7 +179,7 @@ class Filter {
         }
       });
 
-      filterFormElem.addEventListener('change', (e) => {
+      this.view.form.addEventListener('change', (e) => {
         const target = e.target as HTMLInputElement;
         switch (target.id) {
           case 'category': {
@@ -199,7 +196,7 @@ class Filter {
             this.updateBrands();
             this.updatePrice();
             this.updateStock();
-            this.filterProducts(cbProducts);
+            this.filterProducts();
             break;
           }
           case 'brand': {
@@ -213,31 +210,31 @@ class Filter {
             }
             this.updatePrice();
             this.updateStock();
-            this.filterProducts(cbProducts);
+            this.filterProducts();
             break;
           }
           case 'priceFromSlider':
             addSearchParamToUrl({ key: 'minPrice', value: this.priceFilter.min.toString() });
-            this.filterProducts(cbProducts);
+            this.filterProducts();
             break;
           case 'priceToSlider':
             addSearchParamToUrl({ key: 'maxPrice', value: this.priceFilter.max.toString() });
-            this.filterProducts(cbProducts);
+            this.filterProducts();
             break;
           case 'stockFromSlider':
             addSearchParamToUrl({ key: 'minStock', value: this.stockFilter.min.toString() });
-            this.filterProducts(cbProducts);
+            this.filterProducts();
             break;
           case 'stockToSlider':
             addSearchParamToUrl({ key: 'maxStock', value: this.stockFilter.max.toString() });
-            this.filterProducts(cbProducts);
+            this.filterProducts();
             break;
         }
       });
     }
   }
 
-  filterProducts(cbProducts: (data: IProduct[]) => void) {
+  filterProducts() {
     let data = [...this.products];
 
     if (this.category !== 'all') {
@@ -290,22 +287,22 @@ class Filter {
         break;
     }
 
-    console.log('filteredData: ', data);
+    console.log('filtered products: ', data);
 
     this.productsFilter = [...data];
 
-    cbProducts(data);
+    this.cbProductsInit(data);
   }
 
   updateCategories() {
     const categories = new Set(this.products.map((item) => item.category));
-    this.view.drawCategories(Array.from(categories), this.category);
+    this.view.updateCategories(Array.from(categories), this.category);
   }
 
   updateBrands() {
     deleteSearchParamFromUrl('brand');
     const brands = new Set(this.productsFilter.map((item) => item.brand));
-    this.view.drawBrands(Array.from(brands), this.brand);
+    this.view.updateBrands(Array.from(brands), this.brand);
   }
 
   updatePrice() {
@@ -323,8 +320,8 @@ class Filter {
     deleteSearchParamFromUrl('minPrice');
     deleteSearchParamFromUrl('maxPrice');
 
-    this.view.drawPrice(this.price, this.priceFilter);
-    this.view.drawPriceValues(this.price, this.priceFilter);
+    this.view.updatePrice(this.price, this.priceFilter);
+    this.view.updatePriceValues(this.price, this.priceFilter);
   }
 
   updateStock() {
@@ -342,8 +339,8 @@ class Filter {
     deleteSearchParamFromUrl('minStock');
     deleteSearchParamFromUrl('maxStock');
 
-    this.view.drawStock(this.stock, this.stockFilter);
-    this.view.drawStockValues(this.stock, this.stockFilter);
+    this.view.updateStock(this.stock, this.stockFilter);
+    this.view.updateStockValues(this.stock, this.stockFilter);
   }
 
   updatePriceFilter(value: string, option: string) {
@@ -359,7 +356,7 @@ class Filter {
       }
     }
     this.priceFilter[option as keyof MinMax] = checkValue;
-    this.view.drawPriceValues(this.price, this.priceFilter);
+    this.view.updatePriceValues(this.price, this.priceFilter);
   }
 
   updateStockFilter(value: string, option: string) {
@@ -375,8 +372,8 @@ class Filter {
       }
     }
     this.stockFilter[option as keyof MinMax] = checkValue;
-    this.view.drawStockValues(this.stock, this.stockFilter);
+    this.view.updateStockValues(this.stock, this.stockFilter);
   }
 }
 
-export default Filter;
+export default FilterController;

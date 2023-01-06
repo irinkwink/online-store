@@ -26,7 +26,7 @@ const baseConfig = {
       {
         test: /\.ts$/i,
         use: 'ts-loader',
-        include: [path.resolve(__dirname, 'src')],
+        include: [path.resolve(__dirname, 'src'), path.resolve(__dirname, 'index.d.ts')],
       },
       {
         test: /\.(c|sa|sc)ss$/i,

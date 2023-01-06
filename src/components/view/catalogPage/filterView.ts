@@ -1,37 +1,177 @@
-import { MinMax } from '../../../types/types';
+import { FieldRange, FieldSelect, FieldTypes, MinMax } from '../../../types/types';
+import { RANGE_FIELDS, SELECT_FIELDS } from '../../app/const';
 import Overlay from '../overlay/overlay';
 
 class FilterView {
-  overlay: Overlay;
+  private wrapperElem: HTMLElement | null;
+  private overlay: Overlay;
+  private formElem: HTMLFormElement | null;
+  private titleElem: HTMLElement | null;
+  private categorySelectElem: HTMLSelectElement | null;
+  private brandSelectElem: HTMLSelectElement | null;
+  private priceInputElems: HTMLInputElement[];
+  private stockInputElems: HTMLInputElement[];
+  private priceTextElems: HTMLParagraphElement[];
+  private stockTextElems: HTMLParagraphElement[];
+  private copyBtnElem: HTMLButtonElement | null;
 
   constructor() {
+    this.wrapperElem = null;
     this.overlay = new Overlay();
+    this.formElem = null;
+    this.titleElem = null;
+    this.categorySelectElem = null;
+    this.brandSelectElem = null;
+    this.priceInputElems = [];
+    this.stockInputElems = [];
+    this.priceTextElems = [];
+    this.stockTextElems = [];
+    this.copyBtnElem = null;
   }
 
-  drawSearchInput(value: string) {
-    const searchInput = document.querySelector('.search__input');
+  public set wrapper(element: HTMLElement | null) {
+    this.wrapperElem = element;
+  }
 
-    if (searchInput instanceof HTMLInputElement) {
-      searchInput.value = value;
+  public get form() {
+    return this.formElem;
+  }
+
+  public get title() {
+    return this.titleElem;
+  }
+
+  public get copyBtn() {
+    return this.copyBtnElem;
+  }
+
+  public draw() {
+    if (this.wrapperElem) {
+      this.wrapperElem.append(this.createFormElem());
     }
   }
 
-  drawSortInput(value: string) {
-    const sortInputElem = document.querySelector('#sort');
+  private createSelectFieldElem<T extends FieldTypes>(field: T): HTMLFieldSetElement {
+    const fieldElem = document.createElement('fieldset');
+    fieldElem.className = 'filter__field';
 
-    if (sortInputElem) {
-      Array.from(sortInputElem.children).forEach((item) => {
-        if ((item as HTMLOptionElement).value === value) {
-          (item as HTMLOptionElement).selected = true;
-        }
+    const titleElem = document.createElement('legend');
+    titleElem.className = 'filter__field-title';
+    titleElem.textContent = field.title;
+
+    fieldElem.append(titleElem);
+
+    if ('range' in field) {
+      const rangeWrapperElem = document.createElement('div');
+      rangeWrapperElem.className = 'filter__range-wrapper';
+
+      const labelElem = document.createElement('label');
+      labelElem.className = 'filter__range-label';
+
+      const inputElems = field.range.map((input) => {
+        const inputElem = document.createElement('input');
+        inputElem.className = `filter__range filter__range_${input.class}`;
+        inputElem.id = input.id;
+        inputElem.type = 'range';
+        inputElem.name = input.name;
+        inputElem.value = input.value.toString();
+        inputElem.min = input.min.toString();
+        inputElem.max = input.max.toString();
+        inputElem.step = '1';
+        return inputElem;
       });
+
+      if (field.id === 'price') this.priceInputElems.push(...inputElems);
+      if (field.id === 'stock') this.stockInputElems.push(...inputElems);
+
+      const textWrapperElem = document.createElement('div');
+      textWrapperElem.className = 'filter__flex';
+
+      const textElems = ['min', 'current', 'max'].map((item) => {
+        const textElem = document.createElement('p');
+        textElem.className = `filter__range-text filter__range-text_${item} filter__${field.id} filter__${field.id}_${item}`;
+        const minText = `${field.range[0].min}${field.id === 'price' ? '$' : ''}`;
+        const maxText = `${field.range[0].max}${field.id === 'price' ? '$' : ''}`;
+        const currentText = `${minText}-${maxText}`;
+        textElem.textContent = item === 'min' ? minText : item === 'max' ? maxText : currentText;
+
+        return textElem;
+      });
+
+      if (field.id === 'price') this.priceTextElems.push(...textElems);
+      if (field.id === 'stock') this.stockTextElems.push(...textElems);
+
+      labelElem.append(...inputElems);
+      rangeWrapperElem.append(labelElem);
+      textWrapperElem.append(...textElems);
+      fieldElem.append(rangeWrapperElem, textWrapperElem);
+    } else {
+      const labelElem = document.createElement('label');
+      labelElem.className = 'filter__select-label';
+
+      const selectElem = document.createElement('select');
+      selectElem.className = 'filter__input filter__input_select';
+      selectElem.id = field.id;
+      selectElem.name = field.id;
+
+      if (field.id === 'category') this.categorySelectElem = selectElem;
+      if (field.id === 'brand') this.brandSelectElem = selectElem;
+
+      // console.log('keyof this: ', keyof typeof this);
+      // if (field.elem in this) {
+      //   console.log('Heeee');
+      //   this[field.elem] = selectElem;
+      // }
+
+      // const elem = field.elem;
+
+      // (this as FilterView)[ field.elem] = selectElem;
+      // console.log('this: ', this.categorySelectElem);
+
+      labelElem.append(selectElem);
+      fieldElem.append(labelElem);
     }
+
+    return fieldElem;
   }
 
-  drawCategories(data: string[], select: string) {
-    const categorySelectElem = document.querySelector('#category');
-    if (categorySelectElem) {
-      categorySelectElem.innerHTML = '';
+  private createFormElem(): HTMLFormElement {
+    const formElem = document.createElement('form');
+    formElem.className = 'filter__form';
+
+    const titleElem = document.createElement('h3');
+    titleElem.className = 'filter__title';
+    titleElem.textContent = 'Filters:';
+
+    const fieldsListElem = document.createElement('div');
+    fieldsListElem.className = 'filter__fields-list';
+
+    const selectFieldsElems = SELECT_FIELDS.map((field) => this.createSelectFieldElem<FieldSelect>(field));
+    const rangeFieldsElems = RANGE_FIELDS.map((field) => this.createSelectFieldElem<FieldRange>(field));
+
+    const copyBtnElem = document.createElement('button');
+    copyBtnElem.className = 'filter__btn filter__copy';
+    copyBtnElem.type = 'button';
+    copyBtnElem.textContent = 'Copy link';
+
+    const resetBtnElem = document.createElement('button');
+    resetBtnElem.className = 'filter__reset';
+    resetBtnElem.type = 'reset';
+    resetBtnElem.textContent = 'Reset filters';
+
+    fieldsListElem.append(...selectFieldsElems, ...rangeFieldsElems);
+    formElem.append(titleElem, fieldsListElem, copyBtnElem, resetBtnElem);
+
+    this.formElem = formElem;
+    this.titleElem = titleElem;
+    this.copyBtnElem = copyBtnElem;
+
+    return formElem;
+  }
+
+  public updateCategories(data: string[], select: string) {
+    if (this.categorySelectElem) {
+      this.categorySelectElem.innerHTML = '';
 
       const categoryItems = ['All categories', ...data].map((item) => {
         const option = document.createElement('option');
@@ -51,14 +191,13 @@ class FilterView {
         return option;
       });
 
-      categorySelectElem.append(...categoryItems);
+      this.categorySelectElem.append(...categoryItems);
     }
   }
 
-  drawBrands(data: string[], select: string) {
-    const brandSelectElem = document.querySelector('#brand');
-    if (brandSelectElem) {
-      brandSelectElem.innerHTML = '';
+  public updateBrands(data: string[], select: string) {
+    if (this.brandSelectElem) {
+      this.brandSelectElem.innerHTML = '';
       const brandsItems = ['All brands', ...data].map((item) => {
         const option = document.createElement('option');
         option.textContent = item;
@@ -76,18 +215,17 @@ class FilterView {
         return option;
       });
 
-      brandSelectElem.append(...brandsItems);
+      this.brandSelectElem.append(...brandsItems);
     }
   }
 
-  drawPrice(price: MinMax, priceFilter: MinMax) {
-    const priceFromSlider: HTMLInputElement | null = document.querySelector('#priceFromSlider');
+  public updatePrice(price: MinMax, priceFilter: MinMax) {
+    const [priceFromSlider, priceToSlider] = this.priceInputElems;
     if (priceFromSlider) {
       priceFromSlider.min = price.min.toString();
       priceFromSlider.max = price.max.toString();
       priceFromSlider.value = priceFilter.min.toString();
     }
-    const priceToSlider: HTMLInputElement | null = document.querySelector('#priceToSlider');
     if (priceToSlider) {
       priceToSlider.min = price.min.toString();
       priceToSlider.max = price.max.toString();
@@ -95,14 +233,13 @@ class FilterView {
     }
   }
 
-  drawStock(stock: MinMax, stockFilter: MinMax) {
-    const stockFromSlider: HTMLInputElement | null = document.querySelector('#stockFromSlider');
+  public updateStock(stock: MinMax, stockFilter: MinMax) {
+    const [stockFromSlider, stockToSlider] = this.stockInputElems;
     if (stockFromSlider) {
       stockFromSlider.min = stock.min.toString();
       stockFromSlider.max = stock.max.toString();
       stockFromSlider.value = stockFilter.min.toString();
     }
-    const stockToSlider: HTMLInputElement | null = document.querySelector('#stockToSlider');
     if (stockToSlider) {
       stockToSlider.min = stock.min.toString();
       stockToSlider.max = stock.max.toString();
@@ -110,77 +247,50 @@ class FilterView {
     }
   }
 
-  drawPriceValues(price: MinMax, priceFilter: MinMax) {
-    const priceMinElem = document.querySelector('.filter__price_min');
-    if (priceMinElem) {
-      priceMinElem.textContent = `${price.min.toString()}$`;
-    }
-
-    const priceCurrentElem = document.querySelector('.filter__price_current');
-    if (priceCurrentElem) {
+  public updatePriceValues(price: MinMax, priceFilter: MinMax) {
+    const [priceMinElem, priceCurrentElem, priceMaxElem] = this.priceTextElems;
+    if (priceMinElem) priceMinElem.textContent = `${price.min.toString()}$`;
+    if (priceCurrentElem)
       priceCurrentElem.textContent = `${priceFilter.min.toString()}$  -  ${priceFilter.max.toString()}$`;
-    }
+    if (priceMaxElem) priceMaxElem.textContent = `${price.max.toString()}$`;
 
-    const priceMaxElem = document.querySelector('.filter__price_max');
-    if (priceMaxElem) {
-      priceMaxElem.textContent = `${price.max.toString()}$`;
-    }
-
-    const priceFromSlider: HTMLInputElement | null = document.querySelector('#priceFromSlider');
-    if (priceFromSlider) {
-      priceFromSlider.value = priceFilter.min.toString();
-    }
-    const priceToSlider: HTMLInputElement | null = document.querySelector('#priceToSlider');
-    if (priceToSlider) {
-      priceToSlider.value = priceFilter.max.toString();
-    }
+    const [priceFromSlider, priceToSlider] = this.priceInputElems;
+    if (priceFromSlider) priceFromSlider.value = priceFilter.min.toString();
+    if (priceToSlider) priceToSlider.value = priceFilter.max.toString();
   }
 
-  drawStockValues(stock: MinMax, stockFilter: MinMax) {
-    const stockMinElem = document.querySelector('.filter__stock_min');
-    if (stockMinElem) {
-      stockMinElem.textContent = stock.min.toString();
-    }
-
-    const stockCurrentElem = document.querySelector('.filter__stock_current');
-    if (stockCurrentElem) {
+  public updateStockValues(stock: MinMax, stockFilter: MinMax) {
+    const [stockMinElem, stockCurrentElem, stockMaxElem] = this.stockTextElems;
+    if (stockMinElem) stockMinElem.textContent = stock.min.toString();
+    if (stockCurrentElem)
       stockCurrentElem.textContent = `${stockFilter.min.toString()}  -  ${stockFilter.max.toString()}`;
-    }
+    if (stockMaxElem) stockMaxElem.textContent = stock.max.toString();
 
-    const stockMaxElem = document.querySelector('.filter__stock_max');
-    if (stockMaxElem) {
-      stockMaxElem.textContent = stock.max.toString();
-    }
-
-    const stockFromSlider: HTMLInputElement | null = document.querySelector('#stockFromSlider');
-    if (stockFromSlider) {
-      stockFromSlider.value = stockFilter.min.toString();
-    }
-    const stockToSlider: HTMLInputElement | null = document.querySelector('#stockToSlider');
-    if (stockToSlider) {
-      stockToSlider.value = stockFilter.max.toString();
-    }
+    const [stockFromSlider, stockToSlider] = this.stockInputElems;
+    if (stockFromSlider) stockFromSlider.value = stockFilter.min.toString();
+    if (stockToSlider) stockToSlider.value = stockFilter.max.toString();
   }
 
-  showFilters() {
+  public showFilters() {
     this.overlay.showOverlay();
-    document.querySelector('.overlay')?.addEventListener('click', () => this.hideFilters());
-    document.querySelector('.filter')?.classList.add('filter_show');
+    this.overlay.overlay?.addEventListener('click', () => this.hideFilters());
+    this.wrapper?.classList.add('filter_show');
   }
 
-  hideFilters() {
+  public hideFilters() {
     this.overlay.hideOverlay();
-    document.querySelector('.filter')?.classList.remove('filter_show');
+    this.wrapper?.classList.remove('filter_show');
   }
 
-  showCopiedMessage() {
-    const copyBtnElem = document.querySelector('.filter__copy');
-    if (copyBtnElem) {
-      copyBtnElem.textContent = 'Copied!';
-      copyBtnElem.classList.add('pointer-none');
+  public showCopiedMessage() {
+    if (this.copyBtnElem) {
+      this.copyBtnElem.textContent = 'Copied!';
+      this.copyBtnElem.classList.add('pointer-none');
       setTimeout(() => {
-        copyBtnElem.textContent = 'Copy link';
-        copyBtnElem.classList.remove('pointer-none');
+        if (this.copyBtnElem) {
+          this.copyBtnElem.textContent = 'Copy link';
+          this.copyBtnElem.classList.remove('pointer-none');
+        }
       }, 1500);
     }
   }

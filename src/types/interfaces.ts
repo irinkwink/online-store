@@ -1,15 +1,15 @@
 export interface IProduct {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  discountPercentage: number;
-  rating: number;
-  stock: number;
-  brand: string;
-  category: string;
-  thumbnail: string;
-  images: string[];
+  readonly id: number;
+  readonly title: string;
+  readonly description: string;
+  readonly price: number;
+  readonly discountPercentage: number;
+  readonly rating: number;
+  readonly stock: number;
+  readonly brand: string;
+  readonly category: string;
+  readonly thumbnail: string;
+  readonly images: string[];
 }
 
 export interface IProductLS extends IProduct {
