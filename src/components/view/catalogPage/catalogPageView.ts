@@ -9,6 +9,7 @@ class CatalogPageView {
   private paginationElem: HTMLDivElement | null;
   private filterBtnElem: HTMLButtonElement | null;
   private filterElem: HTMLElement | null;
+  private sortSelectElem: HTMLSelectElement | null;
 
   constructor() {
     this.wrapperElem = null;
@@ -19,6 +20,7 @@ class CatalogPageView {
     this.paginationElem = null;
     this.filterBtnElem = null;
     this.filterElem = null;
+    this.sortSelectElem = null;
   }
 
   public set wrapper(element: HTMLElement | null) {
@@ -47,6 +49,10 @@ class CatalogPageView {
 
   public get filter() {
     return this.filterElem;
+  }
+
+  public get sortSelect() {
+    return this.sortSelectElem;
   }
 
   public draw() {
@@ -143,14 +149,6 @@ class CatalogPageView {
     const filterElem = document.createElement('aside');
     filterElem.className = 'catalog__filter filter';
 
-    this.productsCountElem = itemsCountElem;
-    this.productsElem = goodsElem;
-    this.displayBtnsElem = displaylElem;
-    this.displayBtnElems = [displayBtnTileslElem, displayBtnRowslElem];
-    this.paginationElem = paginationElem;
-    this.filterBtnElem = filterBtnElem;
-    this.filterElem = filterElem;
-
     displaylElem.append(displayBtnTileslElem, displayBtnRowslElem);
 
     selectInputElem.append(...optionsSortElems);
@@ -162,6 +160,15 @@ class CatalogPageView {
     catalogElem.append(panelTopElem, panelBottomElem, goodsElem, paginationElem, filterBtnElem);
     containerElem.append(catalogElem, filterElem);
     sectionElem.append(containerElem);
+
+    this.productsCountElem = itemsCountElem;
+    this.productsElem = goodsElem;
+    this.displayBtnsElem = displaylElem;
+    this.displayBtnElems = [displayBtnTileslElem, displayBtnRowslElem];
+    this.paginationElem = paginationElem;
+    this.filterBtnElem = filterBtnElem;
+    this.filterElem = filterElem;
+    this.sortSelectElem = selectInputElem;
 
     return sectionElem;
   }
@@ -182,10 +189,8 @@ class CatalogPageView {
   }
 
   updateSortInput(value: string) {
-    const sortInputElem = document.querySelector('#sort');
-
-    if (sortInputElem) {
-      Array.from(sortInputElem.children).forEach((item) => {
+    if (this.sortSelectElem) {
+      Array.from(this.sortSelectElem.children).forEach((item) => {
         if ((item as HTMLOptionElement).value === value) {
           (item as HTMLOptionElement).selected = true;
         }

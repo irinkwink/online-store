@@ -6,17 +6,27 @@ class HeaderView {
   private headerElem: HTMLElement | null;
   private totalNumberElem: HTMLSpanElement | null;
   private totalAmountElem: HTMLSpanElement | null;
+  private searchFormElem: HTMLFormElement | null;
   private searchInputElem: HTMLInputElement | null;
 
   constructor() {
     this.headerElem = null;
     this.totalNumberElem = null;
     this.totalAmountElem = null;
+    this.searchFormElem = null;
     this.searchInputElem = null;
   }
 
   public get header() {
     return this.headerElem;
+  }
+
+  public get searchForm() {
+    return this.searchFormElem;
+  }
+
+  public get searchInput() {
+    return this.searchInputElem;
   }
 
   public draw(cartTotal: CartTotal, page: string) {

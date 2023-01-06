@@ -37,6 +37,9 @@ class CatalogPageController extends PageController {
       this.products.pagination.view.wrapper = this.view.pagination;
       this.filter.view.wrapper = this.view.filter;
       this.filter.filterBtn = this.view.filterBtn;
+      this.filter.searchForm = this.header.view.searchForm;
+      this.filter.searchInput = this.header.view.searchInput;
+      this.filter.sortSelect = this.view.sortSelect;
 
       this.filter.init(this.state.getState().products);
     }

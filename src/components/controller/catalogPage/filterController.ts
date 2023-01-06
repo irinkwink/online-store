@@ -13,6 +13,9 @@ class FilterController {
   cbProductsInit: (data: IProduct[]) => void;
   view: FilterView;
   filterBtn: HTMLButtonElement | null;
+  searchForm: HTMLFormElement | null;
+  searchInput: HTMLInputElement | null;
+  sortSelect: HTMLSelectElement | null;
   sort: string;
   products: IProduct[];
   productsFilter: IProduct[];
@@ -28,6 +31,9 @@ class FilterController {
     this.cbProductsInit = cbProductsInit;
     this.view = new FilterView();
     this.filterBtn = null;
+    this.searchForm = null;
+    this.searchInput = null;
+    this.sortSelect = null;
     this.sort = 'none';
     this.products = [];
     this.productsFilter = [];
@@ -113,11 +119,10 @@ class FilterController {
 
     this.filterProducts();
 
-    document.querySelector('.header__search')?.addEventListener('submit', (e) => {
+    this.searchForm?.addEventListener('submit', (e) => {
       e.preventDefault();
-      const searchInput = document.querySelector('.search__input');
-      if (searchInput instanceof HTMLInputElement) {
-        const searchStr = searchInput.value;
+      if (this.searchInput) {
+        const searchStr = this.searchInput.value;
         if (searchStr !== this.search) {
           this.search = searchStr;
           if (this.search) {
@@ -138,7 +143,7 @@ class FilterController {
       this.view.showCopiedMessage();
     });
 
-    document.querySelector('#sort')?.addEventListener('change', (e) => {
+    this.sortSelect?.addEventListener('change', (e) => {
       const target = e.target as HTMLInputElement;
       this.sort = target.value;
       if (this.sort === 'none') {

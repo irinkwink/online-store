@@ -32,6 +32,7 @@ class Pagination {
 
     if (this.products.length === 0) {
       deleteSearchParamFromUrl('page');
+      this.cbDrawProducts(this.products);
     } else {
       const searchParams = getSearchParamsFromUrl();
 
@@ -70,9 +71,8 @@ class Pagination {
         }
       });
 
-      const paginationElem = document.querySelector('.pagination');
-      if (paginationElem) {
-        paginationElem.addEventListener('click', (e) => this.handlePagination(e));
+      if (this.view.pagination) {
+        this.view.pagination.addEventListener('click', (e) => this.handlePagination(e));
       }
     }
 

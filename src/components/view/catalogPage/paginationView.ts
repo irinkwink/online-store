@@ -5,6 +5,10 @@ class PaginationView {
     this.wrapperElem = null;
   }
 
+  public get pagination() {
+    return this.wrapperElem;
+  }
+
   public set wrapper(element: HTMLDivElement | null) {
     this.wrapperElem = element;
   }
