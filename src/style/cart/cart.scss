@@ -8,6 +8,12 @@
         justify-content: space-between;
     }
 }
+ .cart-table {
+    width: 100%;
+    &__info {
+        font-size: 3rem;
+    }
+}
 .cart-table-row {
     display: flex;
     max-width: 848px;
@@ -53,8 +59,8 @@
     &__delete {
         margin-left: 1rem;
         background-image: url('/src/img/close.svg');
-        width: 2rem;
-        height: 2rem;
+        width: 32px;
+        height: 32px;
         background-size: cover;
     }
     &__controls {
@@ -67,4 +73,27 @@
 .total {
     font-weight: 700;
     font-size: 2rem;
+    padding: 1rem;
+    border: 1px solid black;
+    border-radius: 8px;
+    &__head {
+        text-align: center;
+        font-size: 3rem;
+        margin-bottom: 2rem;
+    }
+}
+
+.promo-block {
+    &__container {
+        margin: 1rem 0;;
+    }
+    &__title {
+        color: orange;
+        margin: 0.5rem 0;
+    }
+    &__row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
 }

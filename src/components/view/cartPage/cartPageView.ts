@@ -1,13 +1,18 @@
 import { IProduct, IProductInLS, IProductLS } from '../../../types/interfaces';
-import { storageUtility } from '../localStorage/LocalStorage';
 import { myPromoCode } from '../localStorage/PromoCodes';
 
 export class CartPageView {
   products?: IProduct[];
   productsInLS? = [null];
+  cartTable: HTMLUListElement | null;
+  promoInput: HTMLInputElement | null;
+  promoBlock: HTMLElement | null;
 
   constructor() {
     this.products = [];
+    this.cartTable = null;
+    this.promoInput = null;
+    this.promoBlock = null;
   }
 
   identityProducts(arr: IProductInLS[], products: IProduct[]): IProductLS[] {
@@ -51,131 +56,212 @@ export class CartPageView {
   render(productsInCart: IProductLS[]) {
     console.log('вывод');
     const cartTable: HTMLElement | null = document.querySelector('.cart-table');
-    const cartTabeleWr: HTMLElement | null = document.querySelector('.cart__wr');
-    if (cartTable) {
-      productsInCart.forEach(function (product) {
-        console.log(product);
-        const productID = product.id;
-        const tableRow = document.createElement('div');
-        tableRow.className = 'cart-table__row cart-table-row';
-
-        const productImage = new Image();
-        productImage.className = 'cart-table-row__img';
-        productImage.src = product.thumbnail;
-        productImage.alt = product.title;
-
-        const productInfo = document.createElement('div');
-        productInfo.className = 'cart-table-row__info';
-
-        const productTitle = document.createElement('h3');
-        productTitle.className = 'cart-table-row__title';
-        productTitle.innerHTML = `${product.title}`;
-        const productDesc = document.createElement('div');
-        productDesc.className = 'cart-table-row__desc';
-        productDesc.innerHTML = `${product.description}`;
-        productInfo.append(productTitle, productDesc);
-        const productPrice = document.createElement('div');
-        productPrice.className = 'cart-table-row__price';
-        productPrice.innerHTML = `${product.price}$`;
-
-        const productControls = document.createElement('div');
-        productControls.className = 'cart-table-row__controls';
-        const plusBtn = document.createElement('button');
-        plusBtn.className = 'btn cart-table-row__btn btn-plus';
-        plusBtn.textContent = '+';
-        const minusBtn = document.createElement('button');
-        minusBtn.className = 'btn cart-table-row__btn btn-minus';
-        minusBtn.textContent = '-';
-        const productsNum = document.createElement('span');
-        productsNum.className = 'cart-table-row__num';
-        let numProducts = product.num;
-        productsNum.textContent = String(product.num);
-        productControls.append(minusBtn, productsNum, plusBtn);
-        const productDelBtn = document.createElement('button');
-        productDelBtn.className = 'btn cart-table-row__delete';
-        const delBtnImg = new Image();
-        delBtnImg.src = 'img/logo.svg';
-        delBtnImg.alt = 'close icon';
-        productDelBtn.append(delBtnImg);
-        tableRow.append(productImage, productInfo, productControls, productPrice, productDelBtn);
-        cartTable.append(tableRow);
-        tableRow.addEventListener('click', function (e) {
-          const target = e.target as HTMLElement;
-          const curTarget = e.currentTarget as HTMLElement;
-          console.log('curTarget: ', curTarget);
-          if (target.classList.contains('btn-plus')) {
-            if (numProducts) {
-              numProducts++;
-              storageUtility.increaseNum(productID);
-              productsNum.textContent = String(numProducts);
-            }
-          } else if (target.classList.contains('btn-minus') && numProducts !== 1) {
-            if (numProducts) {
-              numProducts--;
-              storageUtility.decreaseNum(productID);
-              productsNum.textContent = String(numProducts);
-            }
-          }
+    if (productsInCart.length > 0) {
+      if (cartTable) {
+        cartTable.innerHTML = '';
+        productsInCart.forEach(function (product) {
+          const tableRow = document.createElement('div');
+          tableRow.className = 'cart-table__row cart-table-row';
+          const productImage = new Image();
+          productImage.className = 'cart-table-row__img';
+          productImage.src = product.thumbnail;
+          productImage.alt = product.title;
+          const productInfo = document.createElement('div');
+          productInfo.className = 'cart-table-row__info';
+          const productTitle = document.createElement('h3');
+          productTitle.className = 'cart-table-row__title';
+          productTitle.innerHTML = `${product.title}`;
+          const productDesc = document.createElement('div');
+          productDesc.className = 'cart-table-row__desc';
+          productDesc.innerHTML = `${product.description}`;
+          productInfo.append(productTitle, productDesc);
+          const productPrice = document.createElement('div');
+          productPrice.className = 'cart-table-row__price';
+          productPrice.innerHTML = `${product.price}$`;
+          const productControls = document.createElement('div');
+          productControls.className = 'cart-table-row__controls';
+          productControls.dataset.id = String(product.id);
+          const plusBtn = document.createElement('button');
+          plusBtn.className = 'btn cart-table-row__btn';
+          plusBtn.id = 'btn-plus';
+          plusBtn.textContent = '+';
+          const minusBtn = document.createElement('button');
+          minusBtn.className = 'btn cart-table-row__btn';
+          minusBtn.id = 'btn-minus';
+          minusBtn.textContent = '-';
+          const productsNum = document.createElement('span');
+          productsNum.className = 'cart-table-row__num';
+          const productDelBtn = document.createElement('button');
+          productDelBtn.className = 'btn cart-table-row__delete';
+          productDelBtn.id = 'btn-delete';
+          productsNum.textContent = String(product.num);
+          productControls.append(minusBtn, productsNum, plusBtn, productDelBtn);
+          tableRow.append(productImage, productInfo, productPrice, productControls);
+          cartTable.append(tableRow);
         });
-      });
-
-      // summary
-      const total = document.createElement('div');
-      total.className = 'total';
-
-      const totalHead = document.createElement('div');
-      totalHead.className = 'summary__head';
-      totalHead.textContent = 'Summary';
-      const totalSummary = document.createElement('div');
-      totalSummary.className = 'total__header';
-      const totalPrice = document.createElement('span');
-      totalPrice.className = 'total__price';
-      totalSummary.append(totalPrice);
-      totalSummary.insertAdjacentHTML(
-        'afterbegin',
-        `
-
-            <div class="total-price">Total price</div>
-        `
-      );
-
-      const totalRow = document.createElement('div');
-      totalRow.className = 'total__row';
-      totalRow.insertAdjacentHTML(
-        'afterbegin',
-        `
-            <span>Products:</span>
-            <span class="total-num"></span>
-        `
-      );
-      total.append(totalHead, totalRow, totalSummary);
-      if (cartTabeleWr) {
-        cartTabeleWr.append(total);
       }
-      this.drawPromo();
+    } else {
+      if (cartTable) {
+        cartTable.innerHTML = 'Please,go shopping!';
+        cartTable.className = 'cart-table__info';
+      }
     }
   }
-  drawPromo() {
-    const total: HTMLElement | null = document.querySelector('.total');
-    const promoBlock = document.createElement('div');
-    promoBlock.className = 'promo-block';
-    const promoInput = document.createElement('input');
-    promoInput.type = 'text';
-    promoInput.className = 'promo-block__input';
-    promoInput.placeholder = 'Enter promo code';
-    const codeInfo = document.createElement('p');
-    codeInfo.textContent = "Promo for test: 'RSS', 'EPAM'";
-    promoBlock.append(promoInput, codeInfo);
-    if (total) {
-      total.insertAdjacentElement('beforeend', promoBlock);
-    }
-    promoInput.addEventListener('input', function (e) {
-      console.log('e: ', e);
-      const inputVal = promoInput.value;
-      myPromoCode.checkEnteredCode(inputVal, promoBlock);
-    });
+  drawTotal() {
+    const cartTableWr: HTMLUListElement | null = document.querySelector('.cart__wr');
+    this.cartTable = cartTableWr;
+    const total = document.createElement('div');
+    total.className = 'total';
+    const totalHead = document.createElement('div');
+    totalHead.className = 'total__head';
+    totalHead.textContent = 'Summary';
+    const totalSummary = document.createElement('div');
+    totalSummary.className = 'total__header';
+    const totalPrice = document.createElement('span');
+    totalPrice.className = 'total__price';
+    totalSummary.append(totalPrice);
+    totalSummary.insertAdjacentHTML(
+      'afterbegin',
+      `
 
-    myPromoCode.drawPromoApplied();
+            <span class="total-price">Total price</span>
+        `
+    );
+    const totalSummaryDiscount = document.createElement('div');
+    totalSummaryDiscount.className = 'total__discount';
+    const totalRow = document.createElement('div');
+    totalRow.className = 'total__row';
+    const totalNum = document.createElement('span');
+    const totalText = document.createElement('span');
+    totalText.textContent = 'Products: ';
+    totalNum.className = 'total-num';
+    totalRow.append(totalText, totalNum);
+    total.append(totalHead, totalRow, totalSummary, totalSummaryDiscount);
+    if (cartTableWr) {
+      cartTableWr.append(total);
+    }
+  }
+  drawPromo(settings: string[]) {
+    const total: HTMLElement | null = document.querySelector('.total');
+    const promoBlockWr: HTMLElement | null = document.querySelector('.promo-block');
+    if (promoBlockWr) {
+      promoBlockWr.innerHTML = '';
+      promoBlockWr.className = 'promo-block';
+      const promoInput = document.createElement('input');
+      promoInput.type = 'text';
+      promoInput.className = 'promo-block__input';
+      promoInput.placeholder = 'Enter promo code';
+      const codeInfo = document.createElement('p');
+      codeInfo.textContent = "Promo for test: 'RSS', 'EPAM'";
+      this.promoBlock = promoBlockWr;
+      if (settings.length > 0) {
+        const appliedTitle = document.createElement('h4');
+        appliedTitle.className = 'promo-block__title';
+        const promoContainer = document.createElement('div');
+        promoContainer.innerHTML = '';
+        promoContainer.className = 'promo-block__container';
+        appliedTitle.textContent = 'Applied codes';
+        promoContainer.append(appliedTitle);
+        settings.forEach((setItem) => {
+          const row = document.createElement('div');
+          row.className = 'promo-block__row';
+          const promoApplied = document.createElement('span');
+          promoApplied.innerHTML = `${setItem} - 10 %`;
+          const delCodeBtn = document.createElement('button');
+          delCodeBtn.id = 'delete-code';
+          delCodeBtn.className = 'btn';
+          delCodeBtn.textContent = 'Drop';
+          row.append(promoApplied, delCodeBtn);
+          promoContainer.insertAdjacentElement('beforeend', row);
+        });
+        promoBlockWr?.append(promoContainer, promoInput, codeInfo);
+      } else {
+        promoBlockWr?.append(promoInput, codeInfo);
+      }
+      if (total) {
+        total.insertAdjacentElement('beforeend', promoBlockWr);
+      }
+    } else {
+      const promoBlockWr: HTMLElement | null = document.createElement('div');
+      promoBlockWr.innerHTML = '';
+      promoBlockWr.className = 'promo-block';
+      const promoInput = document.createElement('input');
+      promoInput.type = 'text';
+      promoInput.className = 'promo-block__input';
+      promoInput.placeholder = 'Enter promo code';
+      const codeInfo = document.createElement('p');
+      codeInfo.textContent = "Promo for test: 'RSS', 'EPAM'";
+      this.promoBlock = promoBlockWr;
+      if (settings.length > 0) {
+        const appliedTitle = document.createElement('h4');
+        appliedTitle.className = 'promo-block__title';
+        const promoContainer = document.createElement('div');
+        promoContainer.innerHTML = '';
+        promoContainer.className = 'promo-block__container';
+        appliedTitle.textContent = 'Applied codes';
+        promoContainer.append(appliedTitle);
+        settings.forEach((setItem) => {
+          const row = document.createElement('div');
+          row.className = 'promo-block__row';
+          const promoApplied = document.createElement('span');
+          promoApplied.innerHTML = `${setItem} - 10 %`;
+          const delCodeBtn = document.createElement('button');
+          delCodeBtn.id = 'delete-code';
+          delCodeBtn.className = 'btn';
+          delCodeBtn.textContent = 'Drop';
+          row.append(promoApplied, delCodeBtn);
+          promoContainer.insertAdjacentElement('beforeend', row);
+        });
+        promoBlockWr?.append(promoContainer, promoInput, codeInfo);
+      } else {
+        promoBlockWr?.append(promoInput, codeInfo);
+      }
+      if (total) {
+        total.insertAdjacentElement('beforeend', promoBlockWr);
+      }
+    }
+  }
+
+  drawPromoApplied(isValid: boolean, code: string) {
+    const promoBlock: HTMLElement | null = document.querySelector('.promo-block');
+    if (isValid && promoBlock) {
+      const row = document.createElement('div');
+      row.className = 'promo-block__row';
+      row.dataset.code = code;
+      const addBtn = document.createElement('button');
+      addBtn.id = 'add-code';
+      addBtn.className = 'btn';
+      const codeInfo = document.createElement('span');
+      codeInfo.textContent = `${code} code - 10%`;
+      addBtn.textContent = 'Add';
+      row.append(codeInfo, addBtn);
+      promoBlock.append(row);
+    }
+  }
+  updateTotalNumber(total: number) {
+    console.log('updateTotalNumber');
+    const totalNum = document.querySelector('.total-num');
+    const totalHeader = document.querySelector('.header__cart-number');
+    if (totalNum && totalHeader) {
+      totalNum.textContent = total.toString();
+      totalHeader.textContent = total.toString();
+    }
+  }
+  updateTotalPrice(totalSum: number) {
+    console.log('updateTotalPrice');
+    const totalPrice = document.querySelector('.total__price');
+    if (totalPrice) {
+      totalPrice.textContent = totalSum.toString() + ' $';
+    }
+  }
+  updateDiscountPrice(discount: number, summ: number) {
+    console.log(summ);
+    const discountTotalPrice: HTMLElement | null = document.querySelector('.total__discount');
+    const totalPrice: HTMLElement | null = document.querySelector('.total__price');
+    if (discountTotalPrice) {
+      discountTotalPrice.innerHTML = `Discount price - ${summ * (1 - discount)} $`;
+      console.log(summ * (1 - discount));
+    }
   }
 }
 
