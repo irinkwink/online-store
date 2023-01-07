@@ -1,5 +1,4 @@
 import { IProduct, IProductInLS, IProductLS } from '../../../types/interfaces';
-import { myPromoCode } from '../localStorage/PromoCodes';
 
 export class CartPageView {
   products?: IProduct[];
@@ -171,6 +170,7 @@ export class CartPageView {
           delCodeBtn.id = 'delete-code';
           delCodeBtn.className = 'btn';
           delCodeBtn.textContent = 'Drop';
+          delCodeBtn.dataset.code = setItem;
           row.append(promoApplied, delCodeBtn);
           promoContainer.insertAdjacentElement('beforeend', row);
         });
@@ -248,19 +248,22 @@ export class CartPageView {
     }
   }
   updateTotalPrice(totalSum: number) {
-    console.log('updateTotalPrice');
     const totalPrice = document.querySelector('.total__price');
     if (totalPrice) {
       totalPrice.textContent = totalSum.toString() + ' $';
     }
   }
   updateDiscountPrice(discount: number, summ: number) {
-    console.log(summ);
     const discountTotalPrice: HTMLElement | null = document.querySelector('.total__discount');
-    const totalPrice: HTMLElement | null = document.querySelector('.total__price');
-    if (discountTotalPrice) {
-      discountTotalPrice.innerHTML = `Discount price - ${summ * (1 - discount)} $`;
+    const totalSummary: HTMLElement | null = document.querySelector('.total__header');
+    if (discountTotalPrice && totalSummary && discount > 0) {
+      const res = Math.floor(summ * (1 - discount));
+      discountTotalPrice.innerHTML = `Discount price - ${res} $`;
+      totalSummary.className = 'total__header line-through';
       console.log(summ * (1 - discount));
+    } else if (totalSummary && discountTotalPrice) {
+      totalSummary.className = 'total__header';
+      discountTotalPrice.innerHTML = '';
     }
   }
 }
