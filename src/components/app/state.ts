@@ -42,6 +42,16 @@ class State {
     this.saveState();
   }
 
+  public deleteItemFromCart(id: number, count = 1) {
+    const index: number = this.state.onlineStoreSettings.cart.findIndex((cartItem) => cartItem.id === id);
+    if (index !== -1 && this.state.onlineStoreSettings.cart[index].num !== 1) {
+      this.state.onlineStoreSettings.cart[index].num -= count;
+    } else {
+      console.log('disabled');
+    }
+    this.saveState();
+  }
+
   public removeProductFromCart(id: number) {
     const index: number = this.state.onlineStoreSettings.cart.findIndex((cartItem) => cartItem.id === id);
     if (index === -1) {
@@ -49,6 +59,31 @@ class State {
     } else {
       this.state.onlineStoreSettings.cart.splice(index, 1);
     }
+    this.saveState();
+  }
+
+  public getTotalNumInCart(): number {
+    const cart = this.getState().onlineStoreSettings.cart;
+    let summ = 0;
+    cart.forEach((cartItem) => (summ += cartItem.num));
+    console.log(summ);
+    return summ;
+  }
+  public checkPromoCodes(code: string): boolean {
+    const promocodes = this.state.onlineStoreSettings.promoСodes;
+    code = code.toUpperCase();
+    console.log(promocodes.includes(code));
+    console.log(promocodes);
+    if ((code === 'RSS' || code === 'EPAM') && !promocodes.includes(code)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  public addCodeToSettings(code: string) {
+    const promocodes = this.state.onlineStoreSettings.promoСodes;
+    console.log(promocodes.includes(code));
+    promocodes.push(code.toUpperCase());
     this.saveState();
   }
 }

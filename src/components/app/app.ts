@@ -1,7 +1,7 @@
 import CartPageController from '../controller/cartPage/cartPageController';
 import CatalogPageController from '../controller/catalogPage/catalogPageController';
 import DataController from '../controller/dataController';
-import LocalStorageUtility from '../view/localStorage/LocalStorage';
+//import LocalStorageUtility from '../view/localStorage/LocalStorage';
 import State from './state';
 import ProductPageController from '../controller/productPage/productPageController';
 import Router from '../router/router';
@@ -15,7 +15,7 @@ class App {
   cartPage: CartPageController;
   productPage: ProductPageController;
   page404: Page404Controller;
-  localStorage: LocalStorageUtility;
+  //localStorage: LocalStorageUtility;
 
   constructor() {
     this.state = new State();
@@ -26,7 +26,7 @@ class App {
     this.cartPage = new CartPageController(this.state);
     this.page404 = new Page404Controller(this.state);
 
-    this.localStorage = new LocalStorageUtility();
+    //this.localStorage = new LocalStorageUtility();
 
     this.router = new Router([this.catalogPage, this.productPage, this.cartPage, this.page404]);
   }

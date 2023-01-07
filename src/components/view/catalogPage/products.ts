@@ -115,17 +115,4 @@ class Products {
   }
 }
 
-// function defineIdProduct(e: Event): void {
-//   const target = e.currentTarget as Element;
-//   const id = Number(target.getAttribute('data-id-goods'));
-//   const btnState = storageUtility.isExist(id);
-//   storageUtility.addProductsToLS(id);
-//   target.innerHTML = storageUtility.updateCartBtn(btnState);
-//   const productsInLS = storageUtility.getProducts();
-//   const headerCartNum: HTMLElement | null = document.querySelector('.header__cart-text.header__cart-number');
-//   if (headerCartNum) {
-//     headerCartNum.innerHTML = String(productsInLS.length - 1);
-//   }
-// }
-
 export default Products;
