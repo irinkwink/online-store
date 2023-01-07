@@ -14,6 +14,7 @@ class FilterView {
   private priceTextElems: HTMLParagraphElement[];
   private stockTextElems: HTMLParagraphElement[];
   private copyBtnElem: HTMLButtonElement | null;
+  private resetBtnElem: HTMLButtonElement | null;
 
   constructor() {
     this.wrapperElem = null;
@@ -27,6 +28,7 @@ class FilterView {
     this.priceTextElems = [];
     this.stockTextElems = [];
     this.copyBtnElem = null;
+    this.resetBtnElem = null;
   }
 
   public set wrapper(element: HTMLElement | null) {
@@ -43,6 +45,10 @@ class FilterView {
 
   public get copyBtn() {
     return this.copyBtnElem;
+  }
+
+  public get resetBtn() {
+    return this.resetBtnElem;
   }
 
   public draw() {
@@ -158,7 +164,7 @@ class FilterView {
 
     const resetBtnElem = document.createElement('button');
     resetBtnElem.className = 'filter__reset';
-    resetBtnElem.type = 'reset';
+    resetBtnElem.type = 'button';
     resetBtnElem.textContent = 'Reset filters';
 
     fieldsListElem.append(...selectFieldsElems, ...rangeFieldsElems);
@@ -167,6 +173,7 @@ class FilterView {
     this.formElem = formElem;
     this.titleElem = titleElem;
     this.copyBtnElem = copyBtnElem;
+    this.resetBtnElem = resetBtnElem;
 
     return formElem;
   }
@@ -222,7 +229,6 @@ class FilterView {
   }
 
   public updatePrice(price: MinMax, priceFilter: MinMax) {
-    console.log('priceFilter: ', priceFilter);
     const [priceFromSlider, priceToSlider] = this.priceInputElems;
     if (priceFromSlider) {
       priceFromSlider.min = price.min.toString();

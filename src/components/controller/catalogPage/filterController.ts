@@ -80,10 +80,7 @@ class FilterController {
     });
 
     if (this.view.form) {
-      this.view.form.addEventListener('reset', () => {
-        console.log('this.view.form: ', this.view.form);
-
-        debugger;
+      this.view.resetBtn?.addEventListener('click', () => {
         const params = ['category', 'brand', 'minPrice', 'maxPrice', 'minStock', 'maxStock'];
         deleteSearchParamsFromUrl(params);
         this.resetFilters();
