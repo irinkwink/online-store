@@ -1,13 +1,13 @@
-import State from '../../app/state';
 import CartPageView from '../../view/cartPage/cartPageView';
 import { storageUtility } from '../../view/localStorage/LocalStorage';
 import PageController from '../pageController';
+import TemplatePageController from '../templatePage/templatePageController';
 
 class CartPageController extends PageController {
   view: CartPageView;
 
-  constructor(state: State) {
-    super(state, 'cart');
+  constructor(templatePage: TemplatePageController) {
+    super(templatePage, 'cart');
     //todo тут заменила на вью, забирай оттуда всю логику и реализую её в методах тут, это и есть основной класс cart
     this.view = new CartPageView();
   }

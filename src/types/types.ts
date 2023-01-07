@@ -69,3 +69,14 @@ export type FieldRange = {
 };
 
 export type FieldTypes = FieldSelect | FieldRange;
+
+export type FiltersValues = {
+  sort: string;
+  search: string;
+  category: string;
+  brand: string;
+  price: MinMax;
+  stock: MinMax;
+  priceFilter: MinMax;
+  stockFilter: MinMax;
+};

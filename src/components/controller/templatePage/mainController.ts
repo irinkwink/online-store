@@ -10,6 +10,10 @@ class MainController {
   public init() {
     this.view.draw();
   }
+
+  public emptyMain() {
+    this.view.emptyMain();
+  }
 }
 
 export default MainController;

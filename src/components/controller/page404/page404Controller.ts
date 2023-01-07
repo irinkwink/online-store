@@ -1,9 +1,9 @@
-import State from '../../app/state';
 import PageController from '../pageController';
+import TemplatePageController from '../templatePage/templatePageController';
 
 class Page404Controller extends PageController {
-  constructor(state: State) {
-    super(state, 'page404');
+  constructor(templatePage: TemplatePageController) {
+    super(templatePage, 'catalog');
   }
 
   start() {

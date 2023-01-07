@@ -81,8 +81,14 @@ class FilterView {
         return inputElem;
       });
 
-      if (field.id === 'price') this.priceInputElems.push(...inputElems);
-      if (field.id === 'stock') this.stockInputElems.push(...inputElems);
+      if (field.id === 'price') {
+        this.priceInputElems = [];
+        this.priceInputElems.push(...inputElems);
+      }
+      if (field.id === 'stock') {
+        this.stockInputElems = [];
+        this.stockInputElems.push(...inputElems);
+      }
 
       const textWrapperElem = document.createElement('div');
       textWrapperElem.className = 'filter__flex';
@@ -98,8 +104,15 @@ class FilterView {
         return textElem;
       });
 
-      if (field.id === 'price') this.priceTextElems.push(...textElems);
-      if (field.id === 'stock') this.stockTextElems.push(...textElems);
+      if (field.id === 'price') {
+        this.priceTextElems = [];
+        this.priceTextElems.push(...textElems);
+      }
+
+      if (field.id === 'stock') {
+        this.stockTextElems = [];
+        this.stockTextElems.push(...textElems);
+      }
 
       labelElem.append(...inputElems);
       rangeWrapperElem.append(labelElem);
@@ -116,17 +129,6 @@ class FilterView {
 
       if (field.id === 'category') this.categorySelectElem = selectElem;
       if (field.id === 'brand') this.brandSelectElem = selectElem;
-
-      // console.log('keyof this: ', keyof typeof this);
-      // if (field.elem in this) {
-      //   console.log('Heeee');
-      //   this[field.elem] = selectElem;
-      // }
-
-      // const elem = field.elem;
-
-      // (this as FilterView)[ field.elem] = selectElem;
-      // console.log('this: ', this.categorySelectElem);
 
       labelElem.append(selectElem);
       fieldElem.append(labelElem);
@@ -220,6 +222,7 @@ class FilterView {
   }
 
   public updatePrice(price: MinMax, priceFilter: MinMax) {
+    console.log('priceFilter: ', priceFilter);
     const [priceFromSlider, priceToSlider] = this.priceInputElems;
     if (priceFromSlider) {
       priceFromSlider.min = price.min.toString();

@@ -1,6 +1,5 @@
 import { IProduct } from '../../../types/interfaces';
 import State from '../../app/state';
-import { deleteSearchParamFromUrl } from '../../router/urlController';
 import ProductsView from '../../view/catalogPage/productsView';
 import Pagination from './paginationController';
 
@@ -20,9 +19,6 @@ class ProductsController {
   }
 
   public init(products: IProduct[]) {
-    console.log('products: ', products);
-    deleteSearchParamFromUrl('page');
-
     this.pagination.init(products);
 
     this.cbUpdateCount(products.length);

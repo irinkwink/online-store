@@ -13,6 +13,12 @@ class MainView {
     this.mainElem = document.createElement('main');
     this.mainElem.className = 'main';
   }
+
+  public emptyMain() {
+    if (this.mainElem) {
+      this.mainElem.innerHTML = '';
+    }
+  }
 }
 
 export default MainView;

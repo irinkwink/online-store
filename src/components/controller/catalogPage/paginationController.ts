@@ -1,6 +1,6 @@
 import { ProductsPerPage } from '../../../types/enums';
 import { IProduct } from '../../../types/interfaces';
-import { addSearchParamToUrl, deleteSearchParamFromUrl, getSearchParamsFromUrl } from '../../router/urlController';
+import { addSearchParamToUrl, deleteSearchParamFromUrl, getSearchParamValueFromUrl } from '../../router/urlController';
 import PaginationView from '../../view/catalogPage/paginationView';
 
 class Pagination {
@@ -34,14 +34,8 @@ class Pagination {
       deleteSearchParamFromUrl('page');
       this.cbDrawProducts(this.products);
     } else {
-      const searchParams = getSearchParamsFromUrl();
-
-      const pageParam = searchParams.filter((item) => item.key === 'page');
-      if (pageParam.length !== 0) {
-        this.page = +pageParam[0].value;
-      } else {
-        this.page = 1;
-      }
+      const pageValue = getSearchParamValueFromUrl('page');
+      this.page = pageValue ? +pageValue : 1;
 
       if (window.innerWidth < 670) {
         this.type = 'mobile';

@@ -1,7 +1,7 @@
-import State from '../../app/state';
-import { addSearchParamToUrl, getSearchParamsFromUrl } from '../../router/urlController';
+import { addSearchParamToUrl, getSearchParamValueFromUrl } from '../../router/urlController';
 import CatalogPageView from '../../view/catalogPage/catalogPageView';
 import PageController from '../pageController';
+import TemplatePageController from '../templatePage/templatePageController';
 import FilterController from './filterController';
 import ProductsController from './productsController';
 
@@ -10,46 +10,53 @@ class CatalogPageController extends PageController {
   products: ProductsController;
   filter: FilterController;
   displayType: string;
+  isCatalogPage: boolean;
 
-  constructor(state: State) {
-    super(state, 'catalog');
+  constructor(templatePage: TemplatePageController) {
+    super(templatePage, 'catalog');
     this.view = new CatalogPageView();
     this.products = new ProductsController(
-      state,
+      this.state,
       (number) => this.view.updateCount(number),
       () => this.header.updateHeaderCartTotal()
     );
     this.filter = new FilterController((products) => this.products.init(products));
     this.displayType = 'tiles';
+    this.isCatalogPage = false;
   }
 
-  start() {
-    super.start();
-    this.view.wrapper = this.main.view.main;
+  public start() {
+    const pageValue = getSearchParamValueFromUrl('page');
+    if (this.isCatalogPage && pageValue) {
+      this.products.pagination.init(this.filter.productsFilter);
+    } else {
+      super.start();
+      this.view.wrapper = this.main.view.main;
 
-    console.log('Catalog Page');
-    if (this.main.view.main) {
-      this.view.draw();
-      this.initDisplayType();
-      this.initSortInput();
+      if (this.main.view.main) {
+        this.view.draw();
+        this.initDisplayType();
+        this.initSortInput();
 
-      this.products.view.wrapper = this.view.productsWrapper;
-      this.products.pagination.view.wrapper = this.view.pagination;
-      this.filter.view.wrapper = this.view.filter;
-      this.filter.filterBtn = this.view.filterBtn;
-      this.filter.searchForm = this.header.view.searchForm;
-      this.filter.searchInput = this.header.view.searchInput;
-      this.filter.sortSelect = this.view.sortSelect;
+        this.products.view.wrapper = this.view.productsWrapper;
+        this.products.pagination.view.wrapper = this.view.pagination;
+        this.filter.view.wrapper = this.view.filter;
+        this.filter.filterBtn = this.view.filterBtn;
+        this.filter.searchForm = this.header.view.searchForm;
+        this.filter.searchInput = this.header.view.searchInput;
+        this.filter.sortSelect = this.view.sortSelect;
 
-      this.filter.init(this.state.getState().products);
+        this.filter.init(this.state.getState().products);
+
+        this.isCatalogPage = true;
+      }
     }
   }
 
   initDisplayType() {
-    const searchParams = getSearchParamsFromUrl();
-    const displayParam = searchParams.find((param) => param.key === 'display');
-    if (displayParam && displayParam.value !== this.displayType) {
-      this.displayType = displayParam.value;
+    const displatValue = getSearchParamValueFromUrl('display');
+    if (displatValue && displatValue !== this.displayType) {
+      this.displayType = displatValue;
       this.view.updateDisplayBtns(this.displayType);
       this.products.view.display = this.displayType;
     }
@@ -71,11 +78,9 @@ class CatalogPageController extends PageController {
   }
 
   initSortInput() {
-    const searchParams = getSearchParamsFromUrl();
-    const sortParam = searchParams.find((item) => item.key === 'sort');
-
-    if (sortParam && sortParam?.value !== 'none') {
-      this.view.updateSortInput(sortParam.value);
+    const sortValue = getSearchParamValueFromUrl('sort');
+    if (sortValue && sortValue !== 'none') {
+      this.view.updateSortInput(sortValue);
     }
   }
 }

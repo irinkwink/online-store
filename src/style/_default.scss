@@ -70,6 +70,7 @@ fieldset {
 }
 
 .root {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -100,8 +101,8 @@ fieldset {
 }
 
 .main {
-  flex-grow: 1;
   position: relative;
+  flex-grow: 1;
   padding-top: 40px;
   padding-bottom: 120px;
 

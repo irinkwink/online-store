@@ -92,6 +92,10 @@ const baseConfig = {
     new EslintPlugin({
       extensions: 'ts',
     }),
+    // new HtmlWebpackPlugin({
+    //   template: path.resolve(__dirname, `src/index.html`),
+    //   filename: `index.html`,
+    // }),
     ...PAGES.map(
       (page) =>
         new HtmlWebpackPlugin({

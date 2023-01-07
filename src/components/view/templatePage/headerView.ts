@@ -6,6 +6,7 @@ class HeaderView {
   private headerElem: HTMLElement | null;
   private totalNumberElem: HTMLSpanElement | null;
   private totalAmountElem: HTMLSpanElement | null;
+  private searchElem: HTMLDivElement | null;
   private searchFormElem: HTMLFormElement | null;
   private searchInputElem: HTMLInputElement | null;
 
@@ -13,6 +14,7 @@ class HeaderView {
     this.headerElem = null;
     this.totalNumberElem = null;
     this.totalAmountElem = null;
+    this.searchElem = null;
     this.searchFormElem = null;
     this.searchInputElem = null;
   }
@@ -29,23 +31,37 @@ class HeaderView {
     return this.searchInputElem;
   }
 
-  public draw(cartTotal: CartTotal, page: string) {
-    this.headerElem = document.createElement('header');
-    this.headerElem.className = 'header';
+  public draw(cartTotal: CartTotal) {
+    const headerElem = document.createElement('header');
+    headerElem.className = 'header';
 
-    this.headerElem.append(this.createTitleElem());
-    this.headerElem.append(this.createContainerElem(cartTotal, page));
+    headerElem.append(this.createTitleElem());
+    headerElem.append(this.createContainerElem(cartTotal));
+
+    this.headerElem = headerElem;
+  }
+
+  public addSearchFormToHeader(value = '') {
+    this.searchElem?.append(this.createSearchFormElem(value));
+  }
+
+  public removeSearchFormFromHeader() {
+    if (this.searchFormElem) {
+      this.searchFormElem.remove();
+      this.searchFormElem = null;
+      this.searchInputElem = null;
+    }
+  }
+
+  public emptySearchInput() {
+    if (this.searchInputElem) {
+      this.searchInputElem.value = '';
+    }
   }
 
   public updateCartTotal(cartTotal: CartTotal) {
     if (this.totalNumberElem) this.totalNumberElem.textContent = cartTotal.productsNum.toString();
     if (this.totalAmountElem) this.totalAmountElem.textContent = `${cartTotal.totalAmount}$`;
-  }
-
-  updateSearchInput(value: string) {
-    if (this.searchInputElem) {
-      this.searchInputElem.value = value;
-    }
   }
 
   private createTitleElem(): HTMLElement {
@@ -56,9 +72,9 @@ class HeaderView {
     return titleElem;
   }
 
-  private createSearchElem(): HTMLFormElement {
+  private createSearchFormElem(value: string): HTMLFormElement {
     const formElem = document.createElement('form');
-    formElem.className = 'header__search search';
+    formElem.className = 'search__form';
 
     const labelElem = document.createElement('label');
 
@@ -66,6 +82,7 @@ class HeaderView {
     inputElem.className = 'search__input';
     inputElem.type = 'search';
     inputElem.name = 'search';
+    inputElem.textContent = value;
 
     const buttonElem = document.createElement('button');
     buttonElem.className = 'search__button';
@@ -80,11 +97,12 @@ class HeaderView {
     formElem.append(labelElem, buttonElem);
 
     this.searchInputElem = inputElem;
+    this.searchFormElem = formElem;
 
     return formElem;
   }
 
-  private createContainerElem(cartTotal: CartTotal, page: string): HTMLElement {
+  private createContainerElem(cartTotal: CartTotal): HTMLElement {
     const containerElem = document.createElement('div');
     containerElem.className = 'container header__container';
 
@@ -96,6 +114,9 @@ class HeaderView {
     logoElem.className = 'header__logo';
     logoElem.src = logo;
     logoElem.alt = 'logo Online Store';
+
+    const searchElem = document.createElement('div');
+    searchElem.className = 'header__search search';
 
     const cartElem = document.createElement('div');
     cartElem.className = 'header__cart header-cart';
@@ -145,14 +166,9 @@ class HeaderView {
     logoLinkElem.append(logoElem);
     cartElem.append(cartTotalElem, cartLinkElem);
 
-    containerElem.append(logoLinkElem);
+    containerElem.append(logoLinkElem, searchElem, cartElem);
 
-    if (page === 'catalog') {
-      containerElem.append(this.createSearchElem());
-      containerElem.classList.add('header__container_catalog');
-    }
-
-    containerElem.append(cartElem);
+    this.searchElem = searchElem;
 
     return containerElem;
   }

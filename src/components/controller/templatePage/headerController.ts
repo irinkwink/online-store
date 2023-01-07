@@ -1,6 +1,6 @@
 import { CartTotal } from '../../../types/types';
 import State from '../../app/state';
-import { getSearchParamsFromUrl } from '../../router/urlController';
+import { getSearchParamValueFromUrl } from '../../router/urlController';
 import HeaderView from '../../view/templatePage/headerView';
 
 class HeaderController {
@@ -17,17 +17,26 @@ class HeaderController {
     };
   }
 
-  public init(page: string) {
+  public init() {
     this.calculateCartTotal();
-    this.view.draw(this.cartTotal, page);
+    this.view.draw(this.cartTotal);
+  }
 
+  public updateHeader(page: string) {
     if (page === 'catalog') {
-      const searchParams = getSearchParamsFromUrl();
+      if (!this.view.searchForm) {
+        const searchValue = getSearchParamValueFromUrl('search');
 
-      const searchParam = searchParams.find((item) => item.key === 'search');
-      if (searchParam) {
-        this.view.updateSearchInput(searchParam.value);
+        if (searchValue) {
+          this.view.addSearchFormToHeader(searchValue);
+        } else {
+          this.view.addSearchFormToHeader();
+        }
+      } else {
+        this.view.emptySearchInput();
       }
+    } else {
+      this.view.removeSearchFormFromHeader();
     }
   }
 

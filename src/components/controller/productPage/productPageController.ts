@@ -1,7 +1,7 @@
 import { SLIDER_MOVE } from '../../app/const';
-import State from '../../app/state';
 import ProductPageView from '../../view/productPage/productPageView';
 import PageController from '../pageController';
+import TemplatePageController from '../templatePage/templatePageController';
 
 class ProductPageController extends PageController {
   view: ProductPageView;
@@ -11,8 +11,8 @@ class ProductPageController extends PageController {
   isInCart: boolean;
   private sliderPosition: number;
 
-  constructor(state: State) {
-    super(state, 'product');
+  constructor(templatePage: TemplatePageController) {
+    super(templatePage, 'product');
     this.view = new ProductPageView();
     this.id = 0;
     this.count = 1;
@@ -33,7 +33,6 @@ class ProductPageController extends PageController {
       this.id = +id;
       const product = this.state.getState().products.find((item) => item.id === this.id);
       this.isInCart = this.state.getState().onlineStoreSettings.cart.find((item) => item.id === this.id) !== undefined;
-      console.log('product: ', product);
 
       if (product) {
         this.stock = product.stock;

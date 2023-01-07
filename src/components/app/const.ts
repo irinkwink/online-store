@@ -1,4 +1,4 @@
-import { Developers, FieldRange, FieldSelect, HeaderCartInfo, SortOption } from '../../types/types';
+import { Developers, FieldRange, FieldSelect, FiltersValues, HeaderCartInfo, SortOption } from '../../types/types';
 
 export const THUMB_WIDTH = 80;
 export const THUMBS_GAP = 4;
@@ -120,3 +120,26 @@ export const RANGE_FIELDS: FieldRange[] = [
     ],
   },
 ];
+
+export const INITIAL_FILTERS: FiltersValues = {
+  sort: 'none',
+  search: '',
+  category: 'all',
+  brand: 'all',
+  price: {
+    min: 0,
+    max: 0,
+  },
+  stock: {
+    min: 0,
+    max: 0,
+  },
+  priceFilter: {
+    min: -1,
+    max: -1,
+  },
+  stockFilter: {
+    min: -1,
+    max: -1,
+  },
+};
