@@ -1,9 +1,7 @@
-import { IProduct } from '../../../types/interfaces';
 import { SLIDER_MOVE } from '../../app/const';
-import State from '../../app/state';
-import { getSearchParamsFromUrl } from '../../router/urlController';
 import ProductPageView from '../../view/productPage/productPageView';
 import PageController from '../pageController';
+import TemplatePageController from '../templatePage/templatePageController';
 
 class ProductPageController extends PageController {
   view: ProductPageView;
@@ -13,8 +11,8 @@ class ProductPageController extends PageController {
   isInCart: boolean;
   private sliderPosition: number;
 
-  constructor(state: State) {
-    super(state);
+  constructor(templatePage: TemplatePageController) {
+    super(templatePage, 'product');
     this.view = new ProductPageView();
     this.id = 0;
     this.count = 1;
@@ -25,20 +23,23 @@ class ProductPageController extends PageController {
 
   start() {
     console.log('product page');
+    super.start();
+    this.view.wrapper = this.main.view.main;
 
-    const searchParams = getSearchParamsFromUrl();
+    const fullPath = window.location.pathname;
+    const id = fullPath.split('/')[2];
 
-    const idParam = searchParams.filter((item) => item.key === 'id');
-    if (idParam.length !== 0) {
-      this.id = +idParam[0].value;
-      const product: IProduct = this.state.getState().products.filter((item) => item.id === this.id)[0];
-      this.isInCart = this.state.getState().onlineStoreSettings.cart.filter((item) => item.id === this.id).length !== 0;
-      console.log('product: ', product);
+    if (id) {
+      this.id = +id;
+      const product = this.state.getState().products.find((item) => item.id === this.id);
+      this.isInCart = this.state.getState().onlineStoreSettings.cart.find((item) => item.id === this.id) !== undefined;
 
-      this.stock = product.stock;
-      this.view.drawCard(product, this.isInCart);
-      this.controlCardSlider();
-      this.controlCardButtons();
+      if (product) {
+        this.stock = product.stock;
+        this.view.drawCard(product, this.isInCart);
+        this.controlCardSlider();
+        this.controlCardButtons();
+      }
     }
   }
 
@@ -91,6 +92,7 @@ class ProductPageController extends PageController {
     } else {
       this.state.addProductToCart(this.id, this.count);
     }
+    this.header.updateHeaderCartTotal();
     this.isInCart = !this.isInCart;
   }
 

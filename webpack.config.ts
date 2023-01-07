@@ -1,8 +1,8 @@
-const path = require('path');
-const { merge } = require('webpack-merge');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const EslintPlugin = require('eslint-webpack-plugin');
+import path from 'path';
+import { merge } from 'webpack-merge';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import EslintPlugin from 'eslint-webpack-plugin';
 
 const PAGES = ['index', 'cart', 'product', 'page404'];
 
@@ -26,7 +26,7 @@ const baseConfig = {
       {
         test: /\.ts$/i,
         use: 'ts-loader',
-        include: [path.resolve(__dirname, 'src')],
+        include: [path.resolve(__dirname, 'src'), path.resolve(__dirname, 'index.d.ts')],
       },
       {
         test: /\.(c|sa|sc)ss$/i,
@@ -90,8 +90,12 @@ const baseConfig = {
   },
   plugins: [
     new EslintPlugin({
-      extensions: 'ts',
+      extensions: ['ts'],
     }),
+    // new HtmlWebpackPlugin({
+    //   template: path.resolve(__dirname, `src/index.html`),
+    //   filename: `index.html`,
+    // }),
     ...PAGES.map(
       (page) =>
         new HtmlWebpackPlugin({
@@ -103,7 +107,7 @@ const baseConfig = {
   ],
 };
 
-module.exports = ({ mode }) => {
+module.exports = ({ mode }: typeof baseConfig) => {
   const isProductionMode = mode === 'prod';
   const envConfig = isProductionMode ? require('./webpack.prod.config') : require('./webpack.dev.config');
 

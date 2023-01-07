@@ -1,20 +1,24 @@
 class Overlay {
-  overlay: HTMLDivElement;
+  private overlayElem: HTMLDivElement;
 
   constructor() {
     const overlayElem = document.createElement('div');
     overlayElem.className = 'overlay';
 
-    this.overlay = overlayElem;
+    this.overlayElem = overlayElem;
+  }
+
+  public get overlay() {
+    return this.overlayElem;
   }
 
   showOverlay() {
-    document.body.append(this.overlay);
-    return this.overlay;
+    document.body.append(this.overlayElem);
+    return this.overlayElem;
   }
 
   hideOverlay() {
-    this.overlay.remove();
+    this.overlayElem.remove();
   }
 }
 

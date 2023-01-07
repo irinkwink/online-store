@@ -1,4 +1,3 @@
-import State from '../../app/state';
 import CartPageView from '../../view/cartPage/cartPageView';
 //import { storageUtility } from '../../view/localStorage/LocalStorage';
 import PageController from '../pageController';

@@ -1,46 +1,41 @@
 import { ProductsPerPage } from '../../../types/enums';
 import { IProduct } from '../../../types/interfaces';
-import { addSearchParamToUrl, deleteSearchParamFromUrl, getSearchParamsFromUrl } from '../../router/urlController';
+import { addSearchParamToUrl, deleteSearchParamFromUrl, getSearchParamValueFromUrl } from '../../router/urlController';
 import PaginationView from '../../view/catalogPage/paginationView';
 
 class Pagination {
-  view: PaginationView;
-  products: IProduct[];
-  callback: (data: IProduct[]) => void;
-  pages: number;
-  page: number;
-  type: keyof typeof ProductsPerPage;
+  public view: PaginationView;
+  private products: IProduct[];
+  private cbDrawProducts: (data: IProduct[]) => void;
+  private pages: number;
+  private page: number;
+  private type: keyof typeof ProductsPerPage;
 
   constructor(callback: (data: IProduct[]) => void) {
     this.view = new PaginationView();
     this.products = [];
-    this.callback = callback;
+    this.cbDrawProducts = callback;
     this.pages = 0;
     this.page = 1;
     this.type = 'desktop';
   }
 
-  showProducts() {
+  private drawProducts() {
     const firstProduct = ProductsPerPage[this.type] * (this.page - 1);
     const lastProduct = ProductsPerPage[this.type] * this.page;
     const productsToDraw = this.products.slice(firstProduct, lastProduct);
-    this.callback(productsToDraw);
+    this.cbDrawProducts(productsToDraw);
   }
 
-  init(products: IProduct[]) {
+  public init(products: IProduct[]) {
     this.products = products;
 
     if (this.products.length === 0) {
       deleteSearchParamFromUrl('page');
+      this.cbDrawProducts(this.products);
     } else {
-      const searchParams = getSearchParamsFromUrl();
-
-      const pageParam = searchParams.filter((item) => item.key === 'page');
-      if (pageParam.length !== 0) {
-        this.page = +pageParam[0].value;
-      } else {
-        this.page = 1;
-      }
+      const pageValue = getSearchParamValueFromUrl('page');
+      this.page = pageValue ? +pageValue : 1;
 
       if (window.innerWidth < 670) {
         this.type = 'mobile';
@@ -51,7 +46,7 @@ class Pagination {
       }
 
       this.drawPagination();
-      this.showProducts();
+      this.drawProducts();
 
       window.addEventListener('resize', () => {
         if (window.innerWidth <= 670 && this.type !== 'mobile') {
@@ -70,21 +65,20 @@ class Pagination {
         }
       });
 
-      const paginationElem = document.querySelector('.pagination');
-      if (paginationElem) {
-        paginationElem.addEventListener('click', (e) => this.handlePagination(e));
+      if (this.view.pagination) {
+        this.view.pagination.addEventListener('click', (e) => this.handlePagination(e));
       }
     }
 
     return ProductsPerPage[this.type];
   }
 
-  drawPagination() {
+  private drawPagination() {
     this.pages = Math.ceil(this.products.length / ProductsPerPage[this.type]);
-    this.view.drawPagination(this.pages, this.page);
+    this.view.draw(this.pages, this.page);
   }
 
-  handlePagination(e: Event) {
+  private handlePagination(e: Event) {
     e.preventDefault();
     const target = e.target as HTMLElement;
     if (target) {
@@ -93,8 +87,8 @@ class Pagination {
         const elem = linkElem as HTMLElement;
         if (elem.dataset.page) {
           this.page = +elem.dataset.page;
-          this.showProducts();
           this.drawPagination();
+          this.drawProducts();
           addSearchParamToUrl({ key: 'page', value: this.page.toString() });
         }
       }
