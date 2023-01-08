@@ -80,3 +80,10 @@ export type FiltersValues = {
   priceFilter: MinMax;
   stockFilter: MinMax;
 };
+
+export type PromoCodes = {
+  STUDENT1: number;
+  RSS: number;
+  EPAM: number;
+  NEWYEAR: number;
+};

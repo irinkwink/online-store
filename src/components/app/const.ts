@@ -1,3 +1,4 @@
+import { PromoCodesDiscount } from '../../types/enums';
 import { Developers, FieldRange, FieldSelect, FiltersValues, HeaderCartInfo, SortOption } from '../../types/types';
 
 export const THUMB_WIDTH = 80;
@@ -143,3 +144,29 @@ export const INITIAL_FILTERS: FiltersValues = {
     max: 0,
   },
 };
+
+export const PROMO_CODES = {
+  STUDENT1: PromoCodesDiscount.STUDENT1,
+  RSS: PromoCodesDiscount.RSS,
+  EPAM: PromoCodesDiscount.EPAM,
+  NEWYEAR: PromoCodesDiscount.NEWYEAR,
+};
+
+// export const PROMO_CODES: PromoCode[] = [
+//   {
+//     code: 'RSS',
+//     discount: 10,
+//   },
+//   {
+//     code: 'STUDENT1',
+//     discount: 15,
+//   },
+//   {
+//     code: 'EPAM',
+//     discount: 5,
+//   },
+//   {
+//     code: 'NEWYEAR',
+//     discount: 3,
+//   },
+// ];

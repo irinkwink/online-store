@@ -9,7 +9,7 @@ class State {
       products: [],
       onlineStoreSettings: {
         cart: [],
-        promoСodes: [],
+        promoCodes: [],
       },
     };
   }
@@ -85,25 +85,16 @@ class State {
     return cartTotal;
   }
 
-  public checkPromoCodes(code: string): boolean {
-    const promocodes = this.state.onlineStoreSettings.promoСodes;
-    code = code.toUpperCase();
-    if ((code === 'RSS' || code === 'EPAM') && !promocodes.includes(code)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
   public addCodeToSettings(code: string) {
-    const promocodes = this.state.onlineStoreSettings.promoСodes;
-    promocodes.push(code.toUpperCase());
+    const appliedPromoCodes = this.state.onlineStoreSettings.promoCodes;
+    appliedPromoCodes.push(code.toUpperCase());
     this.saveState();
   }
 
   public dropCodeFromSetting(code: string) {
-    const promocodes = this.state.onlineStoreSettings.promoСodes;
-    const index = promocodes.indexOf(code);
-    promocodes.splice(index, 1);
+    const appliedPromoCodes = this.state.onlineStoreSettings.promoCodes;
+    const index = appliedPromoCodes.indexOf(code);
+    appliedPromoCodes.splice(index, 1);
     this.saveState();
   }
 }

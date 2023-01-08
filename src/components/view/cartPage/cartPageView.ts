@@ -1,6 +1,6 @@
 import { IProductLS } from '../../../types/interfaces';
-import { CartTotal } from '../../../types/types';
-// import { myPromoCode } from '../localStorage/PromoCodes';
+import { CartTotal, PromoCodes } from '../../../types/types';
+import { PROMO_CODES } from '../../app/const';
 
 export class CartPageView {
   private wrapperElem: HTMLElement | null;
@@ -9,9 +9,13 @@ export class CartPageView {
   private cartListElem: HTMLUListElement | null;
   private numberTotalElem: HTMLSpanElement | null;
   private priceTotalElem: HTMLSpanElement | null;
-  private discountElem: HTMLParagraphElement | null;
-  private promoInput: HTMLInputElement | null;
+  private discountPriceElem: HTMLParagraphElement | null;
+  private discountPriceTotalElem: HTMLSpanElement | null;
+  private promoInputElem: HTMLInputElement | null;
   private promoBlockElem: HTMLDivElement | null;
+  private appliedPromoCodesElem: HTMLDivElement | null;
+  private toApplyPromoCodesElem: HTMLDivElement | null;
+  private buyBtnElem: HTMLButtonElement | null;
 
   constructor() {
     this.wrapperElem = null;
@@ -20,9 +24,13 @@ export class CartPageView {
     this.cartListElem = null;
     this.numberTotalElem = null;
     this.priceTotalElem = null;
-    this.discountElem = null;
-    this.promoInput = null;
+    this.discountPriceElem = null;
+    this.discountPriceTotalElem = null;
+    this.promoInputElem = null;
     this.promoBlockElem = null;
+    this.appliedPromoCodesElem = null;
+    this.toApplyPromoCodesElem = null;
+    this.buyBtnElem = null;
   }
 
   public set wrapper(element: HTMLElement | null) {
@@ -41,13 +49,21 @@ export class CartPageView {
     return this.limitInputElem;
   }
 
-  public draw() {
+  public get promoInput() {
+    return this.promoInputElem;
+  }
+
+  public get promoBlock() {
+    return this.promoBlockElem;
+  }
+
+  public draw(): void {
     if (this.wrapperElem) {
       this.wrapperElem.append(this.createCartElem());
     }
   }
 
-  private createCartElem(): HTMLElement {
+  private createCartElem(): HTMLDivElement {
     const containerElem = document.createElement('div');
     containerElem.className = 'container cart__container cart';
 
@@ -176,8 +192,8 @@ export class CartPageView {
   public drawProducts(productsInCart: IProductLS[]) {
     console.log('вывод');
     if (this.cartListElem) {
+      this.cartListElem.innerHTML = '';
       if (productsInCart.length > 0) {
-        this.cartListElem.innerHTML = '';
         const liElems = productsInCart.map((product) => this.createProductElem(product));
         this.cartListElem.append(...liElems);
       } else {
@@ -189,7 +205,7 @@ export class CartPageView {
     }
   }
 
-  drawTotalElem() {
+  private drawTotalElem() {
     const totalElem = document.createElement('section');
     totalElem.className = 'cart__total total';
 
@@ -197,11 +213,11 @@ export class CartPageView {
     wrapperElem.className = 'total__wrapper';
 
     const titleElem = document.createElement('div');
-    titleElem.className = 'total__title';
+    titleElem.className = 'total__title total__section';
     titleElem.textContent = 'Summary';
 
     const tableElem = document.createElement('div');
-    tableElem.className = 'total__table';
+    tableElem.className = 'total__table total__section';
 
     const numberRowElem = document.createElement('p');
     numberRowElem.className = 'total__row';
@@ -223,87 +239,144 @@ export class CartPageView {
     const priceTotalElem = document.createElement('span');
     priceTotalElem.className = 'total__text total__text_price total__price';
 
-    const discountRowElem = document.createElement('p');
-    discountRowElem.className = 'total__row total__row_discount total__discount';
+    const discountPriceRowElem = document.createElement('p');
+    discountPriceRowElem.className = 'total__row total__row_discount total__discount total__row_hide';
+
+    const discountPriceTextElem = document.createElement('span');
+    discountPriceTextElem.className = 'total__text total__text_discount';
+    discountPriceTextElem.textContent = 'Discount price:';
+
+    const discountPriceTotalElem = document.createElement('span');
+    discountPriceTotalElem.className = 'total__text total__text_discount';
 
     const promoElem = document.createElement('div');
-    promoElem.className = 'promo-block';
+    promoElem.className = 'total__promo promo total__section';
+
+    const buyBtnElem = document.createElement('button');
+    buyBtnElem.className = 'btn total__buy';
+    buyBtnElem.textContent = 'Buy Now';
 
     numberRowElem.append(numberTextElem, numberTotalElem);
     priceRowElem.append(priceTextElem, priceTotalElem);
-    tableElem.append(numberRowElem, priceRowElem, discountRowElem);
-    wrapperElem.append(titleElem, tableElem, promoElem);
+    discountPriceRowElem.append(discountPriceTextElem, discountPriceTotalElem);
+    tableElem.append(numberRowElem, priceRowElem, discountPriceRowElem);
+    wrapperElem.append(titleElem, tableElem, promoElem, buyBtnElem);
     totalElem.append(wrapperElem);
 
-    this.discountElem = discountRowElem;
+    this.discountPriceTotalElem = discountPriceTotalElem;
+    this.discountPriceElem = discountPriceRowElem;
     this.promoBlockElem = promoElem;
     this.numberTotalElem = numberTotalElem;
     this.priceTotalElem = priceTotalElem;
+    this.buyBtnElem = buyBtnElem;
 
     return totalElem;
   }
 
-  drawPromoBlock(settings: string[]) {
+  public drawPromoElem() {
     if (this.promoBlockElem) {
       this.promoBlockElem.innerHTML = '';
 
-      const promoInput = document.createElement('input');
-      promoInput.type = 'text';
-      promoInput.className = 'promo-block__input';
-      promoInput.placeholder = 'Enter promo code';
+      const appliedPromoCodesElem = document.createElement('div');
+      appliedPromoCodesElem.className = 'promo__codes promo__codes_drop';
 
-      const codeInfo = document.createElement('p');
-      codeInfo.textContent = "Promo for test: 'RSS', 'EPAM'";
+      const promoInputElem = document.createElement('input');
+      promoInputElem.type = 'text';
+      promoInputElem.className = 'promo__input';
+      promoInputElem.placeholder = 'Enter promo code';
 
-      if (settings.length > 0) {
-        const appliedTitle = document.createElement('h4');
-        appliedTitle.className = 'promo-block__title';
+      const codeInfoElem = document.createElement('p');
+      codeInfoElem.className = 'promo__text';
 
-        const promoContainer = document.createElement('div');
-        promoContainer.className = 'promo-block__container';
-        appliedTitle.textContent = 'Applied codes';
+      const promoCodesString = Object.keys(PROMO_CODES)
+        .map((code) => `'${code}'`)
+        .join(', ');
+      codeInfoElem.innerHTML = `
+        <span>Promo codes for test: </span>
+        <span>${promoCodesString}</span>
+      `;
 
-        promoContainer.append(appliedTitle);
+      const toApplyPromoCodesElem = document.createElement('div');
+      toApplyPromoCodesElem.className = 'promo__codes promo__codes_apply';
 
-        settings.forEach((setItem) => {
-          const row = document.createElement('div');
-          row.className = 'promo-block__row';
+      this.promoBlockElem.append(appliedPromoCodesElem, promoInputElem, codeInfoElem, toApplyPromoCodesElem);
+      this.promoBlockElem.append();
 
-          const promoApplied = document.createElement('span');
-          promoApplied.innerHTML = `${setItem} - 10 %`;
+      this.promoInputElem = promoInputElem;
+      this.appliedPromoCodesElem = appliedPromoCodesElem;
+      this.toApplyPromoCodesElem = toApplyPromoCodesElem;
+    }
+  }
 
-          const delCodeBtn = document.createElement('button');
-          delCodeBtn.id = 'delete-code';
-          delCodeBtn.className = 'btn promo-block_btn';
-          delCodeBtn.textContent = 'Drop';
-          row.append(promoApplied, delCodeBtn);
-          promoContainer.insertAdjacentElement('beforeend', row);
-        });
+  public emptyPromoCodeInput() {
+    if (this.promoInputElem) {
+      this.promoInputElem.value = '';
+    }
+  }
 
-        this.promoBlockElem.append(promoContainer, promoInput, codeInfo);
+  public updateAppliedPromoCodes(codes: string[]) {
+    if (this.appliedPromoCodesElem) {
+      if (codes.length === 0) {
+        this.appliedPromoCodesElem.innerHTML = '';
       } else {
-        this.promoBlockElem.append(promoInput, codeInfo);
+        this.appliedPromoCodesElem.innerHTML = '';
+        const appliedTitleElem = document.createElement('h4');
+        appliedTitleElem.className = 'promo__title total__section';
+        appliedTitleElem.textContent = 'Applied Codes';
+
+        const appliedRowsElem = document.createElement('div');
+        appliedRowsElem.className = 'promo__rows';
+
+        const rowElems = codes.map((code) => this.drawCodeRowElem(code, 'drop'));
+
+        appliedRowsElem.append(...rowElems);
+        this.appliedPromoCodesElem.append(appliedTitleElem, appliedRowsElem);
       }
     }
   }
 
-  drawPromoApplied(isValid: boolean, code: string) {
-    if (isValid && this.promoBlockElem) {
-      const row = document.createElement('div');
-      row.className = 'promo-block__row';
-      row.dataset.code = code;
-      const addBtn = document.createElement('button');
-      addBtn.id = 'add-code';
-      addBtn.className = 'btn';
-      const codeInfo = document.createElement('span');
-      codeInfo.textContent = `${code} code - 10%`;
-      addBtn.textContent = 'Add';
-      row.append(codeInfo, addBtn);
-      this.promoBlockElem.append(row);
+  public drawPromoCodeUsedMessage() {
+    if (this.toApplyPromoCodesElem) {
+      this.toApplyPromoCodesElem.innerHTML = '';
+      const usedTextElem = document.createElement('p');
+      usedTextElem.className = 'promo__text promo__text_used';
+      usedTextElem.textContent = 'This promo code has already been applied!';
+
+      this.toApplyPromoCodesElem.append(usedTextElem);
     }
   }
 
-  public updateLimit(limit: number) {
+  public updateToApplyPromoCodes(code = '') {
+    if (this.toApplyPromoCodesElem) {
+      this.toApplyPromoCodesElem.innerHTML = '';
+      if (code) {
+        const rowElem = this.drawCodeRowElem(code, 'add');
+        this.toApplyPromoCodesElem.append(rowElem);
+      }
+    }
+  }
+
+  private drawCodeRowElem(code: string, action: string) {
+    const rowElem = document.createElement('div');
+    rowElem.className = `promo__row promo__row_${action}`;
+
+    const codeInfoElem = document.createElement('p');
+    codeInfoElem.className = 'promo__code';
+    const discount: number = code in PROMO_CODES ? PROMO_CODES[code as keyof PromoCodes] : 0;
+    codeInfoElem.innerHTML = `${code} -${discount} %`;
+
+    const delCodeBtnElem = document.createElement('button');
+    delCodeBtnElem.id = `${action}CodeBtn`;
+    delCodeBtnElem.className = 'btn promo__btn';
+    delCodeBtnElem.textContent = action;
+    delCodeBtnElem.dataset.code = code;
+
+    rowElem.append(codeInfoElem, delCodeBtnElem);
+
+    return rowElem;
+  }
+
+  public updateLimitInput(limit: number) {
     if (this.limitInputElem) {
       this.limitInputElem.max = limit.toString();
       this.limitInputElem.value = limit.toString();
@@ -313,6 +386,7 @@ export class CartPageView {
   public updateMaxLimit(limit: number) {
     if (this.limitInputElem) {
       this.limitInputElem.max = limit.toString();
+      if (+this.limitInputElem.value > +this.limitInputElem.max) this.limitInputElem.value = limit.toString();
     }
   }
 
@@ -322,20 +396,6 @@ export class CartPageView {
     }
     if (this.priceTotalElem) {
       this.priceTotalElem.textContent = `${cartTotal.totalPrice}$`;
-    }
-  }
-
-  public updateDiscountPrice(discountPrice: number) {
-    if (this.discountElem) {
-      const discountTextElem = document.createElement('span');
-      discountTextElem.className = 'total__text';
-      discountTextElem.textContent = 'Discount price: ';
-
-      const discountNumberElem = document.createElement('span');
-      discountNumberElem.className = 'total__text total__text_discount total-num';
-      discountNumberElem.textContent = `${discountPrice}$`;
-
-      this.discountElem.append(discountTextElem, discountNumberElem);
     }
   }
 
@@ -365,23 +425,19 @@ export class CartPageView {
           btnIncElem?.classList.remove('inactive');
         }
       }
-  updateTotalPrice(totalSum: number) {
-    const totalPrice = document.querySelector('.total__price');
-    if (totalPrice) {
-      totalPrice.textContent = totalSum.toString() + ' $';
     }
   }
-  updateDiscountPrice(discount: number, summ: number) {
-    const discountTotalPrice: HTMLElement | null = document.querySelector('.total__discount');
-    const totalSummary: HTMLElement | null = document.querySelector('.total__header');
-    if (discountTotalPrice && totalSummary && discount > 0) {
-      const res = Math.floor(summ * (1 - discount));
-      discountTotalPrice.innerHTML = `Discount price - ${res} $`;
-      totalSummary.className = 'total__header line-through';
-      console.log(summ * (1 - discount));
-    } else if (totalSummary && discountTotalPrice) {
-      totalSummary.className = 'total__header';
-      discountTotalPrice.innerHTML = '';
+
+  public updateDiscountPrice(discountPrice: number, isHideDiscount: boolean) {
+    if (this.discountPriceElem && this.discountPriceTotalElem) {
+      if (discountPrice > 0 && !isHideDiscount) {
+        this.discountPriceTotalElem.textContent = `${discountPrice}$`;
+        this.discountPriceElem.classList.remove('total__row_hide');
+        this.priceTotalElem?.classList.add('total__text_line');
+      } else {
+        this.discountPriceElem.classList.add('total__row_hide');
+        this.priceTotalElem?.classList.remove('total__text_line');
+      }
     }
   }
 }

@@ -2,121 +2,143 @@ import CartPageView from '../../view/cartPage/cartPageView';
 import PageController from '../pageController';
 import { ICartProduct, IProduct, IProductLS } from '../../../types/interfaces';
 import TemplatePageController from '../templatePage/templatePageController';
-import { CartTotal } from '../../../types/types';
+import { CartTotal, PromoCodes } from '../../../types/types';
 import CartPaginationController from './cartPaginationController';
+import { PROMO_CODES } from '../../app/const';
 class CartPageController extends PageController {
-  view: CartPageView;
-  pagination: CartPaginationController;
+  public view: CartPageView;
+  private pagination: CartPaginationController;
+  private appliedPromoCodes: string[];
+  private totalDiscount: number;
 
   constructor(templatePage: TemplatePageController) {
     super(templatePage, 'cart');
     this.view = new CartPageView();
     this.pagination = new CartPaginationController((products) => this.view.drawProducts(products));
+    this.appliedPromoCodes = [];
+    this.totalDiscount = 0;
   }
 
   start() {
-    console.log('Cart Page');
     super.start();
     this.view.wrapper = this.main.view.main;
 
     const products = this.state.getState().products;
     const cart = this.state.getState().onlineStoreSettings.cart;
-    const productsToRender = this.identityProducts(cart, products);
-    const settings = this.state.getState().onlineStoreSettings.promoСodes;
+    const cartTotal: CartTotal = this.state.calculateCartTotal();
+    const productsToDraw = this.identityProducts(cart, products);
+    this.appliedPromoCodes = this.state.getState().onlineStoreSettings.promoCodes;
 
     this.view.draw();
     this.pagination.view.wrapper = this.view.pagination;
 
-    this.pagination.initPagination(productsToRender);
-    this.view.updateLimit(this.pagination.limitNum);
-
-    this.view.drawPromoBlock(settings);
-
-    const discount = this.getDiscount(settings);
-
-    const cartTotal: CartTotal = this.state.calculateCartTotal();
+    this.pagination.initPagination(productsToDraw);
+    this.view.updateLimitInput(this.pagination.limitNum);
     this.view.updateTotal(cartTotal);
 
-    if (discount > 0) {
-      const discountPrice = cartTotal.totalPrice * (1 - discount);
-      this.view.updateDiscountPrice(discountPrice);
-    }
+    this.view.drawPromoElem();
+
+    this.initDiscount(cartTotal);
 
     this.view.cartList?.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (target.closest('.item__control') && target.closest('.control-btn')) {
-        this.controlCartButtons(target);
+        this.handleControlCartButtons(target);
       }
     });
 
-    this.getInputValue();
-
-    this.view.limitInput?.addEventListener('change', (e) => {
-      const target = e.target as HTMLInputElement;
-      if (target) {
-        this.pagination.updateLimit(+target.value);
-      }
+    this.view.limitInput?.addEventListener('change', () => {
+      const limit = this.view.limitInput?.value;
+      if (limit) this.pagination.updateLimit(+limit);
     });
 
-    this.view.updateDiscountPrice(discount, totalPrice);
-    this.deletePromocode();
+    this.view.promoInput?.addEventListener('input', () => this.handlePromoCodeInput());
 
+    this.view.promoBlock?.addEventListener('click', (e) => this.handleDropAddBtns(e));
   }
 
-  public getInputValue() {
-    const promoInput: HTMLInputElement | null = document.querySelector('.promo-block__input');
-    const promoBlock: HTMLElement | null = document.querySelector('.promo-block');
-    promoInput?.addEventListener('input', () => {
-      const val: string = promoInput.value;
-      console.log(val);
-      const isValid = this.state.checkPromoCodes(val);
-      this.view.drawPromoApplied(isValid, val);
-      if (isValid) {
-        promoBlock?.addEventListener('click', (e) => {
-          const target = e.target as HTMLElement;
-          if (target.id === 'add-code') {
-            const promoInput: HTMLInputElement | null = document.querySelector('.promo-block__input');
-            if (promoInput) {
-              const val: string = promoInput.value;
-              this.state.addCodeToSettings(val);
-              this.updateTotalBlock();
-              this.getInputValue();
-            }
-          }
-        });
+  initDiscount(cartTotal: CartTotal) {
+    if (this.appliedPromoCodes) {
+      this.totalDiscount = this.calculateDiscount(this.appliedPromoCodes);
+      if (this.totalDiscount > 0) {
+        const discountPrice = Math.floor(cartTotal.totalPrice * (1 - this.totalDiscount));
+        this.view.updateDiscountPrice(discountPrice, this.totalDiscount === 0);
       }
-    });
-  }
-  deletePromocode() {
-    const promoBlock: HTMLElement | null = document.querySelector('.promo-block');
-    const codes = ['RSS', 'EPAM'];
-    promoBlock?.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-      if (target.id === 'delete-code') {
-        const code = target.getAttribute('code');
-        const res = codes.filter((codeItem) => codeItem === code);
-        this.state.dropCodeFromSetting(res[0]);
-        this.updateTotalBlock();
-        this.getInputValue();
-      }
-    });
+      this.view.updateAppliedPromoCodes(this.appliedPromoCodes);
+    }
   }
 
-  updateTotalBlock() {
-    const settings = this.state.getState().onlineStoreSettings;
-    const products = this.state.getState().products;
-    const cart = this.state.getState().onlineStoreSettings.cart;
-    const productsToRender = this.view.identityProducts(cart, products);
-    const discount = settings.promoСodes.length * 0.1;
-    const totalPrice = this.view.getTotalPrice(productsToRender);
-    this.view.drawPromo(settings.promoСodes);
-    this.view.updateDiscountPrice(discount, totalPrice);
+  updateDiscount(cartTotal: CartTotal) {
+    const discountPrice = Math.floor(cartTotal.totalPrice * (1 - this.totalDiscount));
+    this.view.updateDiscountPrice(discountPrice, this.totalDiscount === 0);
+  }
+
+  calculateDiscount(appliedPromoСodes: string[]): number {
+    console.log('appliedPromoСodes: ', appliedPromoСodes);
+    const discount = appliedPromoСodes.reduce(
+      (acc, code) => (code in PROMO_CODES ? acc + PROMO_CODES[code as keyof PromoCodes] : acc),
+      0
+    );
+    console.log('discount: ', discount);
+
+    return discount * 0.01;
+  }
+
+  private handlePromoCodeInput() {
+    const code: string | undefined = this.view.promoInput?.value;
+    if (code && code in PROMO_CODES) {
+      const appliedPromoCodes = this.state.getState().onlineStoreSettings.promoCodes;
+      if (appliedPromoCodes.includes(code)) {
+        this.view.drawPromoCodeUsedMessage();
+      } else {
+        this.view.updateToApplyPromoCodes(code);
+      }
+    }
+  }
+
+  private handleDropAddBtns(e: Event) {
+    const target = e.target as HTMLElement;
+    switch (target.id) {
+      case 'addCodeBtn': {
+        const code = target.dataset.code;
+        if (code) this.applyCode(code);
+        break;
+      }
+      case 'dropCodeBtn': {
+        const code = target.dataset.code;
+        if (code) this.deleteCode(code);
+        break;
+      }
+    }
+  }
+
+  private applyCode(code: string) {
+    this.state.addCodeToSettings(code);
+    this.updateTotalBlock();
+    this.view.emptyPromoCodeInput();
+  }
+
+  private deleteCode(code: string) {
+    this.state.dropCodeFromSetting(code);
+    this.updateTotalBlock();
+  }
+
+  private updateTotalBlock() {
+    this.appliedPromoCodes = this.state.getState().onlineStoreSettings.promoCodes;
+    const cartTotal = this.state.calculateCartTotal();
+    this.totalDiscount = this.calculateDiscount(this.appliedPromoCodes);
+    const discountPrice = Math.floor(cartTotal.totalPrice * (1 - this.totalDiscount));
+
+    this.view.updateAppliedPromoCodes(this.appliedPromoCodes);
+    this.view.updateToApplyPromoCodes();
+    this.view.updateDiscountPrice(discountPrice, this.totalDiscount === 0);
   }
 
   getProductsToRender(): IProductLS[] {
     const products = this.state.getState().products;
     const cart = this.state.getState().onlineStoreSettings.cart;
     const productsToRender = this.identityProducts(cart, products);
+    console.log('productsToRender: ', productsToRender);
     return productsToRender;
   }
 
@@ -140,27 +162,7 @@ class CartPageController extends PageController {
     return pickedProducts;
   }
 
-  getTotalPrice(productsInCart: IProductLS[]): number {
-    let totalPrice = 0;
-    for (let i = 0; i < productsInCart.length; i++) {
-      const num = productsInCart[i].num;
-      totalPrice += productsInCart[i].price * num;
-    }
-    return totalPrice;
-  }
-
-  getDiscount(settings: string[]): number {
-    return settings.length * 0.1;
-  }
-
-  // updateProductsCartNum(id: number) {
-  //   const productsNum = document.querySelectorAll('.item__number');
-  //   const cart = this.state.getState().onlineStoreSettings.cart;
-  //   const index: number = cart.findIndex((cartItem) => cartItem.id === id);
-  //   productsNum[index].textContent = String(cart[index].num);
-  // }
-
-  controlCartButtons(target: HTMLElement) {
+  handleControlCartButtons(target: HTMLElement) {
     const controlElem = target.closest('.item__control') as HTMLElement;
     const btnElem = target.closest('.control-btn') as HTMLElement;
     const idData = controlElem.dataset.productId;
@@ -173,7 +175,8 @@ class CartPageController extends PageController {
       switch (btnElem.id) {
         case 'btn-delete': {
           this.state.removeProductFromCart(id);
-          this.view.updateMaxLimit(this.state.getState().onlineStoreSettings.cart.length);
+          const limit = this.state.getState().onlineStoreSettings.cart.length || 1;
+          this.view.updateMaxLimit(limit);
           this.pagination.initPagination(this.getProductsToRender(), true);
           break;
         }
@@ -197,6 +200,7 @@ class CartPageController extends PageController {
       const cartTotal = this.state.calculateCartTotal();
       this.view.updateTotal(cartTotal);
       this.header.view.updateCartTotal(cartTotal);
+      this.updateDiscount(cartTotal);
     }
   }
 }

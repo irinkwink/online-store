@@ -22,10 +22,6 @@ class PaginationController<T> {
     return this.limit;
   }
 
-  public set limitNum(value: number) {
-    this.limit = value;
-  }
-
   public updateLimit(value: number) {
     this.limit = value;
     this.page = 1;

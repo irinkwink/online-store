@@ -1,13 +1,9 @@
 .cart {
   &__container {
     display: grid;
-    grid-template-columns: 1fr 300px;
+    grid-template-columns: 1fr 340px;
     justify-content: space-between;
     gap: 70px 30px;
-
-    // @include desktop {
-    //   grid-template-columns: minmax(59%, 848px) minmax(34%, 494px);
-    // }
 
     @include laptop {
       grid-template-columns: 1fr;
@@ -84,6 +80,10 @@
     @include mobile {
       font-size: 1.4rem;
       height: 24px;
+    }
+
+    &:focus {
+      outline-color: $color-main;
     }
   }
 

@@ -29,7 +29,7 @@ export interface IState {
   products: IProduct[];
   onlineStoreSettings: {
     cart: ICartProduct[];
-    promoСodes: string[];
+    promoCodes: string[];
   };
 }
 

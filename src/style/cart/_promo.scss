@@ -1,14 +1,125 @@
-.promo-block {
-  &__container {
-      margin: 1rem 0;;
+.promo {
+  display: flex;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  flex-direction: column;
+
+
+  &__input {
+    width: 100%;
+    font-weight: 400;
+    font-size: 1.6rem;
+    padding: 0 10px;
+    border: 1px solid $color-primary;
+    border-radius: 0;
+    height: 38px;
+    color: $color-grey;
+    margin-bottom: 2px;
+
+    @include mobile {
+      font-size: 1.4rem;
+      height: 35px;
+    }
+
+    &:focus {
+      outline-color: $color-main;
+    }
   }
+  
+  &__text {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    font-weight: 500;
+    font-size: 1.2rem;
+
+    @include mobile {
+      display: block;
+      font-size: 1rem;
+    }
+
+    &_used {
+      color: $color-main-dark;
+      margin-top: 5px;
+    }
+  }
+
   &__title {
-      color: orange;
-      margin: 0.5rem 0;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 7px;
+    
+
+    @include mobile {
+      font-size: 1.6rem;
+      margin-bottom: 7px;
+    }
   }
+
+
+  &__codes {
+
+    &_drop {
+    }
+ 
+    &_apply {
+    
+    }
+  }
+
+  &__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 10px;
+  }
+
   &__row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    &_add {
+      margin-top: 10px;
+    }
+
+  }
+
+  &__code {
+    font-weight: 500;
+    font-size: 1.8rem;
+
+    @include mobile {
+      font-size: 1.4rem;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+  }
+
+  &__btn {
+    text-transform: capitalize;
+    color: $color-secondary;
+    background-color: $color-main-sub;
+    padding: 6px 10px;
+    font-weight: 500;
+    font-size: 1.6rem;
+    transition: all 0.36s ease-in-out;
+
+    @include tablet {
+    }
+
+    @include mobile {
+      font-size: 1.3rem;
+      padding: 6px;
+    }
+
+    &:hover {
+      background-color: $color-main;
+    }
   }
 }

@@ -10,3 +10,10 @@ export enum DeviceWindowWidth {
   tablet = 960,
   mobile = 560,
 }
+
+export enum PromoCodesDiscount {
+  STUDENT1 = 15,
+  RSS = 10,
+  EPAM = 5,
+  NEWYEAR = 3,
+}
