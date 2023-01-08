@@ -365,6 +365,23 @@ export class CartPageView {
           btnIncElem?.classList.remove('inactive');
         }
       }
+  updateTotalPrice(totalSum: number) {
+    const totalPrice = document.querySelector('.total__price');
+    if (totalPrice) {
+      totalPrice.textContent = totalSum.toString() + ' $';
+    }
+  }
+  updateDiscountPrice(discount: number, summ: number) {
+    const discountTotalPrice: HTMLElement | null = document.querySelector('.total__discount');
+    const totalSummary: HTMLElement | null = document.querySelector('.total__header');
+    if (discountTotalPrice && totalSummary && discount > 0) {
+      const res = Math.floor(summ * (1 - discount));
+      discountTotalPrice.innerHTML = `Discount price - ${res} $`;
+      totalSummary.className = 'total__header line-through';
+      console.log(summ * (1 - discount));
+    } else if (totalSummary && discountTotalPrice) {
+      totalSummary.className = 'total__header';
+      discountTotalPrice.innerHTML = '';
     }
   }
 }

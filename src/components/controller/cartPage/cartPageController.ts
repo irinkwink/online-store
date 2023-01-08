@@ -1,5 +1,4 @@
 import CartPageView from '../../view/cartPage/cartPageView';
-//import { storageUtility } from '../../view/localStorage/LocalStorage';
 import PageController from '../pageController';
 import { ICartProduct, IProduct, IProductLS } from '../../../types/interfaces';
 import TemplatePageController from '../templatePage/templatePageController';
@@ -34,6 +33,7 @@ class CartPageController extends PageController {
     this.view.drawPromoBlock(settings);
 
     const discount = this.getDiscount(settings);
+
     const cartTotal: CartTotal = this.state.calculateCartTotal();
     this.view.updateTotal(cartTotal);
 
@@ -57,6 +57,10 @@ class CartPageController extends PageController {
         this.pagination.updateLimit(+target.value);
       }
     });
+
+    this.view.updateDiscountPrice(discount, totalPrice);
+    this.deletePromocode();
+
   }
 
   public getInputValue() {
@@ -64,6 +68,7 @@ class CartPageController extends PageController {
     const promoBlock: HTMLElement | null = document.querySelector('.promo-block');
     promoInput?.addEventListener('input', () => {
       const val: string = promoInput.value;
+      console.log(val);
       const isValid = this.state.checkPromoCodes(val);
       this.view.drawPromoApplied(isValid, val);
       if (isValid) {
@@ -74,22 +79,38 @@ class CartPageController extends PageController {
             if (promoInput) {
               const val: string = promoInput.value;
               this.state.addCodeToSettings(val);
-              promoInput.value = '';
-              target.classList.add('inactive');
-              const settings = this.state.getState().onlineStoreSettings;
-              const products = this.state.getState().products;
-              const cart = this.state.getState().onlineStoreSettings.cart;
-              const productsToRender = this.identityProducts(cart, products);
-              const discount = settings.promoСodes.length;
-              const totalPrice = this.getTotalPrice(productsToRender);
-              this.view.drawPromoBlock(settings.promoСodes);
-              const discountPrice = totalPrice * (1 - discount);
-              this.view.updateDiscountPrice(discountPrice);
+              this.updateTotalBlock();
+              this.getInputValue();
             }
           }
         });
       }
     });
+  }
+  deletePromocode() {
+    const promoBlock: HTMLElement | null = document.querySelector('.promo-block');
+    const codes = ['RSS', 'EPAM'];
+    promoBlock?.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.id === 'delete-code') {
+        const code = target.getAttribute('code');
+        const res = codes.filter((codeItem) => codeItem === code);
+        this.state.dropCodeFromSetting(res[0]);
+        this.updateTotalBlock();
+        this.getInputValue();
+      }
+    });
+  }
+
+  updateTotalBlock() {
+    const settings = this.state.getState().onlineStoreSettings;
+    const products = this.state.getState().products;
+    const cart = this.state.getState().onlineStoreSettings.cart;
+    const productsToRender = this.view.identityProducts(cart, products);
+    const discount = settings.promoСodes.length * 0.1;
+    const totalPrice = this.view.getTotalPrice(productsToRender);
+    this.view.drawPromo(settings.promoСodes);
+    this.view.updateDiscountPrice(discount, totalPrice);
   }
 
   getProductsToRender(): IProductLS[] {
