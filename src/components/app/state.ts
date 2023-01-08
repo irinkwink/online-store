@@ -80,6 +80,7 @@ class State {
   public addCodeToSettings(code: string) {
     const promocodes = this.state.onlineStoreSettings.promoСodes;
     promocodes.push(code.toUpperCase());
+    console.log(code);
     this.saveState();
   }
 
