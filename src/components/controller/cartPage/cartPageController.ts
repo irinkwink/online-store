@@ -1,48 +1,68 @@
 import CartPageView from '../../view/cartPage/cartPageView';
 //import { storageUtility } from '../../view/localStorage/LocalStorage';
 import PageController from '../pageController';
-import { IProductInLS, IProductLS } from '../../../types/interfaces';
+import { ICartProduct, IProduct, IProductLS } from '../../../types/interfaces';
+import TemplatePageController from '../templatePage/templatePageController';
+import { CartTotal } from '../../../types/types';
+import CartPaginationController from './cartPaginationController';
 class CartPageController extends PageController {
   view: CartPageView;
+  pagination: CartPaginationController;
 
-  constructor(state: State) {
-    super(state);
+  constructor(templatePage: TemplatePageController) {
+    super(templatePage, 'cart');
     this.view = new CartPageView();
+    this.pagination = new CartPaginationController((products) => this.view.drawProducts(products));
   }
 
   start() {
     console.log('Cart Page');
+    super.start();
+    this.view.wrapper = this.main.view.main;
+
     const products = this.state.getState().products;
     const cart = this.state.getState().onlineStoreSettings.cart;
-    const productsToRender = this.view.identityProducts(cart, products);
+    const productsToRender = this.identityProducts(cart, products);
     const settings = this.state.getState().onlineStoreSettings.promoСodes;
-    this.view.render(productsToRender);
-    this.view.drawTotal();
-    this.view.drawPromo(settings);
+
+    this.view.draw();
+    this.pagination.view.wrapper = this.view.pagination;
+
+    this.pagination.init(productsToRender);
+    this.view.updateLimit(this.pagination.limitNum);
+
+    this.view.drawPromoBlock(settings);
+
     const discount = this.getDiscount(settings);
-    const totalPrice = this.view.getTotalPrice(productsToRender);
-    const totalNum = this.view.getTotalNum(productsToRender);
-    this.view.updateTotalNumber(totalNum);
-    this.view.updateTotalPrice(totalPrice);
+    const cartTotal: CartTotal = this.state.calculateCartTotal();
+    this.view.updateTotal(cartTotal);
+
     if (discount > 0) {
-      this.view.updateDiscountPrice(discount, totalPrice);
+      const discountPrice = cartTotal.totalPrice * (1 - discount);
+      this.view.updateDiscountPrice(discountPrice);
     }
-    this.view.cartTable?.addEventListener('click', (e) => {
+
+    this.view.cartList?.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
-      if (target.closest('.cart-table-row__controls')) {
-        const el = target.closest('.cart-table-row__controls') as HTMLElement;
-        const id = Number(el.dataset.id);
-        const action = target.id;
-        this.controlCartButtons(action, id);
+      if (target.closest('.item__control') && target.closest('.control-btn')) {
+        this.controlCartButtons(target);
       }
     });
+
     this.getInputValue();
+
+    this.view.limitInput?.addEventListener('change', (e) => {
+      const target = e.target as HTMLInputElement;
+      if (target) {
+        this.pagination.updateLimit(+target.value);
+      }
+    });
   }
 
   public getInputValue() {
     const promoInput: HTMLInputElement | null = document.querySelector('.promo-block__input');
     const promoBlock: HTMLElement | null = document.querySelector('.promo-block');
-    promoInput?.addEventListener('input', (e) => {
+    promoInput?.addEventListener('input', () => {
       const val: string = promoInput.value;
       const isValid = this.state.checkPromoCodes(val);
       this.view.drawPromoApplied(isValid, val);
@@ -59,11 +79,12 @@ class CartPageController extends PageController {
               const settings = this.state.getState().onlineStoreSettings;
               const products = this.state.getState().products;
               const cart = this.state.getState().onlineStoreSettings.cart;
-              const productsToRender = this.view.identityProducts(cart, products);
+              const productsToRender = this.identityProducts(cart, products);
               const discount = settings.promoСodes.length;
-              const totalPrice = this.view.getTotalPrice(productsToRender);
-              this.view.drawPromo(settings.promoСodes);
-              this.view.updateDiscountPrice(discount, totalPrice);
+              const totalPrice = this.getTotalPrice(productsToRender);
+              this.view.drawPromoBlock(settings.promoСodes);
+              const discountPrice = totalPrice * (1 - discount);
+              this.view.updateDiscountPrice(discountPrice);
             }
           }
         });
@@ -74,21 +95,19 @@ class CartPageController extends PageController {
   getProductsToRender(): IProductLS[] {
     const products = this.state.getState().products;
     const cart = this.state.getState().onlineStoreSettings.cart;
-    const productsToRender = this.view.identityProducts(cart, products);
+    const productsToRender = this.identityProducts(cart, products);
     return productsToRender;
   }
-  identityProducts(arr: IProductInLS[], state: State): IProductLS[] {
+
+  identityProducts(cart: ICartProduct[], products: IProduct[]): IProductLS[] {
     const pickedProducts = [];
-    if (arr.length > 0) {
-      for (let i = 1; i < arr.length; i++) {
-        const products = state.getState().products;
-        const fined = products.filter((item) => item.id == arr[i].id);
-        const num = arr[i].num;
-        const btnState = arr[i].btnState;
+    if (cart.length > 0) {
+      for (let i = 0; i < cart.length; i++) {
+        const fined = products.filter((item) => item.id == cart[i].id);
+        const num = cart[i].num;
         const res: IProductLS[] = JSON.parse(JSON.stringify(fined));
-        res.forEach(function (item) {
+        res.forEach((item) => {
           item.num = num;
-          item.btnState = btnState;
         });
         if (res.length > 0) {
           pickedProducts.push(...res);
@@ -99,6 +118,7 @@ class CartPageController extends PageController {
     }
     return pickedProducts;
   }
+
   getTotalPrice(productsInCart: IProductLS[]): number {
     let totalPrice = 0;
     for (let i = 0; i < productsInCart.length; i++) {
@@ -112,47 +132,49 @@ class CartPageController extends PageController {
     return settings.length * 0.1;
   }
 
-  updateProductsCartNum(id: number) {
-    const productsNum = document.querySelectorAll('.cart-table-row__num');
-    const index: number = this.state.getState().onlineStoreSettings.cart.findIndex((cartItem) => cartItem.id === id);
-    const num = this.state.getState().onlineStoreSettings.cart.filter((cartItem) => cartItem.id == id);
-    productsNum[index].textContent = String(num[0].num);
-  }
-  controlCartButtons(action: string, id: number) {
-    let num = this.state.getTotalNumInCart();
-    let cart = this.getProductsToRender();
-    let summ = this.getTotalPrice(cart);
-    switch (action) {
-      case 'btn-delete': {
-        this.state.removeProductFromCart(id);
-        num = this.state.getTotalNumInCart();
-        this.view.updateTotalNumber(num);
-        cart = this.getProductsToRender();
-        summ = this.getTotalPrice(cart);
-        this.view.updateTotalPrice(summ);
-        this.view.render(cart);
-        break;
+  // updateProductsCartNum(id: number) {
+  //   const productsNum = document.querySelectorAll('.item__number');
+  //   const cart = this.state.getState().onlineStoreSettings.cart;
+  //   const index: number = cart.findIndex((cartItem) => cartItem.id === id);
+  //   productsNum[index].textContent = String(cart[index].num);
+  // }
+
+  controlCartButtons(target: HTMLElement) {
+    const controlElem = target.closest('.item__control') as HTMLElement;
+    const btnElem = target.closest('.control-btn') as HTMLElement;
+    const idData = controlElem.dataset.productId;
+    const numberData = controlElem.dataset.productNumber;
+    const stockData = controlElem.dataset.productStock;
+    if (idData && numberData && stockData) {
+      const id = +idData;
+      let number = +numberData;
+      const stock = +stockData;
+      switch (btnElem.id) {
+        case 'btn-delete': {
+          this.state.removeProductFromCart(id);
+          this.pagination.init(this.getProductsToRender(), true);
+          break;
+        }
+        case 'btn-plus': {
+          if (number < stock) {
+            number += 1;
+            this.view.updateControl(controlElem, number, number === stock);
+            this.state.addProductToCart(id);
+          }
+          break;
+        }
+        case 'btn-minus': {
+          if (number > 1) {
+            number -= 1;
+            this.view.updateControl(controlElem, number, number === stock);
+            this.state.deleteItemFromCart(id);
+          }
+          break;
+        }
       }
-      case 'btn-plus': {
-        this.state.addProductToCart(id);
-        this.view.updateTotalNumber(num);
-        cart = this.getProductsToRender();
-        summ = this.getTotalPrice(cart);
-        num = this.state.getTotalNumInCart();
-        this.view.updateTotalPrice(summ);
-        this.updateProductsCartNum(id);
-        break;
-      }
-      case 'btn-minus': {
-        cart = this.getProductsToRender();
-        summ = this.getTotalPrice(cart);
-        num = this.state.getTotalNumInCart();
-        this.state.deleteItemFromCart(id);
-        this.view.updateTotalPrice(summ);
-        this.view.updateTotalNumber(num);
-        this.updateProductsCartNum(id);
-        break;
-      }
+      const cartTotal = this.state.calculateCartTotal();
+      this.view.updateTotal(cartTotal);
+      this.header.view.updateCartTotal(cartTotal);
     }
   }
 }

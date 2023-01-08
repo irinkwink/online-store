@@ -57,11 +57,11 @@ class CatalogPageView {
 
   public draw() {
     if (this.wrapperElem) {
-      this.wrapperElem.append(this.createCatalogElems());
+      this.wrapperElem.append(this.createCatalogElem());
     }
   }
 
-  private createCatalogElems(): HTMLElement {
+  private createCatalogElem(): HTMLElement {
     const sectionElem = document.createElement('section');
     sectionElem.className = 'catalog';
 

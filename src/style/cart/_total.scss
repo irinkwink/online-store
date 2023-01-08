@@ -1,0 +1,131 @@
+.total {
+  &__wrapper {
+    position: relative;
+    border: 1px solid $color-grey;
+    border-radius: 20px;
+    padding: 25px 20px;
+    margin: 0 auto;
+
+    @include desktop {
+      max-width: 494px;
+      padding-bottom: 28px;
+    }
+
+    @include mobile {
+      border: none;
+      padding: 15px 0 25px;
+
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: calc((100vw - 100%) / -2);
+        display: block;
+        width: 100vw;
+        height: 1px;
+        background-color: $color-grey;
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: calc((100vw - 100%) / -2);
+        display: block;
+        width: 100vw;
+        height: 1px;
+        background-color: $color-grey;
+      }
+    }
+
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 27px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid $color-grey-light;
+    margin-bottom: 27px;
+
+    @include mobile {
+      position: relative;
+      font-size: 18px;
+      line-height: 22px;
+      margin-bottom: 14px;
+      border-bottom: none;
+      padding-bottom: 9px;
+
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: calc((100vw - 100%) / -2);
+        display: block;
+        width: 100vw;
+        height: 1px;
+        background-color: $color-grey-light;
+      }
+    }
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 1.8rem;
+
+    @include mobile {
+      margin-bottom: 10px;
+      font-size: 1.4rem;
+      padding: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &_discount {
+      font-weight: 700;
+    }
+
+  }
+
+  &__submit {
+    max-width: 352px;
+    width: 100%;
+    height: 57px;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    background-color: $color-main;
+    color: $color-secondary;
+    border: 1px solid $color-main;
+
+    &_inactive {
+      background-color: $color-grey-light;
+      border-color: $color-grey-light;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    @include mobile {
+      height: 50px;
+      font-size: 12px;
+      line-height: 15px;
+    }
+
+    &:hover {
+      background-color: $color-main-sub;
+      border-color: $color-main-sub;
+    }
+
+    &:active {
+      background-color: $color-main;
+      border-color: $color-main-dark;
+    }
+  }
+
+}

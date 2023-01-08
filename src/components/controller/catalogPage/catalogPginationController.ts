@@ -1,9 +1,9 @@
 import { ProductsPerPage } from '../../../types/enums';
 import { IProduct } from '../../../types/interfaces';
 import { addSearchParamToUrl, deleteSearchParamFromUrl, getSearchParamValueFromUrl } from '../../router/urlController';
-import PaginationView from '../../view/catalogPage/paginationView';
+import PaginationView from '../../view/paginationView';
 
-class Pagination {
+class CatalogPaginationController {
   public view: PaginationView;
   private products: IProduct[];
   private cbDrawProducts: (data: IProduct[]) => void;
@@ -75,20 +75,23 @@ class Pagination {
 
   private drawPagination() {
     this.pages = Math.ceil(this.products.length / ProductsPerPage[this.type]);
-    this.view.draw(this.pages, this.page);
+    if (this.pages > 1) {
+      this.view.draw(this.pages, this.page);
+    }
   }
 
   private handlePagination(e: Event) {
     e.preventDefault();
     const target = e.target as HTMLElement;
     if (target) {
-      const linkElem = target.closest('.pagination__link') || target.closest('.pagination__arrow');
-      if (linkElem && (linkElem as HTMLElement).dataset.page) {
-        const elem = linkElem as HTMLElement;
+      const btnElem: HTMLElement | null = target.closest('.pagination__btn');
+      if (btnElem && btnElem.dataset.page) {
+        const elem = btnElem;
         if (elem.dataset.page) {
           this.page = +elem.dataset.page;
-          this.drawPagination();
           this.drawProducts();
+          this.view.updatePageButtons(this.page);
+          this.view.updateArrows(this.pages, this.page);
           addSearchParamToUrl({ key: 'page', value: this.page.toString() });
         }
       }
@@ -96,4 +99,4 @@ class Pagination {
   }
 }
 
-export default Pagination;
+export default CatalogPaginationController;

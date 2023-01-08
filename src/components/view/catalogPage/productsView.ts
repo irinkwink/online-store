@@ -27,6 +27,7 @@ class ProductsView {
   }
 
   public draw(products: IProduct[]): void {
+    console.log(this.displayType);
     if (this.wrapperElem) {
       this.wrapperElem.innerHTML = '';
       const productsElem = products.length === 0 ? this.drawProductsEmptyMessage() : this.drawProducts(products);
@@ -42,7 +43,7 @@ class ProductsView {
 
   private drawProducts(products: IProduct[]): HTMLUListElement {
     const productsListElem = document.createElement('ul');
-    productsListElem.className = 'goods__list goods__tiles';
+    productsListElem.className = `goods__list goods__${this.displayType}`;
 
     const productsElems = products.map((product) => this.createProductLiElem(product));
     productsListElem.append(...productsElems);

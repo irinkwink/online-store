@@ -283,12 +283,12 @@ class FilterView {
   public showFilters() {
     this.overlay.showOverlay();
     this.overlay.overlay?.addEventListener('click', () => this.hideFilters());
-    this.wrapper?.classList.add('filter_show');
+    this.wrapperElem?.classList.add('filter_show');
   }
 
   public hideFilters() {
     this.overlay.hideOverlay();
-    this.wrapper?.classList.remove('filter_show');
+    this.wrapperElem?.classList.remove('filter_show');
   }
 
   public showCopiedMessage() {

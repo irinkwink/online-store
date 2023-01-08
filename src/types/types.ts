@@ -36,7 +36,7 @@ export type SortOption = {
 
 export type CartTotal = {
   productsNum: number;
-  totalAmount: number;
+  totalPrice: number;
 };
 
 export type HeaderCartInfo = {

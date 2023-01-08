@@ -14,7 +14,6 @@ export interface IProduct {
 
 export interface IProductLS extends IProduct {
   num: number;
-  btnState?: boolean;
 }
 
 export interface IProductsData {
@@ -34,8 +33,7 @@ export interface IState {
   };
 }
 
-export interface IProductInLS {
-  id: number | null;
+export interface ICartProduct {
+  id: number;
   num: number;
-  btnState?: boolean;
 }

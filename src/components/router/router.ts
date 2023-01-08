@@ -38,7 +38,7 @@ class Router {
       if (target && target.closest('a') && target.closest('a')?.target !== '_blank') {
         const link = target.closest('a');
         console.log('link: ', link);
-        if (link?.href && !link.href.includes('cart')) {
+        if (link?.href) {
           e.preventDefault();
           history.pushState({}, '', link.href);
           console.log('link.href: ', link.href);

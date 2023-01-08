@@ -255,7 +255,7 @@
     place-self: end end;
     background-color: transparent;
     border: 1px solid $color-primary;
-    padding: 8px 4px;
+    padding: 8px 12px;
     font-weight: 500;
     font-size: 1.6rem;
     transition: all 0.36s ease-in-out;
@@ -266,7 +266,6 @@
     }
 
     @include tablet {
-      padding: 8px 12px;
 
       .goods__rows & {
         margin-top: 5px;

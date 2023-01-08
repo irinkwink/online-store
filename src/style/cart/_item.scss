@@ -1,0 +1,177 @@
+.item {
+  display: grid;
+  grid-template-columns: 200px 1fr max-content max-content;
+  grid-template-rows: min-content 1fr;
+  grid-template-areas: 
+    'image title price control'
+    'image description price control';
+  align-items: center;
+  gap: 10px 15px;
+
+  @include laptop {
+    grid-template-columns: 140px 1fr max-content max-content;
+  }
+
+  @include mobile {
+    grid-template-columns: 120px 1fr max-content;
+    grid-template-rows: min-content max-content max-content;
+    grid-template-areas: 
+      'image title title'
+      'image price control'
+      'description description description';
+    position: relative;
+    gap: 10px;
+  }
+
+  &__link {
+    grid-area: image;
+    height: fit-content;
+
+    @include laptop {
+      height: fit-content
+    }
+  }
+
+  &__image {
+    object-fit: cover;
+    aspect-ratio: 2/1.2;
+    width: 100%;
+    height: 100%;
+
+    @include mobile {
+      // aspect-ratio: 1/1;
+    }
+  }
+
+  &__title {
+    grid-area: title;
+    place-self: start start;
+    font-weight: 700;
+    font-size: 2rem;
+
+    @include tablet {
+      font-size: 1.6rem;
+    }
+
+    @include mobile {
+      margin-top: 5px;
+      padding-right: 20px;
+    }
+  }
+
+  &__description {
+    grid-area: description;
+    place-self: start start;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+
+    @include tablet {
+      font-size: 12px;
+      line-height: 15px;
+    }
+  }
+
+  &__control {
+    grid-area: control;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 0;
+    gap: 10px;
+
+    @include mobile {
+      justify-content: flex-start;
+      gap: 39px;
+    }
+  }
+
+  &__count {
+    flex-grow: 0;
+  }
+
+  &__price {
+    grid-area: price;
+    min-width: 70px;
+    color: $color-main-sub;
+    font-weight: 700;
+    font-size: 2.2rem;
+    color: $color-main-sub;
+    white-space: nowrap;
+    text-align: right;
+
+    @include mobile {
+      font-size: 2rem;
+    }
+  }
+
+  // &__count {
+  //   display: flex;
+  //   justify-content: space-between;
+  //   align-items: center;
+  //   width: 100%;
+  //   max-width: 120px;
+  //   gap: 10px;
+  //   //margin-right: 70px;
+
+  //   @include tablet {
+  //     max-width: 116px;
+  //   }
+  // }
+
+  // &__btn {
+  //   width: 34px;
+  //   height: 34px;
+  //   border-radius: 50%;
+  //   background-color: transparent;
+  //   border: 1px solid $color-primary;
+  //   font-weight: 400;
+  //   font-size: 30px;
+  //   line-height: 100%;
+
+  //   &:hover {
+  //     border-color: $color-main;
+  //     color: $color-main;
+  //   }
+
+  //   &_dec {
+
+  //   }
+  //   &_inc {
+
+  //   }
+  // }
+  // &__number {
+  //   font-weight: 400;
+  //   font-size: 30px;
+  //   line-height: 37px;
+
+  //   @include tablet {
+  //     font-size: 20px;
+  //     line-height: 24px;
+  //   }
+  // }
+
+  &__remove-cart {
+    flex-shrink: 0;
+    color: $color-grey-light;
+    width: 32px;
+    height: 32px;
+    background-color: transparent;
+    border: none;
+
+    @include mobile {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 20px;
+      height: 20px;
+
+    }
+
+    &:hover {
+      color: $color-main;
+    }
+
+  }
+}

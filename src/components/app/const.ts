@@ -29,8 +29,8 @@ export const HEADER_CART_INFO: HeaderCartInfo[] = [
     total: 0,
   },
   {
-    id: 'amount',
-    text: 'Total amount:',
+    id: 'price',
+    text: 'Total price:',
     end: '$',
     total: 0,
   },

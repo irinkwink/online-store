@@ -1,21 +1,21 @@
 import { IProduct } from '../../../types/interfaces';
 import State from '../../app/state';
 import ProductsView from '../../view/catalogPage/productsView';
-import Pagination from './paginationController';
+import CatalogPaginationController from './catalogPginationController';
 
 class ProductsController {
   state: State;
   cbUpdateCount: (number: number) => void;
   cbUpdateCartTotal: () => void;
   view: ProductsView;
-  pagination: Pagination;
+  pagination: CatalogPaginationController;
 
   constructor(state: State, cbUpdateCount: (number: number) => void, cbUpdateCartTotal: () => void) {
     this.cbUpdateCount = cbUpdateCount;
     this.cbUpdateCartTotal = cbUpdateCartTotal;
     this.state = state;
     this.view = new ProductsView(state);
-    this.pagination = new Pagination((products) => this.view.draw(products));
+    this.pagination = new CatalogPaginationController((products) => this.view.draw(products));
   }
 
   public init(products: IProduct[]) {

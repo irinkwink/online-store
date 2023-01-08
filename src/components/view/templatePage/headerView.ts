@@ -5,7 +5,7 @@ import { HEADER_CART_INFO } from '../../app/const';
 class HeaderView {
   private headerElem: HTMLElement | null;
   private totalNumberElem: HTMLSpanElement | null;
-  private totalAmountElem: HTMLSpanElement | null;
+  private totalPriceElem: HTMLSpanElement | null;
   private searchElem: HTMLDivElement | null;
   private searchFormElem: HTMLFormElement | null;
   private searchInputElem: HTMLInputElement | null;
@@ -13,7 +13,7 @@ class HeaderView {
   constructor() {
     this.headerElem = null;
     this.totalNumberElem = null;
-    this.totalAmountElem = null;
+    this.totalPriceElem = null;
     this.searchElem = null;
     this.searchFormElem = null;
     this.searchInputElem = null;
@@ -61,7 +61,7 @@ class HeaderView {
 
   public updateCartTotal(cartTotal: CartTotal) {
     if (this.totalNumberElem) this.totalNumberElem.textContent = cartTotal.productsNum.toString();
-    if (this.totalAmountElem) this.totalAmountElem.textContent = `${cartTotal.totalAmount}$`;
+    if (this.totalPriceElem) this.totalPriceElem.textContent = `${cartTotal.totalPrice}$`;
   }
 
   private createTitleElem(): HTMLElement {
@@ -128,8 +128,8 @@ class HeaderView {
 
     const numberIndex = headerCartRows.findIndex((item) => item.id === 'number');
     if (numberIndex !== -1) headerCartRows[numberIndex].total = cartTotal.productsNum;
-    const amountIndex = headerCartRows.findIndex((item) => item.id === 'amount');
-    if (numberIndex !== -1) headerCartRows[amountIndex].total = cartTotal.totalAmount;
+    const priceIndex = headerCartRows.findIndex((item) => item.id === 'price');
+    if (numberIndex !== -1) headerCartRows[priceIndex].total = cartTotal.totalPrice;
 
     const cartRowElems = headerCartRows.map((item) => {
       const cartRowElem = document.createElement('p');
@@ -146,7 +146,7 @@ class HeaderView {
       cartRowElem.append(cartTextElem, cartTotalElem);
 
       if (item.id === 'number') this.totalNumberElem = cartTotalElem;
-      if (item.id === 'amount') this.totalAmountElem = cartTotalElem;
+      if (item.id === 'price') this.totalPriceElem = cartTotalElem;
 
       return cartRowElem;
     });

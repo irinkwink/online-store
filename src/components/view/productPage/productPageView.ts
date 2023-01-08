@@ -168,19 +168,19 @@ class ProductPageView {
     cardControlElem.className = 'card__control';
 
     const cardCountElem = document.createElement('div');
-    cardCountElem.className = 'card__count';
+    cardCountElem.className = 'card__count count';
 
     const cardBtnDecElem = document.createElement('button');
-    cardBtnDecElem.className = 'card__btn card__btn_dec inactive';
+    cardBtnDecElem.className = 'count__btn inactive';
     cardBtnDecElem.textContent = '–';
     cardBtnDecElem.id = 'cardBtnDec';
 
     const cardCountNumberElem = document.createElement('output');
-    cardCountNumberElem.className = 'card__number';
-    cardCountNumberElem.textContent = '1';
+    cardCountNumberElem.className = 'count__number';
+    cardCountNumberElem.value = '1';
 
     const cardBtnIncElem = document.createElement('button');
-    cardBtnIncElem.className = 'card__btn card__btn_inc';
+    cardBtnIncElem.className = 'count__btn';
     cardBtnIncElem.textContent = '+';
     cardBtnIncElem.id = 'cardBtnInc';
 

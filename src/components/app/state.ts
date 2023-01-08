@@ -1,4 +1,5 @@
 import { IProduct, IState } from '../../types/interfaces';
+import { CartTotal } from '../../types/types';
 
 class State {
   private state: IState;
@@ -62,13 +63,28 @@ class State {
     this.saveState();
   }
 
-  public getTotalNumInCart(): number {
-    const cart = this.getState().onlineStoreSettings.cart;
-    let summ = 0;
-    cart.forEach((cartItem) => (summ += cartItem.num));
-    console.log(summ);
-    return summ;
+  public calculateCartTotal(): CartTotal {
+    const products = this.state.products;
+    const cart = this.state.onlineStoreSettings.cart;
+
+    const cartTotal: CartTotal = cart.reduce(
+      (acc, item) => {
+        acc.productsNum += item.num;
+        const price = products.find((product) => product.id === item.id)?.price;
+        if (price) {
+          acc.totalPrice += price * item.num;
+        }
+        return acc;
+      },
+      {
+        productsNum: 0,
+        totalPrice: 0,
+      }
+    );
+
+    return cartTotal;
   }
+
   public checkPromoCodes(code: string): boolean {
     const promocodes = this.state.onlineStoreSettings.promoСodes;
     code = code.toUpperCase();

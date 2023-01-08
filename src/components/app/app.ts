@@ -10,7 +10,7 @@ class App {
   dataController: DataController;
 
   templatePage: TemplatePageController;
-  localStorage: LocalStorageUtility;
+  // localStorage: LocalStorageUtility;
 
   constructor() {
     this.state = new State();
