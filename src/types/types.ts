@@ -6,7 +6,7 @@ import ProductPageController from '../components/controller/productPage/productP
 export type Routes = {
   404: Page404Controller;
   '/': CatalogPageController;
-  '/product': ProductPageController;
+  '/product.html': ProductPageController;
   '/cart.html': CartPageController;
 };
 

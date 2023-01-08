@@ -38,6 +38,7 @@
   &__title {
     font-weight: 700;
     font-size: 4rem;
+    margin-bottom: 5px;
 
     @include laptop {
       font-size: 3.6rem;

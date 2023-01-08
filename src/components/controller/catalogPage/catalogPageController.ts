@@ -28,7 +28,7 @@ class CatalogPageController extends PageController {
   public start() {
     const pageValue = getSearchParamValueFromUrl('page');
     if (this.isCatalogPage && pageValue) {
-      this.products.pagination.init(this.filter.productsFilter);
+      this.products.pagination.initPagination(this.filter.productsFilter);
     } else {
       super.start();
       this.view.wrapper = this.main.view.main;

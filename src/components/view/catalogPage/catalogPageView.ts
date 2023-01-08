@@ -92,6 +92,9 @@ class CatalogPageView {
     const panelBottomElem = document.createElement('div');
     panelBottomElem.className = 'catalog__panel catalog__panel_bottom';
 
+    const panelBottomRightElem = document.createElement('div');
+    panelBottomRightElem.className = 'catalog__panel-wrapper';
+
     const selectLabelElem = document.createElement('label');
     selectLabelElem.className = 'catalog__select-label';
 
@@ -99,6 +102,9 @@ class CatalogPageView {
     selectInputElem.className = 'catalog__input catalog__input_select';
     selectInputElem.id = 'sort';
     selectInputElem.name = 'sort';
+
+    const paginationElem = document.createElement('div');
+    paginationElem.className = 'catalog__pagination pagination';
 
     const optionsSortElems = SORT_OPTIONS.map((option) => {
       const optionElem = document.createElement('option');
@@ -140,9 +146,6 @@ class CatalogPageView {
     const goodsElem = document.createElement('div');
     goodsElem.className = 'catalog__goods goods';
 
-    const paginationElem = document.createElement('div');
-    paginationElem.className = 'catalog__pagination pagination';
-
     const filterBtnElem = document.createElement('button');
     filterBtnElem.className = 'catalog__filter-btn';
     filterBtnElem.textContent = 'Filters:';
@@ -153,11 +156,12 @@ class CatalogPageView {
 
     selectInputElem.append(...optionsSortElems);
     selectLabelElem.append(selectInputElem);
-    panelBottomElem.append(selectLabelElem, displaylElem);
+    panelBottomRightElem.append(selectLabelElem, displaylElem);
+    panelBottomElem.append(paginationElem, panelBottomRightElem);
 
     itemsNumberElem.append(itemsTextElem, itemsCountElem);
     panelTopElem.append(titleElem, itemsNumberElem);
-    catalogElem.append(panelTopElem, panelBottomElem, goodsElem, paginationElem, filterBtnElem);
+    catalogElem.append(panelTopElem, panelBottomElem, goodsElem, filterBtnElem);
     containerElem.append(catalogElem, filterElem);
     sectionElem.append(containerElem);
 
@@ -173,7 +177,7 @@ class CatalogPageView {
     return sectionElem;
   }
 
-  updateCount(count: number) {
+  public updateCount(count: number) {
     if (this.productsCountElem) {
       this.productsCountElem.textContent = count.toString();
     }
@@ -188,7 +192,7 @@ class CatalogPageView {
     });
   }
 
-  updateSortInput(value: string) {
+  public updateSortInput(value: string) {
     if (this.sortSelectElem) {
       Array.from(this.sortSelectElem.children).forEach((item) => {
         if ((item as HTMLOptionElement).value === value) {

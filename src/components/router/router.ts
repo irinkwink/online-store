@@ -22,7 +22,7 @@ class Router {
     this.routes = {
       404: this.page404,
       '/': this.catalogPage,
-      '/product': this.productPage,
+      '/product.html': this.productPage,
       '/cart.html': this.cartPage,
     };
     this.route = this.catalogPage;
@@ -37,11 +37,9 @@ class Router {
       const target = e.target as HTMLElement;
       if (target && target.closest('a') && target.closest('a')?.target !== '_blank') {
         const link = target.closest('a');
-        console.log('link: ', link);
         if (link?.href) {
           e.preventDefault();
           history.pushState({}, '', link.href);
-          console.log('link.href: ', link.href);
           this.handleLocation();
         }
       }
@@ -58,12 +56,8 @@ class Router {
 
   private handleLocation() {
     const fullPath = window.location.pathname;
-    console.log('window: ', window.location);
-    console.log('window.location.search: ', window.location.search);
-    console.log('fullPath: ', fullPath);
-    const path = `/${fullPath.split('/')[1]}`;
-    console.log('path: ', path);
-    this.route = path in this.routes ? this.routes[path as keyof Routes] : this.routes[404];
+    // const path = `/${fullPath.split('/')[1]}`;
+    this.route = fullPath in this.routes ? this.routes[fullPath as keyof Routes] : this.routes[404];
     console.log('this.route: ', this.route);
     this.route.start();
   }

@@ -24,7 +24,7 @@ export const DEVELOPERS: Developers[] = [
 export const HEADER_CART_INFO: HeaderCartInfo[] = [
   {
     id: 'number',
-    text: 'Products in cart:',
+    text: 'Items in Cart:',
     end: '',
     total: 0,
   },

@@ -36,7 +36,7 @@ class PaginationView {
     if (this.wrapperElem) {
       this.wrapperElem.textContent = '';
 
-      if (pages > 0) {
+      if (pages > 1) {
         const paginationList = document.createElement('div');
         paginationList.className = 'pagination__list';
 

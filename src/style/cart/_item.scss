@@ -24,11 +24,24 @@
   }
 
   &__link {
-    grid-area: image;
-    height: fit-content;
+    &_image {
+      grid-area: image;
+      height: fit-content;
+    }
 
-    @include laptop {
-      height: fit-content
+    &_title {
+      grid-area: title;
+      place-self: start start;
+      transition: color 0.36s ease-in-out;
+
+      &:hover {
+        color: $color-main-sub;
+      }
+
+      @include mobile {
+        margin-top: 5px;
+        padding-right: 20px;
+      }
     }
   }
 
@@ -44,18 +57,11 @@
   }
 
   &__title {
-    grid-area: title;
-    place-self: start start;
     font-weight: 700;
     font-size: 2rem;
 
     @include tablet {
       font-size: 1.6rem;
-    }
-
-    @include mobile {
-      margin-top: 5px;
-      padding-right: 20px;
     }
   }
 

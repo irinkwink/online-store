@@ -1,23 +1,20 @@
-import { IProduct, IProductLS } from '../../../types/interfaces';
+import { IProductLS } from '../../../types/interfaces';
 import { CartTotal } from '../../../types/types';
 // import { myPromoCode } from '../localStorage/PromoCodes';
 
 export class CartPageView {
   private wrapperElem: HTMLElement | null;
-  products?: IProduct[];
-  productsInLS? = [null];
   private paginationElem: HTMLDivElement | null;
   private limitInputElem: HTMLInputElement | null;
   private cartListElem: HTMLUListElement | null;
   private numberTotalElem: HTMLSpanElement | null;
   private priceTotalElem: HTMLSpanElement | null;
   private discountElem: HTMLParagraphElement | null;
-  promoInput: HTMLInputElement | null;
-  promoBlockElem: HTMLDivElement | null;
+  private promoInput: HTMLInputElement | null;
+  private promoBlockElem: HTMLDivElement | null;
 
   constructor() {
     this.wrapperElem = null;
-    this.products = [];
     this.paginationElem = null;
     this.limitInputElem = null;
     this.cartListElem = null;
@@ -42,13 +39,6 @@ export class CartPageView {
 
   public get limitInput() {
     return this.limitInputElem;
-  }
-
-  private createContainerElem(): HTMLDivElement {
-    const containerElem = document.createElement('div');
-    containerElem.className = 'container';
-
-    return containerElem;
   }
 
   public draw() {
@@ -109,13 +99,17 @@ export class CartPageView {
     liElem.className = 'item';
 
     const linkImageElem = document.createElement('a');
-    linkImageElem.className = 'item__link';
-    linkImageElem.href = `product/${product.id.toString()}`;
+    linkImageElem.className = 'item__link item__link_image';
+    linkImageElem.href = `product.html?id=${product.id.toString()}`;
 
     const imageElem = new Image();
     imageElem.className = 'item__image';
     imageElem.src = product.thumbnail;
     imageElem.alt = product.title;
+
+    const linkTitleElem = document.createElement('a');
+    linkTitleElem.className = 'item__link item__link_title';
+    linkTitleElem.href = `product.html?id=${product.id.toString()}`;
 
     const titleElem = document.createElement('h3');
     titleElem.className = 'item__title';
@@ -171,9 +165,10 @@ export class CartPageView {
     `;
 
     linkImageElem.append(imageElem);
+    linkTitleElem.append(titleElem);
     countElem.append(btnDecElem, countNumberElem, btnIncElem);
     controlElem.append(countElem, productDelBtn);
-    liElem.append(linkImageElem, titleElem, descriptionElem, priceElem, controlElem);
+    liElem.append(linkImageElem, linkTitleElem, descriptionElem, priceElem, controlElem);
 
     return liElem;
   }
@@ -213,7 +208,7 @@ export class CartPageView {
 
     const numberTextElem = document.createElement('span');
     numberTextElem.className = 'total__text';
-    numberTextElem.textContent = 'Products: ';
+    numberTextElem.textContent = 'Items: ';
 
     const numberTotalElem = document.createElement('span');
     numberTotalElem.className = 'total__text total__text_number total-num';
@@ -315,6 +310,12 @@ export class CartPageView {
     }
   }
 
+  public updateMaxLimit(limit: number) {
+    if (this.limitInputElem) {
+      this.limitInputElem.max = limit.toString();
+    }
+  }
+
   public updateTotal(cartTotal: CartTotal) {
     if (this.numberTotalElem) {
       this.numberTotalElem.textContent = cartTotal.productsNum.toString();
@@ -341,11 +342,8 @@ export class CartPageView {
   public updateControl(controlElem: HTMLElement, number: number, isMax = false): void {
     if (controlElem) {
       const numberElem: HTMLOutputElement | null = controlElem.querySelector('.count__number');
-      console.log('numberElem: ', numberElem);
       const btnDecElem: HTMLButtonElement | null = controlElem.querySelector('.count__btn_dec');
-      console.log('btnDecElem: ', btnDecElem);
       const btnIncElem: HTMLButtonElement | null = controlElem.querySelector('.count__btn_inc');
-      console.log('btnIncElem: ', btnIncElem);
       controlElem.dataset.productNumber = number.toString();
 
       if (numberElem) {

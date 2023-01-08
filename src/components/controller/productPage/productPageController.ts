@@ -1,4 +1,5 @@
 import { SLIDER_MOVE } from '../../app/const';
+import { getSearchParamValueFromUrl } from '../../router/urlController';
 import ProductPageView from '../../view/productPage/productPageView';
 import PageController from '../pageController';
 import TemplatePageController from '../templatePage/templatePageController';
@@ -26,8 +27,10 @@ class ProductPageController extends PageController {
     super.start();
     this.view.wrapper = this.main.view.main;
 
-    const fullPath = window.location.pathname;
-    const id = fullPath.split('/')[2];
+    // const fullPath = window.location.pathname;
+    // const id = fullPath.split('/')[2];
+
+    const id = getSearchParamValueFromUrl('id');
 
     if (id) {
       this.id = +id;

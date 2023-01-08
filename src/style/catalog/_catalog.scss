@@ -24,7 +24,7 @@
   &__panel {
     display: flex;
     margin-bottom: 10px;
-    gap: 20px;
+    gap: 10px 20px;
 
     &_top {
       align-items: baseline;
@@ -33,9 +33,18 @@
 
     &_bottom {
       align-items: center;
-      justify-content: flex-end;
+      justify-content: space-between;
       margin-bottom: 20px;
+
+      @include mobile {
+        flex-direction: column-reverse;
+      }
     }
+  }
+
+  &__panel-wrapper {
+    display: flex;
+    gap: 20px;
   }
 
   &__title {

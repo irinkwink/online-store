@@ -1,16 +1,15 @@
-import { IProductLS } from '../../types/interfaces';
 import { addSearchParamToUrl, deleteSearchParamFromUrl, getSearchParamValueFromUrl } from '../router/urlController';
 import PaginationView from '../view/paginationView';
 
-class paginationController {
+class PaginationController<T> {
   public view: PaginationView;
-  private products: IProductLS[];
-  private cbDrawProducts: (data: IProductLS[]) => void;
-  private pages: number;
-  private page: number;
-  private limit: number;
+  protected products: T[];
+  protected cbDrawProducts: (data: T[]) => void;
+  protected pages: number;
+  protected page: number;
+  protected limit: number;
 
-  constructor(callback: (data: IProductLS[]) => void) {
+  constructor(callback: (data: T[]) => void) {
     this.view = new PaginationView();
     this.products = [];
     this.cbDrawProducts = callback;
@@ -29,6 +28,7 @@ class paginationController {
 
   public updateLimit(value: number) {
     this.limit = value;
+    this.page = 1;
     this.drawPagination();
     this.filterProducts();
 
@@ -37,29 +37,20 @@ class paginationController {
     }
   }
 
-  private filterProducts() {
+  protected filterProducts() {
     const firstProduct = this.limit * (this.page - 1);
     const lastProduct = this.limit * this.page;
     const productsToDraw = this.products.slice(firstProduct, lastProduct);
     this.cbDrawProducts(productsToDraw);
   }
 
-  public init(products: IProductLS[], isCurrentPage = false) {
-    console.log('products: ', products.length);
-    this.products = products;
-    if (isCurrentPage) {
-      deleteSearchParamFromUrl('page');
-    } else {
-      this.limit = this.products.length === 0 ? 1 : this.products.length;
-    }
-
+  protected init() {
     if (this.products.length === 0) {
       deleteSearchParamFromUrl('page');
       this.cbDrawProducts(this.products);
     } else {
       const pageValue = getSearchParamValueFromUrl('page');
       this.page = pageValue ? +pageValue : 1;
-      console.log('this.page: ', this.page);
 
       this.drawPagination();
       this.filterProducts();
@@ -70,14 +61,12 @@ class paginationController {
     }
   }
 
-  private drawPagination() {
+  protected drawPagination() {
     this.pages = Math.ceil(this.products.length / this.limit);
-    if (this.pages > 1) {
-      this.view.draw(this.pages, this.page);
-    }
+    this.view.draw(this.pages, this.page);
   }
 
-  private handlePagination(e: Event) {
+  protected handlePagination(e: Event) {
     e.preventDefault();
     const target = e.target as HTMLElement;
     if (target) {
@@ -96,4 +85,4 @@ class paginationController {
   }
 }
 
-export default paginationController;
+export default PaginationController;

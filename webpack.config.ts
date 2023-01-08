@@ -3,6 +3,7 @@ import { merge } from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import EslintPlugin from 'eslint-webpack-plugin';
+// import FontPreloadPlugin from 'webpack-font-preload-plugin';
 
 const PAGES = ['index', 'cart', 'product', 'page404'];
 
@@ -86,12 +87,22 @@ const baseConfig = {
         ],
         type: 'asset/resource',
       },
+      {
+        test: /\.webmanifest$/i,
+        use: 'webpack-webmanifest-loader',
+        type: 'asset/resource',
+      },
     ],
   },
   plugins: [
     new EslintPlugin({
       extensions: ['ts'],
     }),
+    // new FontPreloadPlugin({
+    //   extensions: ['woff2', 'woff'],
+    //   crossorigin: true,
+    //   loadType: 'preload',
+    // }),
     // new HtmlWebpackPlugin({
     //   template: path.resolve(__dirname, `src/index.html`),
     //   filename: `index.html`,

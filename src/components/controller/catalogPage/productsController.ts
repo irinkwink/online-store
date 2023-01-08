@@ -1,7 +1,7 @@
 import { IProduct } from '../../../types/interfaces';
 import State from '../../app/state';
 import ProductsView from '../../view/catalogPage/productsView';
-import CatalogPaginationController from './catalogPginationController';
+import CatalogPaginationController from './catalogPaginationController';
 
 class ProductsController {
   state: State;
@@ -19,7 +19,7 @@ class ProductsController {
   }
 
   public init(products: IProduct[]) {
-    this.pagination.init(products);
+    this.pagination.initPagination(products);
 
     this.cbUpdateCount(products.length);
 

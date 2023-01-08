@@ -76,6 +76,7 @@ class FilterController {
       } else {
         addSearchParamToUrl({ key: 'sort', value: this.filters.sort });
       }
+      deleteSearchParamFromUrl('page');
       this.filterProducts();
     });
 

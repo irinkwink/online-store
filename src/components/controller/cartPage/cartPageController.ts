@@ -28,7 +28,7 @@ class CartPageController extends PageController {
     this.view.draw();
     this.pagination.view.wrapper = this.view.pagination;
 
-    this.pagination.init(productsToRender);
+    this.pagination.initPagination(productsToRender);
     this.view.updateLimit(this.pagination.limitNum);
 
     this.view.drawPromoBlock(settings);
@@ -152,7 +152,8 @@ class CartPageController extends PageController {
       switch (btnElem.id) {
         case 'btn-delete': {
           this.state.removeProductFromCart(id);
-          this.pagination.init(this.getProductsToRender(), true);
+          this.view.updateMaxLimit(this.state.getState().onlineStoreSettings.cart.length);
+          this.pagination.initPagination(this.getProductsToRender(), true);
           break;
         }
         case 'btn-plus': {
