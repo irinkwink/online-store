@@ -55,13 +55,20 @@ export class CartPageView {
     if (productsInCart.length > 0) {
       if (cartTable) {
         cartTable.innerHTML = '';
+        let number = 1;
         productsInCart.forEach(function (product) {
           const tableRow = document.createElement('div');
           tableRow.className = 'cart-table__row cart-table-row';
+          const productsNumber = document.createElement('span');
+          productsNumber.innerHTML = String(number);
+          productsNumber.className = 'cart-table-row__number';
           const productImage = new Image();
           productImage.className = 'cart-table-row__img';
           productImage.src = product.thumbnail;
           productImage.alt = product.title;
+          const productLink = document.createElement('a');
+          productLink.className = 'cart-table-row__link';
+          productLink.href = `/product.html?id=${product.id}`;
           const productInfo = document.createElement('div');
           productInfo.className = 'cart-table-row__info';
           const productTitle = document.createElement('h3');
@@ -70,7 +77,11 @@ export class CartPageView {
           const productDesc = document.createElement('div');
           productDesc.className = 'cart-table-row__desc';
           productDesc.innerHTML = `${product.description}`;
-          productInfo.append(productTitle, productDesc);
+          const productStock = document.createElement('div');
+          productStock.className = 'cart-table-row__stock';
+          productStock.innerHTML = `Stock - ${product.stock}`;
+          productInfo.append(productTitle, productDesc, productStock);
+          productLink.append(productImage, productInfo);
           const productPrice = document.createElement('div');
           productPrice.className = 'cart-table-row__price';
           productPrice.innerHTML = `${product.price}$`;
@@ -92,8 +103,9 @@ export class CartPageView {
           productDelBtn.id = 'btn-delete';
           productsNum.textContent = String(product.num);
           productControls.append(minusBtn, productsNum, plusBtn, productDelBtn);
-          tableRow.append(productImage, productInfo, productPrice, productControls);
+          tableRow.append(productsNumber, productLink, productPrice, productControls);
           cartTable.append(tableRow);
+          number += 1;
         });
       }
     } else {

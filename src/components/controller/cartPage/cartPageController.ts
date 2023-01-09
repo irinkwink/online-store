@@ -230,7 +230,6 @@ class CartPageController extends PageController {
     const form = this.modal.form;
     form?.addEventListener('submit', (e) => {
       e.preventDefault();
-      console.log('Проверка полей');
       const phone = this.modal.phoneInp;
       const phoneErr = this.modal.phoneErr;
       const number = this.modal.cardNumInp;
