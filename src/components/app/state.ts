@@ -7,6 +7,7 @@ class State {
   constructor() {
     this.state = {
       products: [],
+      error: '',
       onlineStoreSettings: {
         cart: [],
         promoCodes: [],
@@ -14,26 +15,30 @@ class State {
     };
   }
 
-  public getState() {
+  public getState(): IState {
     return this.state;
   }
 
-  public loadState() {
+  public loadState(): void {
     const dataJSON = localStorage.getItem('online-store-settings');
     if (dataJSON) {
       this.state.onlineStoreSettings = JSON.parse(dataJSON);
     }
   }
 
-  private saveState() {
+  private saveState(): void {
     localStorage.setItem('online-store-settings', JSON.stringify(this.state.onlineStoreSettings));
   }
 
-  public saveProducts(data: IProduct[]) {
+  public saveProducts(data: IProduct[]): void {
     this.state.products = data;
   }
 
-  public addProductToCart(id: number, count = 1) {
+  public saveError(error: string): void {
+    this.state.error = error;
+  }
+
+  public addProductToCart(id: number, count = 1): void {
     const index: number = this.state.onlineStoreSettings.cart.findIndex((cartItem) => cartItem.id === id);
     if (index === -1) {
       this.state.onlineStoreSettings.cart.push({ id: id, num: count });
@@ -43,17 +48,15 @@ class State {
     this.saveState();
   }
 
-  public deleteItemFromCart(id: number, count = 1) {
+  public deleteItemFromCart(id: number, count = 1): void {
     const index: number = this.state.onlineStoreSettings.cart.findIndex((cartItem) => cartItem.id === id);
     if (index !== -1 && this.state.onlineStoreSettings.cart[index].num !== 1) {
       this.state.onlineStoreSettings.cart[index].num -= count;
-    } else {
-      console.log('disabled');
     }
     this.saveState();
   }
 
-  public removeProductFromCart(id: number) {
+  public removeProductFromCart(id: number): void {
     const index: number = this.state.onlineStoreSettings.cart.findIndex((cartItem) => cartItem.id === id);
     if (index === -1) {
       this.state.onlineStoreSettings.cart.push({ id: id, num: 1 });
@@ -85,13 +88,13 @@ class State {
     return cartTotal;
   }
 
-  public addCodeToSettings(code: string) {
+  public addCodeToSettings(code: string): void {
     const appliedPromoCodes = this.state.onlineStoreSettings.promoCodes;
     appliedPromoCodes.push(code.toUpperCase());
     this.saveState();
   }
 
-  public dropCodeFromSetting(code: string) {
+  public dropCodeFromSetting(code: string): void {
     const appliedPromoCodes = this.state.onlineStoreSettings.promoCodes;
     const index = appliedPromoCodes.indexOf(code);
     appliedPromoCodes.splice(index, 1);

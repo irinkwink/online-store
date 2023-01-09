@@ -33,7 +33,7 @@ class FilterController {
     this.filters = Object.assign({}, INITIAL_FILTERS);
   }
 
-  init(products: IProduct[]) {
+  init(products: IProduct[]): void {
     this.products = products;
     this.productsFilter = [...this.products];
 
@@ -185,7 +185,7 @@ class FilterController {
     }
   }
 
-  resetFilters() {
+  resetFilters(): void {
     this.productsFilter = [...this.products];
     this.filters.category = 'all';
     this.filters.brand = 'all';
@@ -195,11 +195,11 @@ class FilterController {
     this.updateStock();
   }
 
-  initFilters() {
+  initFilters(): void {
     this.filters = Object.assign({}, INITIAL_FILTERS);
   }
 
-  checkUrlForFilters() {
+  checkUrlForFilters(): void {
     const searchParams = getSearchParamsFromUrl();
 
     const searchParam = searchParams.find((item) => item.key === 'search');
@@ -242,7 +242,7 @@ class FilterController {
     this.updateStock(false);
   }
 
-  filterProducts() {
+  filterProducts(): void {
     let data = [...this.products];
 
     if (this.filters.category !== 'all') {
@@ -300,17 +300,17 @@ class FilterController {
     this.cbProductsInit(data);
   }
 
-  updateCategories() {
+  updateCategories(): void {
     const categories = new Set(this.products.map((item) => item.category));
     this.view.updateCategories(Array.from(categories), this.filters.category);
   }
 
-  updateBrands() {
+  updateBrands(): void {
     const brands = new Set(this.productsFilter.map((item) => item.brand));
     this.view.updateBrands(Array.from(brands), this.filters.brand);
   }
 
-  updatePrice(changeFiltersValues = true) {
+  updatePrice(changeFiltersValues = true): void {
     const prices = this.productsFilter.map((item) => item.price).sort((a, b) => a - b);
     this.filters.price.min = prices[0];
     this.filters.price.max = prices[prices.length - 1];
@@ -329,7 +329,7 @@ class FilterController {
     this.view.updatePriceValues(this.filters.price, this.filters.priceFilter);
   }
 
-  updateStock(changeFilters = true) {
+  updateStock(changeFilters = true): void {
     const stocks = this.productsFilter.map((item) => item.stock).sort((a, b) => a - b);
     this.filters.stock.min = stocks[0];
     this.filters.stock.max = stocks[stocks.length - 1];
@@ -348,7 +348,7 @@ class FilterController {
     this.view.updateStockValues(this.filters.stock, this.filters.stockFilter);
   }
 
-  updatePriceFilter(value: string, option: string) {
+  updatePriceFilter(value: string, option: string): void {
     let checkValue = +value;
     if (option === 'min') {
       if (checkValue >= this.filters.priceFilter.max) {
@@ -364,7 +364,7 @@ class FilterController {
     this.view.updatePriceValues(this.filters.price, this.filters.priceFilter);
   }
 
-  updateStockFilter(value: string, option: string) {
+  updateStockFilter(value: string, option: string): void {
     let checkValue = +value;
     if (option === 'min') {
       if (checkValue >= this.filters.stockFilter.max) {

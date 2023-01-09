@@ -263,7 +263,7 @@ class ProductPageView {
     return false;
   }
 
-  private updateArrowBtn(arrow: string, shouldInactivate = false) {
+  private updateArrowBtn(arrow: string, shouldInactivate = false): void {
     switch (arrow) {
       case 'prev':
         if (shouldInactivate) {

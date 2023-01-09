@@ -35,23 +35,23 @@ class FilterView {
     this.wrapperElem = element;
   }
 
-  public get form() {
+  public get form(): HTMLFormElement | null {
     return this.formElem;
   }
 
-  public get title() {
+  public get title(): HTMLElement | null {
     return this.titleElem;
   }
 
-  public get copyBtn() {
+  public get copyBtn(): HTMLButtonElement | null {
     return this.copyBtnElem;
   }
 
-  public get resetBtn() {
+  public get resetBtn(): HTMLButtonElement | null {
     return this.resetBtnElem;
   }
 
-  public draw() {
+  public draw(): void {
     if (this.wrapperElem) {
       this.wrapperElem.append(this.createFormElem());
     }
@@ -178,7 +178,7 @@ class FilterView {
     return formElem;
   }
 
-  public updateCategories(data: string[], select: string) {
+  public updateCategories(data: string[], select: string): void {
     if (this.categorySelectElem) {
       this.categorySelectElem.innerHTML = '';
 
@@ -204,7 +204,7 @@ class FilterView {
     }
   }
 
-  public updateBrands(data: string[], select: string) {
+  public updateBrands(data: string[], select: string): void {
     if (this.brandSelectElem) {
       this.brandSelectElem.innerHTML = '';
       const brandsItems = ['All brands', ...data].map((item) => {
@@ -228,7 +228,7 @@ class FilterView {
     }
   }
 
-  public updatePrice(price: MinMax, priceFilter: MinMax) {
+  public updatePrice(price: MinMax, priceFilter: MinMax): void {
     const [priceFromSlider, priceToSlider] = this.priceInputElems;
     if (priceFromSlider) {
       priceFromSlider.min = price.min.toString();
@@ -242,7 +242,7 @@ class FilterView {
     }
   }
 
-  public updateStock(stock: MinMax, stockFilter: MinMax) {
+  public updateStock(stock: MinMax, stockFilter: MinMax): void {
     const [stockFromSlider, stockToSlider] = this.stockInputElems;
     if (stockFromSlider) {
       stockFromSlider.min = stock.min.toString();
@@ -256,7 +256,7 @@ class FilterView {
     }
   }
 
-  public updatePriceValues(price: MinMax, priceFilter: MinMax) {
+  public updatePriceValues(price: MinMax, priceFilter: MinMax): void {
     const [priceMinElem, priceCurrentElem, priceMaxElem] = this.priceTextElems;
     if (priceMinElem) priceMinElem.textContent = `${price.min.toString()}$`;
     if (priceCurrentElem)
@@ -268,7 +268,7 @@ class FilterView {
     if (priceToSlider) priceToSlider.value = priceFilter.max.toString();
   }
 
-  public updateStockValues(stock: MinMax, stockFilter: MinMax) {
+  public updateStockValues(stock: MinMax, stockFilter: MinMax): void {
     const [stockMinElem, stockCurrentElem, stockMaxElem] = this.stockTextElems;
     if (stockMinElem) stockMinElem.textContent = stock.min.toString();
     if (stockCurrentElem)
@@ -280,18 +280,18 @@ class FilterView {
     if (stockToSlider) stockToSlider.value = stockFilter.max.toString();
   }
 
-  public showFilters() {
+  public showFilters(): void {
     this.overlay.showOverlay();
     this.overlay.overlay?.addEventListener('click', () => this.hideFilters());
     this.wrapperElem?.classList.add('filter_show');
   }
 
-  public hideFilters() {
+  public hideFilters(): void {
     this.overlay.hideOverlay();
     this.wrapperElem?.classList.remove('filter_show');
   }
 
-  public showCopiedMessage() {
+  public showCopiedMessage(): void {
     if (this.copyBtnElem) {
       this.copyBtnElem.textContent = 'Copied!';
       this.copyBtnElem.classList.add('pointer-none');

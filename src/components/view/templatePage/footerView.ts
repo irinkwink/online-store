@@ -8,11 +8,11 @@ class FooterView {
     this.footerElem = null;
   }
 
-  public get footer() {
+  public get footer(): HTMLElement | null {
     return this.footerElem;
   }
 
-  public draw() {
+  public draw(): void {
     this.footerElem = document.createElement('footer');
     this.footerElem.className = 'footer';
 

@@ -18,11 +18,11 @@ class PaginationController<T> {
     this.limit = 1;
   }
 
-  public get limitNum() {
+  public get limitNum(): number {
     return this.limit;
   }
 
-  public updateLimit(value: number) {
+  public updateLimit(value: number): void {
     this.limit = value;
     this.page = 1;
     this.drawPagination();
@@ -33,14 +33,14 @@ class PaginationController<T> {
     }
   }
 
-  protected filterProducts() {
+  protected filterProducts(): void {
     const firstProduct = this.limit * (this.page - 1);
     const lastProduct = this.limit * this.page;
     const productsToDraw = this.products.slice(firstProduct, lastProduct);
     this.cbDrawProducts(productsToDraw);
   }
 
-  protected init() {
+  protected init(): void {
     if (this.products.length === 0) {
       deleteSearchParamFromUrl('page');
       this.cbDrawProducts(this.products);
@@ -57,12 +57,12 @@ class PaginationController<T> {
     }
   }
 
-  protected drawPagination() {
+  protected drawPagination(): void {
     this.pages = Math.ceil(this.products.length / this.limit);
     this.view.draw(this.pages, this.page);
   }
 
-  protected handlePagination(e: Event) {
+  protected handlePagination(e: Event): void {
     e.preventDefault();
     const target = e.target as HTMLElement;
     if (target) {

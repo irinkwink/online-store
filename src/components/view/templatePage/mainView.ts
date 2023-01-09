@@ -5,16 +5,16 @@ class MainView {
     this.mainElem = null;
   }
 
-  public get main() {
+  public get main(): HTMLElement | null {
     return this.mainElem;
   }
 
-  public draw() {
+  public draw(): void {
     this.mainElem = document.createElement('main');
     this.mainElem.className = 'main';
   }
 
-  public emptyMain() {
+  public emptyMain(): void {
     if (this.mainElem) {
       this.mainElem.innerHTML = '';
     }

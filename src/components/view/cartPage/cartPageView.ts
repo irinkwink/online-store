@@ -37,23 +37,23 @@ export class CartPageView {
     this.wrapperElem = element;
   }
 
-  public get cartList() {
+  public get cartList(): HTMLUListElement | null {
     return this.cartListElem;
   }
 
-  public get pagination() {
+  public get pagination(): HTMLDivElement | null {
     return this.paginationElem;
   }
 
-  public get limitInput() {
+  public get limitInput(): HTMLInputElement | null {
     return this.limitInputElem;
   }
 
-  public get promoInput() {
+  public get promoInput(): HTMLInputElement | null {
     return this.promoInputElem;
   }
 
-  public get promoBlock() {
+  public get promoBlock(): HTMLDivElement | null {
     return this.promoBlockElem;
   }
 
@@ -97,7 +97,7 @@ export class CartPageView {
     const listElem = document.createElement('ul');
     listElem.className = 'cart__list cart-table';
 
-    const totalElem = this.drawTotalElem();
+    const totalElem = this.createTotalElem();
 
     limitElem.append(limitLabelElem, limitInputElem);
     panelElem.append(titleElem, paginationElem, limitElem);
@@ -110,7 +110,7 @@ export class CartPageView {
     return containerElem;
   }
 
-  private createProductElem(product: IProductLS) {
+  private createProductElem(product: IProductLS): HTMLLIElement {
     const liElem = document.createElement('li');
     liElem.className = 'item';
 
@@ -189,8 +189,7 @@ export class CartPageView {
     return liElem;
   }
 
-  public drawProducts(productsInCart: IProductLS[]) {
-    console.log('вывод');
+  public drawProducts(productsInCart: IProductLS[]): void {
     if (this.cartListElem) {
       this.cartListElem.innerHTML = '';
       if (productsInCart.length > 0) {
@@ -205,7 +204,7 @@ export class CartPageView {
     }
   }
 
-  private drawTotalElem() {
+  private createTotalElem(): HTMLElement {
     const totalElem = document.createElement('section');
     totalElem.className = 'cart__total total';
 
@@ -273,7 +272,7 @@ export class CartPageView {
     return totalElem;
   }
 
-  public drawPromoElem() {
+  public drawPromoElem(): void {
     if (this.promoBlockElem) {
       this.promoBlockElem.innerHTML = '';
 
@@ -308,13 +307,13 @@ export class CartPageView {
     }
   }
 
-  public emptyPromoCodeInput() {
+  public emptyPromoCodeInput(): void {
     if (this.promoInputElem) {
       this.promoInputElem.value = '';
     }
   }
 
-  public updateAppliedPromoCodes(codes: string[]) {
+  public updateAppliedPromoCodes(codes: string[]): void {
     if (this.appliedPromoCodesElem) {
       if (codes.length === 0) {
         this.appliedPromoCodesElem.innerHTML = '';
@@ -327,7 +326,7 @@ export class CartPageView {
         const appliedRowsElem = document.createElement('div');
         appliedRowsElem.className = 'promo__rows';
 
-        const rowElems = codes.map((code) => this.drawCodeRowElem(code, 'drop'));
+        const rowElems = codes.map((code) => this.createCodeRowElem(code, 'drop'));
 
         appliedRowsElem.append(...rowElems);
         this.appliedPromoCodesElem.append(appliedTitleElem, appliedRowsElem);
@@ -335,7 +334,7 @@ export class CartPageView {
     }
   }
 
-  public drawPromoCodeUsedMessage() {
+  public drawPromoCodeUsedMessage(): void {
     if (this.toApplyPromoCodesElem) {
       this.toApplyPromoCodesElem.innerHTML = '';
       const usedTextElem = document.createElement('p');
@@ -346,17 +345,17 @@ export class CartPageView {
     }
   }
 
-  public updateToApplyPromoCodes(code = '') {
+  public updateToApplyPromoCodes(code = ''): void {
     if (this.toApplyPromoCodesElem) {
       this.toApplyPromoCodesElem.innerHTML = '';
       if (code) {
-        const rowElem = this.drawCodeRowElem(code, 'add');
+        const rowElem = this.createCodeRowElem(code, 'add');
         this.toApplyPromoCodesElem.append(rowElem);
       }
     }
   }
 
-  private drawCodeRowElem(code: string, action: string) {
+  private createCodeRowElem(code: string, action: string): HTMLDivElement {
     const rowElem = document.createElement('div');
     rowElem.className = `promo__row promo__row_${action}`;
 
@@ -376,21 +375,21 @@ export class CartPageView {
     return rowElem;
   }
 
-  public updateLimitInput(limit: number) {
+  public updateLimitInput(limit: number): void {
     if (this.limitInputElem) {
       this.limitInputElem.max = limit.toString();
       this.limitInputElem.value = limit.toString();
     }
   }
 
-  public updateMaxLimit(limit: number) {
+  public updateMaxLimit(limit: number): void {
     if (this.limitInputElem) {
       this.limitInputElem.max = limit.toString();
       if (+this.limitInputElem.value > +this.limitInputElem.max) this.limitInputElem.value = limit.toString();
     }
   }
 
-  public updateTotal(cartTotal: CartTotal) {
+  public updateTotal(cartTotal: CartTotal): void {
     if (this.numberTotalElem) {
       this.numberTotalElem.textContent = cartTotal.productsNum.toString();
     }
@@ -428,7 +427,7 @@ export class CartPageView {
     }
   }
 
-  public updateDiscountPrice(discountPrice: number, isHideDiscount: boolean) {
+  public updateDiscountPrice(discountPrice: number, isHideDiscount: boolean): void {
     if (this.discountPriceElem && this.discountPriceTotalElem) {
       if (discountPrice > 0 && !isHideDiscount) {
         this.discountPriceTotalElem.textContent = `${discountPrice}$`;

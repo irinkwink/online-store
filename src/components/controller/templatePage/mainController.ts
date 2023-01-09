@@ -7,11 +7,11 @@ class MainController {
     this.view = new MainView();
   }
 
-  public init() {
+  public init(): void {
     this.view.draw();
   }
 
-  public emptyMain() {
+  public emptyMain(): void {
     this.view.emptyMain();
   }
 }

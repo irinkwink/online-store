@@ -28,7 +28,7 @@ class Router {
     this.route = this.catalogPage;
   }
 
-  public start() {
+  public start(): void {
     this.handleLocation();
 
     window.addEventListener('popstate', () => this.handleLocation());
@@ -54,11 +54,10 @@ class Router {
   //   }
   // }
 
-  private handleLocation() {
+  private handleLocation(): void {
     const fullPath = window.location.pathname;
     // const path = `/${fullPath.split('/')[1]}`;
     this.route = fullPath in this.routes ? this.routes[fullPath as keyof Routes] : this.routes[404];
-    console.log('this.route: ', this.route);
     this.route.start();
   }
 }

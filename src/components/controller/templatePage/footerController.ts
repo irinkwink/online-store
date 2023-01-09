@@ -7,7 +7,7 @@ class FooterController {
     this.view = new FooterView();
   }
 
-  public init() {
+  public init(): void {
     this.view.draw();
   }
 }

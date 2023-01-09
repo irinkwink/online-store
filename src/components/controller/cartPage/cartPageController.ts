@@ -19,7 +19,7 @@ class CartPageController extends PageController {
     this.totalDiscount = 0;
   }
 
-  start() {
+  start(): void {
     super.start();
     this.view.wrapper = this.main.view.main;
 
@@ -57,7 +57,7 @@ class CartPageController extends PageController {
     this.view.promoBlock?.addEventListener('click', (e) => this.handleDropAddBtns(e));
   }
 
-  initDiscount(cartTotal: CartTotal) {
+  initDiscount(cartTotal: CartTotal): void {
     if (this.appliedPromoCodes) {
       this.totalDiscount = this.calculateDiscount(this.appliedPromoCodes);
       if (this.totalDiscount > 0) {
@@ -68,23 +68,21 @@ class CartPageController extends PageController {
     }
   }
 
-  updateDiscount(cartTotal: CartTotal) {
+  updateDiscount(cartTotal: CartTotal): void {
     const discountPrice = Math.floor(cartTotal.totalPrice * (1 - this.totalDiscount));
     this.view.updateDiscountPrice(discountPrice, this.totalDiscount === 0);
   }
 
   calculateDiscount(appliedPromoСodes: string[]): number {
-    console.log('appliedPromoСodes: ', appliedPromoСodes);
     const discount = appliedPromoСodes.reduce(
       (acc, code) => (code in PROMO_CODES ? acc + PROMO_CODES[code as keyof PromoCodes] : acc),
       0
     );
-    console.log('discount: ', discount);
 
     return discount * 0.01;
   }
 
-  private handlePromoCodeInput() {
+  private handlePromoCodeInput(): void {
     const code: string | undefined = this.view.promoInput?.value;
     if (code && code in PROMO_CODES) {
       const appliedPromoCodes = this.state.getState().onlineStoreSettings.promoCodes;
@@ -96,7 +94,7 @@ class CartPageController extends PageController {
     }
   }
 
-  private handleDropAddBtns(e: Event) {
+  private handleDropAddBtns(e: Event): void {
     const target = e.target as HTMLElement;
     switch (target.id) {
       case 'addCodeBtn': {
@@ -112,18 +110,18 @@ class CartPageController extends PageController {
     }
   }
 
-  private applyCode(code: string) {
+  private applyCode(code: string): void {
     this.state.addCodeToSettings(code);
     this.updateTotalBlock();
     this.view.emptyPromoCodeInput();
   }
 
-  private deleteCode(code: string) {
+  private deleteCode(code: string): void {
     this.state.dropCodeFromSetting(code);
     this.updateTotalBlock();
   }
 
-  private updateTotalBlock() {
+  private updateTotalBlock(): void {
     this.appliedPromoCodes = this.state.getState().onlineStoreSettings.promoCodes;
     const cartTotal = this.state.calculateCartTotal();
     this.totalDiscount = this.calculateDiscount(this.appliedPromoCodes);
@@ -138,7 +136,6 @@ class CartPageController extends PageController {
     const products = this.state.getState().products;
     const cart = this.state.getState().onlineStoreSettings.cart;
     const productsToRender = this.identityProducts(cart, products);
-    console.log('productsToRender: ', productsToRender);
     return productsToRender;
   }
 
@@ -162,7 +159,7 @@ class CartPageController extends PageController {
     return pickedProducts;
   }
 
-  handleControlCartButtons(target: HTMLElement) {
+  handleControlCartButtons(target: HTMLElement): void {
     const controlElem = target.closest('.item__control') as HTMLElement;
     const btnElem = target.closest('.control-btn') as HTMLElement;
     const idData = controlElem.dataset.productId;

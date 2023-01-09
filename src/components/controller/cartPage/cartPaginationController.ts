@@ -7,14 +7,14 @@ class CartPaginationController extends PaginationController<IProductLS> {
     super(callback);
   }
 
-  public initPagination(products: IProductLS[], isCurrentPage = false) {
+  public initPagination(products: IProductLS[], isCurrentPage = false): void {
     deleteSearchParamFromUrl('page');
     this.products = products;
     this.initPageLimit(isCurrentPage);
     super.init();
   }
 
-  public initPageLimit(isCurrentPage: boolean) {
+  public initPageLimit(isCurrentPage: boolean): void {
     if (isCurrentPage) {
       deleteSearchParamFromUrl('page');
       if (this.limit > this.products.length) this.limit = this.products.length;

@@ -19,19 +19,19 @@ class HeaderView {
     this.searchInputElem = null;
   }
 
-  public get header() {
+  public get header(): HTMLElement | null {
     return this.headerElem;
   }
 
-  public get searchForm() {
+  public get searchForm(): HTMLFormElement | null {
     return this.searchFormElem;
   }
 
-  public get searchInput() {
+  public get searchInput(): HTMLInputElement | null {
     return this.searchInputElem;
   }
 
-  public draw(cartTotal: CartTotal) {
+  public draw(cartTotal: CartTotal): void {
     const headerElem = document.createElement('header');
     headerElem.className = 'header';
 
@@ -41,11 +41,11 @@ class HeaderView {
     this.headerElem = headerElem;
   }
 
-  public addSearchFormToHeader(value = '') {
+  public addSearchFormToHeader(value = ''): void {
     this.searchElem?.append(this.createSearchFormElem(value));
   }
 
-  public removeSearchFormFromHeader() {
+  public removeSearchFormFromHeader(): void {
     if (this.searchFormElem) {
       this.searchFormElem.remove();
       this.searchFormElem = null;
@@ -53,13 +53,13 @@ class HeaderView {
     }
   }
 
-  public emptySearchInput() {
+  public emptySearchInput(): void {
     if (this.searchInputElem) {
       this.searchInputElem.value = '';
     }
   }
 
-  public updateCartTotal(cartTotal: CartTotal) {
+  public updateCartTotal(cartTotal: CartTotal): void {
     if (this.totalNumberElem) this.totalNumberElem.textContent = cartTotal.productsNum.toString();
     if (this.totalPriceElem) this.totalPriceElem.textContent = `${cartTotal.totalPrice}$`;
   }

@@ -11,7 +11,7 @@ class HeaderController {
     this.view = new HeaderView();
   }
 
-  public init() {
+  public init(): void {
     this.view.draw(this.state.calculateCartTotal());
   }
 

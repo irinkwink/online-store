@@ -27,6 +27,7 @@ export interface ICartProduct {
 
 export interface IState {
   products: IProduct[];
+  error: string;
   onlineStoreSettings: {
     cart: ICartProduct[];
     promoCodes: string[];

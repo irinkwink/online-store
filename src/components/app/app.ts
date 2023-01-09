@@ -3,6 +3,7 @@ import DataController from '../controller/dataController';
 import State from './state';
 import Router from '../router/router';
 import TemplatePageController from '../controller/templatePage/templatePageController';
+import { Errors } from '../../types/enums';
 
 class App {
   private state: State;
@@ -13,18 +14,24 @@ class App {
   constructor() {
     this.state = new State();
     this.dataController = new DataController();
-
     this.templatePage = new TemplatePageController(this.state);
-
     this.router = new Router(this.templatePage);
   }
 
-  public async start() {
+  public async start(): Promise<void> {
     this.state.loadState();
-    const data = await this.dataController.getProducts();
-    this.state.saveProducts(data.products);
-    this.templatePage.start();
+    try {
+      const data = await this.dataController.getProducts();
+      if ('products' in data) {
+        this.state.saveProducts(data.products);
+      } else {
+        this.state.saveError(Errors.dataError);
+      }
+    } catch {
+      this.state.saveError(Errors.serverError);
+    }
 
+    this.templatePage.start();
     this.router.start();
   }
 }

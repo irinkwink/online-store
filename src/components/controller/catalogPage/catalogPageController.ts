@@ -25,7 +25,7 @@ class CatalogPageController extends PageController {
     this.isCatalogPage = false;
   }
 
-  public start() {
+  public start(): void {
     const pageValue = getSearchParamValueFromUrl('page');
     if (this.isCatalogPage && pageValue) {
       this.products.pagination.initPagination(this.filter.productsFilter);
@@ -53,7 +53,7 @@ class CatalogPageController extends PageController {
     }
   }
 
-  initDisplayType() {
+  initDisplayType(): void {
     const displatValue = getSearchParamValueFromUrl('display');
     if (displatValue && displatValue !== this.displayType) {
       this.displayType = displatValue;
@@ -77,7 +77,7 @@ class CatalogPageController extends PageController {
     });
   }
 
-  initSortInput() {
+  initSortInput(): void {
     const sortValue = getSearchParamValueFromUrl('sort');
     if (sortValue && sortValue !== 'none') {
       this.view.updateSortInput(sortValue);

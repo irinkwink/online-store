@@ -6,7 +6,7 @@ class Page404Controller extends PageController {
     super(templatePage, 'catalog');
   }
 
-  start() {
+  start(): void {
     console.log('page 404');
   }
 }

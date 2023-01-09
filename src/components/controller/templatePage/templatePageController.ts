@@ -16,19 +16,19 @@ class TemplatePageController {
     this._footer = new FooterController();
   }
 
-  public get state() {
+  public get state(): State {
     return this._state;
   }
 
-  public get header() {
+  public get header(): HeaderController {
     return this._header;
   }
 
-  public get main() {
+  public get main(): MainController {
     return this._main;
   }
 
-  public get footer() {
+  public get footer(): FooterController {
     return this._footer;
   }
 
@@ -41,9 +41,9 @@ class TemplatePageController {
       this._main.init();
       this._footer.init();
 
-      root.append(this._header.view.header as Node);
-      root.append(this._main.view.main as Node);
-      root.append(this._footer.view.footer as Node);
+      if (this._header.view.header) root.append(this._header.view.header);
+      if (this._main.view.main) root.append(this._main.view.main);
+      if (this._footer.view.footer) root.append(this._footer.view.footer);
     }
   }
 }

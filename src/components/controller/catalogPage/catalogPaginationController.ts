@@ -9,7 +9,7 @@ class CatalogPaginationController extends PaginationController<IProduct> {
     this.type = 'desktop';
   }
 
-  public initPagination(products: IProduct[]) {
+  public initPagination(products: IProduct[]): void {
     this.products = products;
     this.initPageLimit();
     super.init();

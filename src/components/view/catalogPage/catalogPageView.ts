@@ -27,35 +27,35 @@ class CatalogPageView {
     this.wrapperElem = element;
   }
 
-  public get productsCount() {
+  public get productsCount(): HTMLSpanElement | null {
     return this.productsCountElem;
   }
 
-  public get productsWrapper() {
+  public get productsWrapper(): HTMLDivElement | null {
     return this.productsElem;
   }
 
-  public get displayBtns() {
+  public get displayBtns(): HTMLDivElement | null {
     return this.displayBtnsElem;
   }
 
-  public get pagination() {
+  public get pagination(): HTMLDivElement | null {
     return this.paginationElem;
   }
 
-  public get filterBtn() {
+  public get filterBtn(): HTMLButtonElement | null {
     return this.filterBtnElem;
   }
 
-  public get filter() {
+  public get filter(): HTMLElement | null {
     return this.filterElem;
   }
 
-  public get sortSelect() {
+  public get sortSelect(): HTMLSelectElement | null {
     return this.sortSelectElem;
   }
 
-  public draw() {
+  public draw(): void {
     if (this.wrapperElem) {
       this.wrapperElem.append(this.createCatalogElem());
     }
@@ -177,13 +177,13 @@ class CatalogPageView {
     return sectionElem;
   }
 
-  public updateCount(count: number) {
+  public updateCount(count: number): void {
     if (this.productsCountElem) {
       this.productsCountElem.textContent = count.toString();
     }
   }
 
-  public updateDisplayBtns(displayType: string) {
+  public updateDisplayBtns(displayType: string): void {
     this.displayBtnElems.forEach((btn) => {
       btn.classList.remove('display__button_active');
       if (displayType === btn.dataset.display) {
@@ -192,7 +192,7 @@ class CatalogPageView {
     });
   }
 
-  public updateSortInput(value: string) {
+  public updateSortInput(value: string): void {
     if (this.sortSelectElem) {
       Array.from(this.sortSelectElem.children).forEach((item) => {
         if ((item as HTMLOptionElement).value === value) {

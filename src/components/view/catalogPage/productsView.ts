@@ -22,12 +22,11 @@ class ProductsView {
     this.displayType = value;
   }
 
-  public get productsList() {
+  public get productsList(): HTMLUListElement | null {
     return this.productsListElem;
   }
 
   public draw(products: IProduct[]): void {
-    console.log(this.displayType);
     if (this.wrapperElem) {
       this.wrapperElem.innerHTML = '';
       const productsElem = products.length === 0 ? this.drawProductsEmptyMessage() : this.drawProducts(products);
@@ -60,7 +59,7 @@ class ProductsView {
     return messageElem;
   }
 
-  updateProductsDisplay(displayType: string) {
+  updateProductsDisplay(displayType: string): void {
     if (this.productsList) {
       this.displayType = displayType;
       this.productsList.className = `goods__list goods__${displayType}`;

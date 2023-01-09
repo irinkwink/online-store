@@ -18,7 +18,7 @@ class ProductsController {
     this.pagination = new CatalogPaginationController((products) => this.view.draw(products));
   }
 
-  public init(products: IProduct[]) {
+  public init(products: IProduct[]): void {
     this.pagination.initPagination(products);
 
     this.cbUpdateCount(products.length);
@@ -31,7 +31,7 @@ class ProductsController {
     });
   }
 
-  private updateCart(btn: HTMLButtonElement) {
+  private updateCart(btn: HTMLButtonElement): void {
     this.view.updateBtnToCart(btn);
     const id = btn.dataset.productId;
     if (id !== undefined) {

@@ -1,3 +1,8 @@
+export enum Errors {
+  dataError = 'dataError',
+  serverError = 'serverError',
+}
+
 export enum ProductsPerPage {
   mobile = 6,
   tablet = 10,

@@ -11,7 +11,7 @@ class PaginationView {
     this.firstArrowElem = null;
   }
 
-  public get pagination() {
+  public get pagination(): HTMLDivElement | null {
     return this.wrapperElem;
   }
 
@@ -19,7 +19,7 @@ class PaginationView {
     this.wrapperElem = element;
   }
 
-  private createItemPagination(page: number, active: boolean) {
+  private createItemPagination(page: number, active: boolean): HTMLButtonElement {
     const btnElem = document.createElement('button');
     btnElem.className = 'btn pagination__btn pagination__btn_number';
     btnElem.textContent = page.toString();
@@ -32,7 +32,7 @@ class PaginationView {
     return btnElem;
   }
 
-  public draw(pages: number, page: number) {
+  public draw(pages: number, page: number): void {
     if (this.wrapperElem) {
       this.wrapperElem.textContent = '';
 
@@ -83,7 +83,7 @@ class PaginationView {
     }
   }
 
-  public updateArrows(pages: number, page: number) {
+  public updateArrows(pages: number, page: number): void {
     if (this.firstArrowElem) {
       if (page === 1) {
         this.firstArrowElem.classList.add('inactive');
@@ -101,7 +101,7 @@ class PaginationView {
     }
   }
 
-  public updatePageButtons(page: number) {
+  public updatePageButtons(page: number): void {
     this.pageNumberElems?.forEach((btn) => {
       const btnNumber = btn.dataset.page;
       if (btnNumber) {

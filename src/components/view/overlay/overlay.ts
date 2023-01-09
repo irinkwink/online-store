@@ -8,16 +8,16 @@ class Overlay {
     this.overlayElem = overlayElem;
   }
 
-  public get overlay() {
+  public get overlay(): HTMLDivElement {
     return this.overlayElem;
   }
 
-  showOverlay() {
+  showOverlay(): HTMLDivElement {
     document.body.append(this.overlayElem);
     return this.overlayElem;
   }
 
-  hideOverlay() {
+  hideOverlay(): void {
     this.overlayElem.remove();
   }
 }
