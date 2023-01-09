@@ -10,6 +10,7 @@
     grid-template-columns: 1fr 3fr 1fr;
     gap: 20px;
 
+
     @include desktop {
       grid-template-columns: 1fr 2fr 1fr;
     }
@@ -20,7 +21,6 @@
 
     @include tablet {
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
     }
 
     @include mobile {
@@ -46,6 +46,7 @@
   }
 
   &__search {
+    width: 100%;
     justify-self: center;
     max-width: 818px;
 

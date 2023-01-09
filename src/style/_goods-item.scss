@@ -3,14 +3,14 @@
   height: 100%;
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr max-content max-content;
   grid-template-rows: max-content max-content 1fr max-content max-content;
   grid-template-areas: 
-    'image image'
-    'title title'
-    'description description'
-    'price stock'
-    'rating btn';
+    'image image image'
+    'title title title'
+    'description description description'
+    'price price stock'
+    'rating btn btn';
   gap: 10px;
 
   .goods__rows & {
@@ -21,12 +21,10 @@
       'image description . . '
       'image description stock btn'
       'image description rating btn';
-    gap: 2px 10px;
+    gap: 4px 10px;
   }
 
   @include tablet {
-    // min-height: 420px;
-
     .goods__rows & {
       grid-template-columns: 100px 1fr max-content;
       grid-template-rows: max-content 1fr max-content max-content max-content;
@@ -40,7 +38,6 @@
   }
 
   @include mobile {
-    // min-height: 252px;
     grid-template-columns: 1fr;
     grid-template-areas: 
     'image'
@@ -53,7 +50,13 @@
     ;
 
     .goods__rows & {
-      grid-template-columns: 60px 1fr max-content;
+      grid-template-columns: 60px 1fr max-content max-content;
+      grid-template-rows: max-content 1fr max-content max-content;
+      grid-template-areas: 
+      'image title title price'
+      'image description description description'
+      'image rating btn btn'
+      'image . stock stock';
     }
   }
 
@@ -62,6 +65,7 @@
 
     &_image {
       grid-area: image;
+      height: fit-content;
     }
 
     &_title {
@@ -104,6 +108,7 @@
     object-fit: cover;
 
     .goods__rows & {
+      aspect-ratio: 1/1;
       height: 100%;
     }
   }
@@ -199,6 +204,12 @@
     .goods__rows & {
       place-self: end end;
     }
+
+    @include mobile {
+      .goods__rows & {
+        place-self: center start;
+      }
+    }
   }
 
   &__rate {
@@ -244,7 +255,7 @@
     place-self: end end;
     background-color: transparent;
     border: 1px solid $color-primary;
-    padding: 8px 4px;
+    padding: 8px 12px;
     font-weight: 500;
     font-size: 1.6rem;
     transition: all 0.36s ease-in-out;
@@ -255,7 +266,6 @@
     }
 
     @include tablet {
-      padding: 8px 12px;
 
       .goods__rows & {
         margin-top: 5px;
@@ -264,19 +274,19 @@
 
     @include mobile {
       width: 100%;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       margin-top: 5px;
+      padding: 8px;
+
+      .goods__rows & {
+        margin-top: 0;
+      }
     }
 
     &:hover {
       border-color: transparent;
       background-color: $color-main-sub;
     }
-
-    //&:active {
-    //  border-color: transparent;
-    //  background-color: $color-main-sub;
-    //}
   }
 }
 

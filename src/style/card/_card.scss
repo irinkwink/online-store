@@ -184,49 +184,49 @@
     }
   }
 
-  &__count {
-    grid-area: count;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    min-width: 110px;
+  // &__count {
+  //   grid-area: count;
+  //   display: flex;
+  //   justify-content: space-between;
+  //   align-items: center;
+  //   width: 100%;
+  //   min-width: 110px;
 
-    @include tablet {
-      min-width: 100px;
-    }
-  }
+  //   @include tablet {
+  //     min-width: 100px;
+  //   }
+  // }
 
-  &__btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background-color: transparent;
-    border: 1px solid $color-primary;
-    font-weight: 400;
-    font-size: 3rem;
-    line-height: 100%;
+  // &__btn {
+  //   width: 34px;
+  //   height: 34px;
+  //   border-radius: 50%;
+  //   background-color: transparent;
+  //   border: 1px solid $color-primary;
+  //   font-weight: 400;
+  //   font-size: 3rem;
+  //   line-height: 100%;
 
-    @include tablet {
-      width: 30px;
-      height: 30px;
-      font-size: 2.4rem;
-    }
+  //   @include tablet {
+  //     width: 30px;
+  //     height: 30px;
+  //     font-size: 2.4rem;
+  //   }
 
-    &:hover {
-      border-color: $color-main;
-      color: $color-main;
-    }
-  }
+  //   &:hover {
+  //     border-color: $color-main;
+  //     color: $color-main;
+  //   }
+  // }
 
-  &__number {
-    font-weight: 400;
-    font-size: 2.6rem;
+  // &__number {
+  //   font-weight: 400;
+  //   font-size: 2.6rem;
 
-    @include tablet {
-      font-size: 2rem;
-    }
-  }
+  //   @include tablet {
+  //     font-size: 2rem;
+  //   }
+  // }
 
   &__row {
     display: flex;
@@ -342,6 +342,18 @@
 
     &:hover {
       background-color: $color-main-sub;
+    }
+  }
+
+  &__link {
+    grid-area: oneclick;
+    margin: auto;
+    text-align: center;
+    line-height: 36px;
+
+
+    @include mobile {
+      line-height: 20px;
     }
   }
 

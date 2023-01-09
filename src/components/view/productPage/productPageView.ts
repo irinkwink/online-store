@@ -2,6 +2,7 @@ import { DeviceWindowWidth } from '../../../types/enums';
 import { IProduct } from '../../../types/interfaces';
 import { WIDTH_THREE_ELEMS, WIDTH_TWO_ELEMS } from '../../app/const';
 class ProductPageView {
+  private wrapperElem: HTMLElement | null;
   private btnCartElem: HTMLButtonElement | null;
   private btnIncElem: HTMLButtonElement | null;
   private btnDecElem: HTMLButtonElement | null;
@@ -13,7 +14,8 @@ class ProductPageView {
   private imageElem: HTMLImageElement | null;
   private controlElem: HTMLDivElement | null;
 
-  constructor() {
+  public constructor() {
+    this.wrapperElem = null;
     this.btnCartElem = null;
     this.btnDecElem = null;
     this.btnIncElem = null;
@@ -26,6 +28,10 @@ class ProductPageView {
     this.controlElem = null;
   }
 
+  public set wrapper(element: HTMLElement | null) {
+    this.wrapperElem = element;
+  }
+
   public get cardSliderElem(): HTMLDivElement | null {
     return this.sliderElem;
   }
@@ -34,14 +40,12 @@ class ProductPageView {
     return this.controlElem;
   }
 
-  public drawCard(product: IProduct, isInCart: boolean): void {
-    const main = document.querySelector('main');
-
-    if (main) {
-      const cardElem = this.createCardArticleElem(product, isInCart);
+  public draw(product: IProduct, numInCart: number): void {
+    if (this.wrapperElem) {
+      const cardElem = this.createCardArticleElem(product, numInCart);
       const containerElem = this.createContainerElem();
       containerElem.append(cardElem);
-      main.append(containerElem);
+      this.wrapperElem.append(containerElem);
 
       this.updateArrowBtn('next', this.shouldInactivateNextArrow());
     }
@@ -67,7 +71,7 @@ class ProductPageView {
     cardSliderElem.className = 'card__slider';
 
     const cardArrowPrevBtnElem = document.createElement('button');
-    cardArrowPrevBtnElem.classList.add('card__arrow', 'arrow', 'btn', 'inactive');
+    cardArrowPrevBtnElem.className = 'card__arrow arrow btn inactive';
     cardArrowPrevBtnElem.id = 'arrowRrev';
     cardArrowPrevBtnElem.innerHTML = `
         <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -76,7 +80,7 @@ class ProductPageView {
       `;
 
     const cardArrowNextBtnElem = document.createElement('button');
-    cardArrowNextBtnElem.classList.add('card__arrow', 'btn', 'arrow');
+    cardArrowNextBtnElem.className = 'card__arrow btn arrow';
     cardArrowNextBtnElem.id = 'arrowNext';
     cardArrowNextBtnElem.innerHTML = `
         <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -104,7 +108,7 @@ class ProductPageView {
     return cardSliderElem;
   }
 
-  private createCardArticleElem(product: IProduct, isInCart: boolean): HTMLElement {
+  private createCardArticleElem(product: IProduct, numInCart: number): HTMLElement {
     const cardArticleElem = document.createElement('article');
     cardArticleElem.className = 'card';
 
@@ -164,19 +168,19 @@ class ProductPageView {
     cardControlElem.className = 'card__control';
 
     const cardCountElem = document.createElement('div');
-    cardCountElem.className = 'card__count';
+    cardCountElem.className = 'card__count count';
 
     const cardBtnDecElem = document.createElement('button');
-    cardBtnDecElem.className = 'card__btn card__btn_dec inactive';
+    cardBtnDecElem.className = `count__btn ${numInCart > 1 ? '' : 'inactive'}`;
     cardBtnDecElem.textContent = '–';
     cardBtnDecElem.id = 'cardBtnDec';
 
     const cardCountNumberElem = document.createElement('output');
-    cardCountNumberElem.className = 'card__number';
-    cardCountNumberElem.textContent = '1';
+    cardCountNumberElem.className = 'count__number';
+    cardCountNumberElem.value = numInCart ? numInCart.toString() : '1';
 
     const cardBtnIncElem = document.createElement('button');
-    cardBtnIncElem.className = 'card__btn card__btn_inc';
+    cardBtnIncElem.className = 'count__btn';
     cardBtnIncElem.textContent = '+';
     cardBtnIncElem.id = 'cardBtnInc';
 
@@ -201,19 +205,26 @@ class ProductPageView {
 
     const toCartBtnElem = document.createElement('button');
     toCartBtnElem.className = 'btn card__button card__button_to-cart';
-    toCartBtnElem.textContent = isInCart ? 'Remove from Cart' : 'Add to Cart';
+    toCartBtnElem.textContent = numInCart ? 'Add to Cart' : 'Remove from Cart';
     toCartBtnElem.dataset.idGoods = product.id.toString();
     toCartBtnElem.id = 'cardBtnToCart';
 
-    const oneClickBtnElem = document.createElement('button');
-    oneClickBtnElem.className = 'btn card__button card__button_one-click';
+    const oneClickLinkElem = document.createElement('a');
+    oneClickLinkElem.className = 'card__link';
+    oneClickLinkElem.href = `cart.html?buyId=${product.id.toString()}`;
+
+    const oneClickBtnElem = document.createElement('a');
+    oneClickBtnElem.className = 'card__link card__button';
     oneClickBtnElem.textContent = 'Buy in One Click';
+    oneClickBtnElem.type = 'button';
     oneClickBtnElem.dataset.idGoods = product.id.toString();
     oneClickBtnElem.id = 'cardBtnOneClick';
+    oneClickBtnElem.href = `cart.html?buyId=${product.id.toString()}`;
 
     cardCountElem.append(cardBtnDecElem, cardCountNumberElem, cardBtnIncElem);
     priceRowElem.append(priceNewElem, priceOldElem);
 
+    oneClickLinkElem.append(oneClickBtnElem);
     cardControlElem.append(cardCountElem, priceRowElem, stockElem, toCartBtnElem, oneClickBtnElem);
 
     cardInfoElem.append(cardTitleElem, ratingElem, cardDescriptionElem, cardControlElem);
@@ -259,7 +270,7 @@ class ProductPageView {
     return false;
   }
 
-  private updateArrowBtn(arrow: string, shouldInactivate = false) {
+  private updateArrowBtn(arrow: string, shouldInactivate = false): void {
     switch (arrow) {
       case 'prev':
         if (shouldInactivate) {

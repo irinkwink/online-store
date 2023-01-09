@@ -1,273 +1,476 @@
-import { IProduct, IProductInLS, IProductLS } from '../../../types/interfaces';
+import { IProductLS } from '../../../types/interfaces';
+import { CartTotal, PromoCodes } from '../../../types/types';
+import { MESSAGES, PROMO_CODES } from '../../app/const';
 
 export class CartPageView {
-  products?: IProduct[];
-  productsInLS? = [null];
-  cartTable: HTMLUListElement | null;
-  promoInput: HTMLInputElement | null;
-  promoBlock: HTMLElement | null;
+  private wrapperElem: HTMLElement | null;
+  private paginationElem: HTMLDivElement | null;
+  private limitInputElem: HTMLInputElement | null;
+  private cartListElem: HTMLUListElement | null;
+  private numberTotalElem: HTMLSpanElement | null;
+  private priceTotalElem: HTMLSpanElement | null;
+  private discountPriceElem: HTMLParagraphElement | null;
+  private discountPriceTotalElem: HTMLSpanElement | null;
+  private promoInputElem: HTMLInputElement | null;
+  private promoBlockElem: HTMLDivElement | null;
+  private appliedPromoCodesElem: HTMLDivElement | null;
+  private toApplyPromoCodesElem: HTMLDivElement | null;
+  private buyBtnElem: HTMLButtonElement | null;
 
-  constructor() {
-    this.products = [];
-    this.cartTable = null;
-    this.promoInput = null;
-    this.promoBlock = null;
+  public constructor() {
+    this.wrapperElem = null;
+    this.paginationElem = null;
+    this.limitInputElem = null;
+    this.cartListElem = null;
+    this.numberTotalElem = null;
+    this.priceTotalElem = null;
+    this.discountPriceElem = null;
+    this.discountPriceTotalElem = null;
+    this.promoInputElem = null;
+    this.promoBlockElem = null;
+    this.appliedPromoCodesElem = null;
+    this.toApplyPromoCodesElem = null;
+    this.buyBtnElem = null;
   }
 
-  identityProducts(arr: IProductInLS[], products: IProduct[]): IProductLS[] {
-    const pickedProducts = [];
-    if (arr.length > 0) {
-      for (let i = 0; i < arr.length; i++) {
-        const fined = products.filter((item) => item.id == arr[i].id);
-        const num = arr[i].num;
-        const btnState = arr[i].btnState;
-        const res: IProductLS[] = JSON.parse(JSON.stringify(fined));
-        res.forEach(function (item) {
-          item.num = num;
-          item.btnState = btnState;
-        });
-        if (res.length > 0) {
-          pickedProducts.push(...res);
+  public set wrapper(element: HTMLElement | null) {
+    this.wrapperElem = element;
+  }
+
+  public get cartList(): HTMLUListElement | null {
+    return this.cartListElem;
+  }
+
+  public get pagination(): HTMLDivElement | null {
+    return this.paginationElem;
+  }
+
+  public get limitInput(): HTMLInputElement | null {
+    return this.limitInputElem;
+  }
+
+  public get promoInput(): HTMLInputElement | null {
+    return this.promoInputElem;
+  }
+
+  public get promoBlock(): HTMLDivElement | null {
+    return this.promoBlockElem;
+  }
+
+  public get buyBtn(): HTMLButtonElement | null {
+    return this.buyBtnElem;
+  }
+
+  public draw(): void {
+    if (this.wrapperElem) {
+      this.wrapperElem.append(this.createCartElem());
+    }
+  }
+
+  private createCartElem(): HTMLDivElement {
+    const containerElem = document.createElement('div');
+    containerElem.className = 'container cart__container cart';
+
+    const sectionElem = document.createElement('section');
+    sectionElem.className = 'cart__wrapper';
+
+    const panelElem = document.createElement('div');
+    panelElem.className = 'cart__panel';
+
+    const titleElem = document.createElement('h2');
+    titleElem.className = 'cart__title';
+    titleElem.textContent = 'Cart';
+
+    const paginationElem = document.createElement('div');
+    paginationElem.className = 'cart__pagination pagination';
+
+    const limitElem = document.createElement('div');
+    limitElem.className = 'cart__limit';
+
+    const limitLabelElem = document.createElement('label');
+    limitLabelElem.className = 'cart__limit-label';
+    limitLabelElem.textContent = 'Products per Page: ';
+
+    const limitInputElem = document.createElement('input');
+    limitInputElem.className = 'cart__limit-input';
+    limitInputElem.type = 'number';
+    limitInputElem.value = '10';
+    limitInputElem.max = '10';
+    limitInputElem.min = '1';
+
+    const listElem = document.createElement('ul');
+    listElem.className = 'cart__list cart-table';
+
+    const totalElem = this.createTotalElem();
+
+    limitElem.append(limitLabelElem, limitInputElem);
+    panelElem.append(titleElem, paginationElem, limitElem);
+    sectionElem.append(panelElem, listElem);
+    containerElem.append(sectionElem, totalElem);
+
+    this.cartListElem = listElem;
+    this.paginationElem = paginationElem;
+    this.limitInputElem = limitInputElem;
+    return containerElem;
+  }
+
+  private createProductElem(product: IProductLS): HTMLLIElement {
+    const liElem = document.createElement('li');
+    liElem.className = 'item';
+
+    const linkImageElem = document.createElement('a');
+    linkImageElem.className = 'item__link item__link_image';
+    linkImageElem.href = `product.html?id=${product.id.toString()}`;
+
+    const imageElem = new Image();
+    imageElem.className = 'item__image';
+    imageElem.src = product.thumbnail;
+    imageElem.alt = product.title;
+
+    const linkTitleElem = document.createElement('a');
+    linkTitleElem.className = 'item__link item__link_title';
+    linkTitleElem.href = `product.html?id=${product.id.toString()}`;
+
+    const titleElem = document.createElement('h3');
+    titleElem.className = 'item__title';
+    titleElem.innerHTML = `${product.title}`;
+
+    const ratingElem = document.createElement('div');
+    ratingElem.className = 'item__rating';
+    const ratingActivWidth = Math.round((product.rating * 100) / 5);
+    ratingElem.innerHTML = `
+      <div class="card__stars stars">
+        <div class="stars__row stars__row_inactive"></div>
+        <div class="stars__row stars__row_active" style="width: ${ratingActivWidth.toString()}%"></div>
+      </div>
+      <p class="item__rate">${product.rating.toString()}</p>
+    `;
+
+    const descriptionElem = document.createElement('div');
+    descriptionElem.className = 'item__description';
+    descriptionElem.innerHTML = `${product.description}`;
+
+    const priceElem = document.createElement('p');
+    priceElem.className = 'item__price';
+    priceElem.innerHTML = `${product.price}$`;
+
+    const controlElem = document.createElement('div');
+    controlElem.className = 'item__control';
+    controlElem.dataset.productId = product.id.toString();
+    controlElem.dataset.productNumber = product.num.toString();
+    controlElem.dataset.productStock = product.stock.toString();
+
+    const countElem = document.createElement('div');
+    countElem.className = 'item__count count';
+
+    const btnDecElem = document.createElement('button');
+    btnDecElem.className = 'count__btn count__btn_dec control-btn';
+    btnDecElem.textContent = '–';
+    // btnDecElem.id = 'cardBtnDec';
+    btnDecElem.id = 'btn-minus';
+
+    if (product.num === 1) btnDecElem.classList.add('inactive');
+
+    const countNumberElem = document.createElement('output');
+    countNumberElem.className = 'count__number';
+    countNumberElem.value = product.num.toString();
+
+    const btnIncElem = document.createElement('button');
+    btnIncElem.className = 'count__btn count__btn_inc control-btn';
+    btnIncElem.textContent = '+';
+    // btnIncElem.id = 'cardBtnInc';
+    btnIncElem.id = 'btn-plus';
+
+    const productsNum = document.createElement('span');
+    productsNum.className = 'cart-table-row__num';
+
+    const productDelBtn = document.createElement('button');
+    productDelBtn.className = 'item__remove-cart control-btn';
+    productDelBtn.id = 'btn-delete';
+
+    productDelBtn.innerHTML = `
+      <svg width="32" height="32" viewbox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M25.3337 8.54667L23.4537 6.66667L16.0003 14.12L8.54699 6.66667L6.66699 8.54667L14.1203 16L6.66699 23.4533L8.54699 25.3333L16.0003 17.88L23.4537 25.3333L25.3337 23.4533L17.8803 16L25.3337 8.54667Z" />
+      </svg>
+    `;
+
+    linkImageElem.append(imageElem);
+    linkTitleElem.append(titleElem);
+    countElem.append(btnDecElem, countNumberElem, btnIncElem);
+    controlElem.append(countElem, productDelBtn);
+    liElem.append(linkImageElem, linkTitleElem, ratingElem, descriptionElem, priceElem, controlElem);
+
+    return liElem;
+  }
+
+  public drawProducts(productsInCart: IProductLS[]): void {
+    if (this.cartListElem) {
+      this.cartListElem.innerHTML = '';
+      if (productsInCart.length > 0) {
+        const liElems = productsInCart.map((product) => this.createProductElem(product));
+        this.cartListElem.append(...liElems);
+      } else {
+        this.cartListElem.append(this.drawCartEmptyMessage());
+      }
+    }
+  }
+
+  private drawCartEmptyMessage(): HTMLDivElement {
+    const messageElem = document.createElement('div');
+    messageElem.className = 'message';
+
+    const textElems = MESSAGES.emptyCart.map((text) => {
+      const textElem = document.createElement('p');
+      textElem.className = 'message__text';
+      textElem.textContent = text;
+      return textElem;
+    });
+
+    messageElem.append(...textElems);
+
+    return messageElem;
+  }
+
+  private createTotalElem(): HTMLElement {
+    const totalElem = document.createElement('section');
+    totalElem.className = 'cart__total total';
+
+    const wrapperElem = document.createElement('div');
+    wrapperElem.className = 'total__wrapper';
+
+    const titleElem = document.createElement('div');
+    titleElem.className = 'total__title total__section';
+    titleElem.textContent = 'Summary';
+
+    const tableElem = document.createElement('div');
+    tableElem.className = 'total__table total__section';
+
+    const numberRowElem = document.createElement('p');
+    numberRowElem.className = 'total__row';
+
+    const numberTextElem = document.createElement('span');
+    numberTextElem.className = 'total__text';
+    numberTextElem.textContent = 'Items: ';
+
+    const numberTotalElem = document.createElement('span');
+    numberTotalElem.className = 'total__text total__text_number total-num';
+
+    const priceRowElem = document.createElement('p');
+    priceRowElem.className = 'total__row';
+
+    const priceTextElem = document.createElement('span');
+    priceTextElem.className = 'total__text total-price';
+    priceTextElem.textContent = 'Total price:';
+
+    const priceTotalElem = document.createElement('span');
+    priceTotalElem.className = 'total__text total__text_price total__price';
+
+    const discountPriceRowElem = document.createElement('p');
+    discountPriceRowElem.className = 'total__row total__row_discount total__discount total__row_hide';
+
+    const discountPriceTextElem = document.createElement('span');
+    discountPriceTextElem.className = 'total__text total__text_discount';
+    discountPriceTextElem.textContent = 'Discount price:';
+
+    const discountPriceTotalElem = document.createElement('span');
+    discountPriceTotalElem.className = 'total__text total__text_discount';
+
+    const promoElem = document.createElement('div');
+    promoElem.className = 'total__promo promo total__section';
+
+    const buyBtnElem = document.createElement('button');
+    buyBtnElem.className = 'btn total__buy';
+    buyBtnElem.textContent = 'Buy Now';
+
+    numberRowElem.append(numberTextElem, numberTotalElem);
+    priceRowElem.append(priceTextElem, priceTotalElem);
+    discountPriceRowElem.append(discountPriceTextElem, discountPriceTotalElem);
+    tableElem.append(numberRowElem, priceRowElem, discountPriceRowElem);
+    wrapperElem.append(titleElem, tableElem, promoElem, buyBtnElem);
+    totalElem.append(wrapperElem);
+
+    this.discountPriceTotalElem = discountPriceTotalElem;
+    this.discountPriceElem = discountPriceRowElem;
+    this.promoBlockElem = promoElem;
+    this.numberTotalElem = numberTotalElem;
+    this.priceTotalElem = priceTotalElem;
+    this.buyBtnElem = buyBtnElem;
+
+    return totalElem;
+  }
+
+  public drawPromoElem(): void {
+    if (this.promoBlockElem) {
+      this.promoBlockElem.innerHTML = '';
+
+      const appliedPromoCodesElem = document.createElement('div');
+      appliedPromoCodesElem.className = 'promo__codes promo__codes_drop';
+
+      const promoInputElem = document.createElement('input');
+      promoInputElem.type = 'text';
+      promoInputElem.className = 'promo__input';
+      promoInputElem.placeholder = 'Enter promo code';
+
+      const codeInfoElem = document.createElement('p');
+      codeInfoElem.className = 'promo__text';
+
+      const promoCodesString = Object.keys(PROMO_CODES)
+        .map((code) => `'${code}'`)
+        .join(', ');
+      codeInfoElem.innerHTML = `
+        <span>Promo codes for test: </span>
+        <span>${promoCodesString}</span>
+      `;
+
+      const toApplyPromoCodesElem = document.createElement('div');
+      toApplyPromoCodesElem.className = 'promo__codes promo__codes_apply';
+
+      this.promoBlockElem.append(appliedPromoCodesElem, promoInputElem, codeInfoElem, toApplyPromoCodesElem);
+      this.promoBlockElem.append();
+
+      this.promoInputElem = promoInputElem;
+      this.appliedPromoCodesElem = appliedPromoCodesElem;
+      this.toApplyPromoCodesElem = toApplyPromoCodesElem;
+    }
+  }
+
+  public emptyPromoCodeInput(): void {
+    if (this.promoInputElem) {
+      this.promoInputElem.value = '';
+    }
+  }
+
+  public updateAppliedPromoCodes(codes: string[]): void {
+    if (this.appliedPromoCodesElem) {
+      if (codes.length === 0) {
+        this.appliedPromoCodesElem.innerHTML = '';
+      } else {
+        this.appliedPromoCodesElem.innerHTML = '';
+        const appliedTitleElem = document.createElement('h4');
+        appliedTitleElem.className = 'promo__title total__section';
+        appliedTitleElem.textContent = 'Applied Codes';
+
+        const appliedRowsElem = document.createElement('div');
+        appliedRowsElem.className = 'promo__rows';
+
+        const rowElems = codes.map((code) => this.createCodeRowElem(code, 'drop'));
+
+        appliedRowsElem.append(...rowElems);
+        this.appliedPromoCodesElem.append(appliedTitleElem, appliedRowsElem);
+      }
+    }
+  }
+
+  public drawPromoCodeUsedMessage(): void {
+    if (this.toApplyPromoCodesElem) {
+      this.toApplyPromoCodesElem.innerHTML = '';
+      const usedTextElem = document.createElement('p');
+      usedTextElem.className = 'promo__text promo__text_used';
+      usedTextElem.textContent = 'This promo code has already been applied!';
+
+      this.toApplyPromoCodesElem.append(usedTextElem);
+    }
+  }
+
+  public updateToApplyPromoCodes(code = ''): void {
+    if (this.toApplyPromoCodesElem) {
+      this.toApplyPromoCodesElem.innerHTML = '';
+      if (code) {
+        const rowElem = this.createCodeRowElem(code, 'add');
+        this.toApplyPromoCodesElem.append(rowElem);
+      }
+    }
+  }
+
+  private createCodeRowElem(code: string, action: string): HTMLDivElement {
+    const rowElem = document.createElement('div');
+    rowElem.className = `promo__row promo__row_${action}`;
+
+    const codeInfoElem = document.createElement('p');
+    codeInfoElem.className = 'promo__code';
+    const discount: number = code in PROMO_CODES ? PROMO_CODES[code as keyof PromoCodes] : 0;
+    codeInfoElem.innerHTML = `${code} -${discount} %`;
+
+    const delCodeBtnElem = document.createElement('button');
+    delCodeBtnElem.id = `${action}CodeBtn`;
+    delCodeBtnElem.className = 'btn promo__btn';
+    delCodeBtnElem.textContent = action;
+    delCodeBtnElem.dataset.code = code;
+
+    rowElem.append(codeInfoElem, delCodeBtnElem);
+
+    return rowElem;
+  }
+
+  public updateLimitInput(limit: number): void {
+    if (this.limitInputElem) {
+      this.limitInputElem.max = limit.toString();
+      this.limitInputElem.value = limit.toString();
+    }
+  }
+
+  public updateMaxLimit(limit: number): void {
+    if (this.limitInputElem) {
+      this.limitInputElem.max = limit.toString();
+      if (+this.limitInputElem.value > +this.limitInputElem.max) this.limitInputElem.value = limit.toString();
+    }
+  }
+
+  public updateTotal(cartTotal: CartTotal): void {
+    if (this.numberTotalElem) {
+      this.numberTotalElem.textContent = cartTotal.productsNum.toString();
+    }
+    if (this.priceTotalElem) {
+      this.priceTotalElem.textContent = `${cartTotal.totalPrice}$`;
+    }
+    if (cartTotal.totalPrice === 0) {
+      this.buyBtnElem?.classList.add('total__buy_inactive');
+      this.promoInputElem?.classList.add('promo__input_inactive');
+    } else {
+      this.buyBtnElem?.classList.remove('total__buy_inactive');
+      this.promoInputElem?.classList.remove('promo__input_inactive');
+    }
+  }
+
+  public updateControl(controlElem: HTMLElement, number: number, isMax = false): void {
+    if (controlElem) {
+      const numberElem: HTMLOutputElement | null = controlElem.querySelector('.count__number');
+      const btnDecElem: HTMLButtonElement | null = controlElem.querySelector('.count__btn_dec');
+      const btnIncElem: HTMLButtonElement | null = controlElem.querySelector('.count__btn_inc');
+      controlElem.dataset.productNumber = number.toString();
+
+      if (numberElem) {
+        numberElem.value = number.toString();
+      }
+
+      if (btnDecElem) {
+        if (number === 1) {
+          btnDecElem?.classList.add('inactive');
+        } else {
+          btnDecElem?.classList.remove('inactive');
         }
       }
-    } else {
-      return [];
-    }
-    return pickedProducts;
-  }
-  getTotalPrice(productsInCart: IProductLS[]): number {
-    let totalPrice = 0;
-    for (let i = 0; i < productsInCart.length; i++) {
-      const num = productsInCart[i].num;
-      totalPrice += productsInCart[i].price * num;
-    }
-    return totalPrice;
-  }
 
-  getTotalNum(productsInCart: IProductLS[]): number {
-    let totalNum = 0;
-    productsInCart.forEach((product) => (totalNum += product.num));
-    return totalNum;
-  }
-
-  render(productsInCart: IProductLS[]) {
-    const cartTable: HTMLElement | null = document.querySelector('.cart-table');
-    if (productsInCart.length > 0) {
-      if (cartTable) {
-        cartTable.innerHTML = '';
-        productsInCart.forEach(function (product) {
-          const tableRow = document.createElement('div');
-          tableRow.className = 'cart-table__row cart-table-row';
-          const productImage = new Image();
-          productImage.className = 'cart-table-row__img';
-          productImage.src = product.thumbnail;
-          productImage.alt = product.title;
-          const productInfo = document.createElement('div');
-          productInfo.className = 'cart-table-row__info';
-          const productTitle = document.createElement('h3');
-          productTitle.className = 'cart-table-row__title';
-          productTitle.innerHTML = `${product.title}`;
-          const productDesc = document.createElement('div');
-          productDesc.className = 'cart-table-row__desc';
-          productDesc.innerHTML = `${product.description}`;
-          productInfo.append(productTitle, productDesc);
-          const productPrice = document.createElement('div');
-          productPrice.className = 'cart-table-row__price';
-          productPrice.innerHTML = `${product.price}$`;
-          const productControls = document.createElement('div');
-          productControls.className = 'cart-table-row__controls';
-          productControls.dataset.id = String(product.id);
-          const plusBtn = document.createElement('button');
-          plusBtn.className = 'btn cart-table-row__btn';
-          plusBtn.id = 'btn-plus';
-          plusBtn.textContent = '+';
-          const minusBtn = document.createElement('button');
-          minusBtn.className = 'btn cart-table-row__btn';
-          minusBtn.id = 'btn-minus';
-          minusBtn.textContent = '-';
-          const productsNum = document.createElement('span');
-          productsNum.className = 'cart-table-row__num';
-          const productDelBtn = document.createElement('button');
-          productDelBtn.className = 'btn cart-table-row__delete';
-          productDelBtn.id = 'btn-delete';
-          productsNum.textContent = String(product.num);
-          productControls.append(minusBtn, productsNum, plusBtn, productDelBtn);
-          tableRow.append(productImage, productInfo, productPrice, productControls);
-          cartTable.append(tableRow);
-        });
-      }
-    } else {
-      if (cartTable) {
-        cartTable.innerHTML = 'Please,go shopping!';
-        cartTable.className = 'cart-table__info';
+      if (btnIncElem) {
+        if (isMax) {
+          btnIncElem?.classList.add('inactive');
+        } else {
+          btnIncElem?.classList.remove('inactive');
+        }
       }
     }
   }
-  drawTotal() {
-    const cartTableWr: HTMLUListElement | null = document.querySelector('.cart__wr');
-    this.cartTable = cartTableWr;
-    const total = document.createElement('div');
-    total.className = 'total';
-    const totalHead = document.createElement('div');
-    totalHead.className = 'total__head';
-    totalHead.textContent = 'Summary';
-    const totalSummary = document.createElement('div');
-    totalSummary.className = 'total__header';
-    const totalPrice = document.createElement('span');
-    totalPrice.className = 'total__price';
-    totalSummary.append(totalPrice);
-    totalSummary.insertAdjacentHTML(
-      'afterbegin',
-      `
 
-            <span class="total-price">Total price</span>
-        `
-    );
-    const totalSummaryDiscount = document.createElement('div');
-    totalSummaryDiscount.className = 'total__discount';
-    const totalRow = document.createElement('div');
-    totalRow.className = 'total__row';
-    const totalNum = document.createElement('span');
-    const totalText = document.createElement('span');
-    totalText.textContent = 'Products: ';
-    totalNum.className = 'total-num';
-    totalRow.append(totalText, totalNum);
-    total.append(totalHead, totalRow, totalSummary, totalSummaryDiscount);
-    if (cartTableWr) {
-      cartTableWr.append(total);
-    }
-  }
-
-  drawPromo(settings: string[]) {
-    const total: HTMLElement | null = document.querySelector('.total');
-    const promoBlockWr: HTMLElement | null = document.querySelector('.promo-block');
-    if (promoBlockWr) {
-      promoBlockWr.innerHTML = '';
-      promoBlockWr.className = 'promo-block';
-      const promoInput = document.createElement('input');
-      promoInput.type = 'text';
-      promoInput.className = 'promo-block__input';
-      promoInput.placeholder = 'Enter promo code';
-      const codeInfo = document.createElement('p');
-      codeInfo.textContent = "Promo for test: 'RSS', 'EPAM'";
-      this.promoBlock = promoBlockWr;
-      const toBuyBtn = document.createElement('button');
-      toBuyBtn.id = 'buy-btn';
-      toBuyBtn.className = 'btn total__to-buy';
-      toBuyBtn.textContent = 'Buy';
-      if (settings.length > 0) {
-        const appliedTitle = document.createElement('h4');
-        appliedTitle.className = 'promo-block__title';
-        const promoContainer = document.createElement('div');
-        promoContainer.innerHTML = '';
-        promoContainer.className = 'promo-block__container';
-        appliedTitle.textContent = 'Applied codes';
-        promoContainer.append(appliedTitle);
-        settings.forEach((setItem) => {
-          const row = document.createElement('div');
-          row.className = 'promo-block__row';
-          const promoApplied = document.createElement('span');
-          promoApplied.innerHTML = `${setItem} - 10 %`;
-          const delCodeBtn = document.createElement('button');
-          delCodeBtn.id = 'delete-code';
-          delCodeBtn.className = 'btn';
-          delCodeBtn.textContent = 'Drop';
-          delCodeBtn.dataset.code = setItem;
-          row.append(promoApplied, delCodeBtn);
-          promoContainer.insertAdjacentElement('beforeend', row);
-        });
-        promoBlockWr?.append(promoContainer, promoInput, codeInfo, toBuyBtn);
+  public updateDiscountPrice(discountPrice: number, isHideDiscount: boolean): void {
+    if (this.discountPriceElem && this.discountPriceTotalElem) {
+      if (discountPrice > 0 && !isHideDiscount) {
+        this.discountPriceTotalElem.textContent = `${discountPrice}$`;
+        this.discountPriceElem.classList.remove('total__row_hide');
+        this.priceTotalElem?.classList.add('total__text_line');
       } else {
-        promoBlockWr?.append(promoInput, codeInfo, toBuyBtn);
+        this.discountPriceElem.classList.add('total__row_hide');
+        this.priceTotalElem?.classList.remove('total__text_line');
       }
-      if (total) {
-        total.insertAdjacentElement('beforeend', promoBlockWr);
-      }
-    } else {
-      const promoBlockWr: HTMLElement | null = document.createElement('div');
-      promoBlockWr.innerHTML = '';
-      promoBlockWr.className = 'promo-block';
-      const promoInput = document.createElement('input');
-      promoInput.type = 'text';
-      promoInput.className = 'promo-block__input';
-      promoInput.placeholder = 'Enter promo code';
-      const codeInfo = document.createElement('p');
-      codeInfo.textContent = "Promo for test: 'RSS', 'EPAM'";
-      this.promoBlock = promoBlockWr;
-      const toBuyBtn = document.createElement('button');
-      toBuyBtn.id = 'buy-btn';
-      toBuyBtn.className = 'btn total__to-buy';
-      toBuyBtn.textContent = 'Buy';
-      if (settings.length > 0) {
-        const appliedTitle = document.createElement('h4');
-        appliedTitle.className = 'promo-block__title';
-        const promoContainer = document.createElement('div');
-        promoContainer.innerHTML = '';
-        promoContainer.className = 'promo-block__container';
-        appliedTitle.textContent = 'Applied codes';
-        promoContainer.append(appliedTitle);
-        settings.forEach((setItem) => {
-          const row = document.createElement('div');
-          row.className = 'promo-block__row';
-          const promoApplied = document.createElement('span');
-          promoApplied.innerHTML = `${setItem} - 10 %`;
-          const delCodeBtn = document.createElement('button');
-          delCodeBtn.id = 'delete-code';
-          delCodeBtn.className = 'btn';
-          delCodeBtn.textContent = 'Drop';
-          row.append(promoApplied, delCodeBtn);
-          promoContainer.insertAdjacentElement('beforeend', row);
-        });
-        promoBlockWr?.append(promoContainer, promoInput, codeInfo, toBuyBtn);
-      } else {
-        promoBlockWr?.append(promoInput, codeInfo, toBuyBtn);
-      }
-      if (total) {
-        total.insertAdjacentElement('beforeend', promoBlockWr);
-      }
-    }
-  }
-
-  drawPromoApplied(isValid: boolean, code: string) {
-    const promoBlock: HTMLElement | null = document.querySelector('.promo-block');
-    if (isValid && promoBlock) {
-      const row = document.createElement('div');
-      row.className = 'promo-block__row';
-      row.dataset.code = code;
-      const addBtn = document.createElement('button');
-      addBtn.id = 'add-code';
-      addBtn.className = 'btn';
-      const codeInfo = document.createElement('span');
-      codeInfo.textContent = `${code} code - 10%`;
-      addBtn.textContent = 'Add';
-      row.append(codeInfo, addBtn);
-      promoBlock.append(row);
-    }
-  }
-  updateTotalNumber(total: number) {
-    const totalNum = document.querySelector('.total-num');
-    const totalHeader = document.querySelector('.header__cart-number');
-    if (totalNum && totalHeader) {
-      totalNum.textContent = total.toString();
-      totalHeader.textContent = total.toString();
-    }
-  }
-  updateTotalPrice(totalSum: number) {
-    const totalPrice = document.querySelector('.total__price');
-    if (totalPrice) {
-      totalPrice.textContent = totalSum.toString() + ' $';
-    }
-  }
-  updateDiscountPrice(discount: number, summ: number) {
-    const discountTotalPrice: HTMLElement | null = document.querySelector('.total__discount');
-    const totalSummary: HTMLElement | null = document.querySelector('.total__header');
-    if (discountTotalPrice && totalSummary && discount > 0) {
-      const res = Math.floor(summ * (1 - discount));
-      discountTotalPrice.innerHTML = `Discount price - ${res} $`;
-      totalSummary.className = 'total__header line-through';
-    } else if (totalSummary && discountTotalPrice) {
-      totalSummary.className = 'total__header';
-      discountTotalPrice.innerHTML = '';
     }
   }
 }

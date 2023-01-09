@@ -1,45 +1,38 @@
-import CartPageController from '../controller/cartPage/cartPageController';
-import CatalogPageController from '../controller/catalogPage/catalogPageController';
 import DataController from '../controller/dataController';
 //import LocalStorageUtility from '../view/localStorage/LocalStorage';
 import State from './state';
-import ProductPageController from '../controller/productPage/productPageController';
 import Router from '../router/router';
-import Page404Controller from '../controller/page404/page404Controller';
+import TemplatePageController from '../controller/templatePage/templatePageController';
+import { Errors } from '../../types/enums';
 
 class App {
-  state: State;
-  router: Router;
-  dataController: DataController;
-  catalogPage: CatalogPageController;
-  cartPage: CartPageController;
-  productPage: ProductPageController;
-  page404: Page404Controller;
-  //localStorage: LocalStorageUtility;
+  private state: State;
+  private router: Router;
+  private dataController: DataController;
+  private templatePage: TemplatePageController;
 
-  constructor() {
+  public constructor() {
     this.state = new State();
     this.dataController = new DataController();
-
-    this.catalogPage = new CatalogPageController(this.state);
-    this.productPage = new ProductPageController(this.state);
-    this.cartPage = new CartPageController(this.state);
-    this.page404 = new Page404Controller(this.state);
-
-    //this.localStorage = new LocalStorageUtility();
-
-    this.router = new Router([this.catalogPage, this.productPage, this.cartPage, this.page404]);
+    this.templatePage = new TemplatePageController(this.state);
+    this.router = new Router(this.templatePage);
   }
 
-  async start() {
+  public async start(): Promise<void> {
     this.state.loadState();
-    const data = await this.dataController.getProducts();
-    this.state.saveProducts(data.products);
+    try {
+      const data = await this.dataController.getProducts();
+      if ('products' in data) {
+        this.state.saveProducts(data.products);
+      } else {
+        this.state.saveError(Errors.dataError);
+      }
+    } catch {
+      this.state.saveError(Errors.serverError);
+    }
 
+    this.templatePage.start();
     this.router.start();
-    // this.catalogPage.start();
-    // this.cartPage.start();
-    // this.productPage.start();
   }
 }
 

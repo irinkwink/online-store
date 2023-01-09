@@ -1,12 +1,12 @@
 import { SearchParam } from '../../types/types';
 
-export const addSearchParamToUrl = ({ key, value }: SearchParam) => {
+export const addSearchParamToUrl = ({ key, value }: SearchParam): void => {
   const url = new URL(window.location.href);
   url.searchParams.set(key, value);
   window.history.pushState({}, '', url);
 };
 
-export const deleteSearchParamFromUrl = (key: string) => {
+export const deleteSearchParamFromUrl = (key: string): void => {
   const url = new URL(window.location.href);
 
   if (url.searchParams.has(key)) {
@@ -15,15 +15,7 @@ export const deleteSearchParamFromUrl = (key: string) => {
   }
 };
 
-export const addSearchParamsToUrl = (params: SearchParam[]) => {
-  const url = new URL(window.location.href);
-  params.forEach((item) => {
-    url.searchParams.set(item.key, item.value);
-  });
-  window.history.pushState({}, '', url);
-};
-
-export const deleteSearchParamsFromUrl = (keys: string[]) => {
+export const deleteSearchParamsFromUrl = (keys: string[]): void => {
   const url = new URL(window.location.href);
   const isPush =
     keys
@@ -41,7 +33,7 @@ export const deleteSearchParamsFromUrl = (keys: string[]) => {
   }
 };
 
-export const getSearchParamsFromUrl = () => {
+export const getSearchParamsFromUrl = (): SearchParam[] => {
   const url = new URL(window.location.href);
 
   const searchParams = Array.from(url.searchParams.entries()).map((item) => ({ key: item[0], value: item[1] }));
@@ -49,7 +41,15 @@ export const getSearchParamsFromUrl = () => {
   return searchParams;
 };
 
-export const copyToClipboard = () => {
+export const getSearchParamValueFromUrl = (param: string): string | null => {
+  const url = new URL(window.location.href);
+
+  const searchParam = Array.from(url.searchParams.entries()).find((item) => item[0] === param);
+
+  return searchParam ? searchParam[1] : null;
+};
+
+export const copyToClipboard = (): void => {
   const inputCopy = document.body.appendChild(document.createElement('input'));
   inputCopy.value = window.location.href;
   inputCopy.select();

@@ -1,20 +1,19 @@
-import { IProduct } from '../../../types/interfaces';
 import { SLIDER_MOVE } from '../../app/const';
-import State from '../../app/state';
-import { getSearchParamsFromUrl } from '../../router/urlController';
+import { getSearchParamValueFromUrl } from '../../router/urlController';
 import ProductPageView from '../../view/productPage/productPageView';
 import PageController from '../pageController';
+import TemplatePageController from '../templatePage/templatePageController';
 
 class ProductPageController extends PageController {
-  view: ProductPageView;
-  id: number;
-  count: number;
-  stock: number;
-  isInCart: boolean;
+  public view: ProductPageView;
+  private id: number;
+  private count: number;
+  private stock: number;
+  private isInCart: boolean;
   private sliderPosition: number;
 
-  constructor(state: State) {
-    super(state);
+  public constructor(templatePage: TemplatePageController) {
+    super(templatePage, 'product');
     this.view = new ProductPageView();
     this.id = 0;
     this.count = 1;
@@ -23,26 +22,31 @@ class ProductPageController extends PageController {
     this.sliderPosition = 0;
   }
 
-  start() {
-    console.log('product page');
+  public start(): void {
+    super.start();
+    this.view.wrapper = this.main.view.main;
 
-    const searchParams = getSearchParamsFromUrl();
+    // const fullPath = window.location.pathname;
+    // const id = fullPath.split('/')[2];
 
-    const idParam = searchParams.filter((item) => item.key === 'id');
-    if (idParam.length !== 0) {
-      this.id = +idParam[0].value;
-      const product: IProduct = this.state.getState().products.filter((item) => item.id === this.id)[0];
-      this.isInCart = this.state.getState().onlineStoreSettings.cart.filter((item) => item.id === this.id).length !== 0;
-      console.log('product: ', product);
+    const id = getSearchParamValueFromUrl('id');
 
-      this.stock = product.stock;
-      this.view.drawCard(product, this.isInCart);
-      this.controlCardSlider();
-      this.controlCardButtons();
+    if (id) {
+      this.id = +id;
+      const product = this.state.getState().products.find((item) => item.id === this.id);
+      const cartProductInfo = this.state.getState().onlineStoreSettings.cart.find((item) => item.id === this.id);
+      const numInCart = cartProductInfo ? cartProductInfo.num : 0;
+      if (product) {
+        this.stock = product.stock;
+        this.count = numInCart ? numInCart : 1;
+        this.view.draw(product, numInCart);
+        this.controlCardSlider();
+        this.controlCardButtons();
+      }
     }
   }
 
-  controlCardSlider() {
+  private controlCardSlider(): void {
     this.view.cardSliderElem?.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (target) {
@@ -60,7 +64,7 @@ class ProductPageController extends PageController {
     });
   }
 
-  controlCardButtons() {
+  private controlCardButtons(): void {
     this.view.cardControlElem?.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       switch (target.id) {
@@ -76,25 +80,22 @@ class ProductPageController extends PageController {
           this.updateCart();
           break;
         }
-        case 'cardBtnOneClick': {
-          // this.buyInOneClick(this.id);
-          break;
-        }
       }
     });
   }
 
-  updateCart() {
+  private updateCart(): void {
     this.view.updateBtnToCart();
     if (this.isInCart) {
       this.state.removeProductFromCart(this.id);
     } else {
       this.state.addProductToCart(this.id, this.count);
     }
+    this.header.updateHeaderCartTotal();
     this.isInCart = !this.isInCart;
   }
 
-  changeCount(operation: string) {
+  private changeCount(operation: string): void {
     switch (operation) {
       case 'dec': {
         if (this.count > 1) {

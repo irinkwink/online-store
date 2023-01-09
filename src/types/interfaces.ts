@@ -1,20 +1,19 @@
 export interface IProduct {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  discountPercentage: number;
-  rating: number;
-  stock: number;
-  brand: string;
-  category: string;
-  thumbnail: string;
-  images: string[];
+  readonly id: number;
+  readonly title: string;
+  readonly description: string;
+  readonly price: number;
+  readonly discountPercentage: number;
+  readonly rating: number;
+  readonly stock: number;
+  readonly brand: string;
+  readonly category: string;
+  readonly thumbnail: string;
+  readonly images: string[];
 }
 
 export interface IProductLS extends IProduct {
   num: number;
-  btnState?: boolean;
 }
 
 export interface IProductsData {
@@ -28,14 +27,14 @@ export interface ICartProduct {
 
 export interface IState {
   products: IProduct[];
+  error: string;
   onlineStoreSettings: {
     cart: ICartProduct[];
-    promoСodes: string[];
+    promoCodes: string[];
   };
 }
 
-export interface IProductInLS {
-  id: number | null;
+export interface ICartProduct {
+  id: number;
   num: number;
-  btnState?: boolean;
 }
