@@ -1,5 +1,4 @@
 import { IProduct, IProductInLS, IProductLS } from '../../../types/interfaces';
-import { myPromoCode } from '../localStorage/PromoCodes';
 
 export class CartPageView {
   products?: IProduct[];
@@ -19,8 +18,6 @@ export class CartPageView {
     const pickedProducts = [];
     if (arr.length > 0) {
       for (let i = 0; i < arr.length; i++) {
-        console.log(products);
-        console.log(arr[i]);
         const fined = products.filter((item) => item.id == arr[i].id);
         const num = arr[i].num;
         const btnState = arr[i].btnState;
@@ -54,7 +51,6 @@ export class CartPageView {
   }
 
   render(productsInCart: IProductLS[]) {
-    console.log('вывод');
     const cartTable: HTMLElement | null = document.querySelector('.cart-table');
     if (productsInCart.length > 0) {
       if (cartTable) {
@@ -141,6 +137,7 @@ export class CartPageView {
       cartTableWr.append(total);
     }
   }
+
   drawPromo(settings: string[]) {
     const total: HTMLElement | null = document.querySelector('.total');
     const promoBlockWr: HTMLElement | null = document.querySelector('.promo-block');
@@ -154,6 +151,10 @@ export class CartPageView {
       const codeInfo = document.createElement('p');
       codeInfo.textContent = "Promo for test: 'RSS', 'EPAM'";
       this.promoBlock = promoBlockWr;
+      const toBuyBtn = document.createElement('button');
+      toBuyBtn.id = 'buy-btn';
+      toBuyBtn.className = 'btn total__to-buy';
+      toBuyBtn.textContent = 'Buy';
       if (settings.length > 0) {
         const appliedTitle = document.createElement('h4');
         appliedTitle.className = 'promo-block__title';
@@ -171,12 +172,13 @@ export class CartPageView {
           delCodeBtn.id = 'delete-code';
           delCodeBtn.className = 'btn';
           delCodeBtn.textContent = 'Drop';
+          delCodeBtn.dataset.code = setItem;
           row.append(promoApplied, delCodeBtn);
           promoContainer.insertAdjacentElement('beforeend', row);
         });
-        promoBlockWr?.append(promoContainer, promoInput, codeInfo);
+        promoBlockWr?.append(promoContainer, promoInput, codeInfo, toBuyBtn);
       } else {
-        promoBlockWr?.append(promoInput, codeInfo);
+        promoBlockWr?.append(promoInput, codeInfo, toBuyBtn);
       }
       if (total) {
         total.insertAdjacentElement('beforeend', promoBlockWr);
@@ -192,6 +194,10 @@ export class CartPageView {
       const codeInfo = document.createElement('p');
       codeInfo.textContent = "Promo for test: 'RSS', 'EPAM'";
       this.promoBlock = promoBlockWr;
+      const toBuyBtn = document.createElement('button');
+      toBuyBtn.id = 'buy-btn';
+      toBuyBtn.className = 'btn total__to-buy';
+      toBuyBtn.textContent = 'Buy';
       if (settings.length > 0) {
         const appliedTitle = document.createElement('h4');
         appliedTitle.className = 'promo-block__title';
@@ -212,9 +218,9 @@ export class CartPageView {
           row.append(promoApplied, delCodeBtn);
           promoContainer.insertAdjacentElement('beforeend', row);
         });
-        promoBlockWr?.append(promoContainer, promoInput, codeInfo);
+        promoBlockWr?.append(promoContainer, promoInput, codeInfo, toBuyBtn);
       } else {
-        promoBlockWr?.append(promoInput, codeInfo);
+        promoBlockWr?.append(promoInput, codeInfo, toBuyBtn);
       }
       if (total) {
         total.insertAdjacentElement('beforeend', promoBlockWr);
@@ -239,7 +245,6 @@ export class CartPageView {
     }
   }
   updateTotalNumber(total: number) {
-    console.log('updateTotalNumber');
     const totalNum = document.querySelector('.total-num');
     const totalHeader = document.querySelector('.header__cart-number');
     if (totalNum && totalHeader) {
@@ -248,19 +253,21 @@ export class CartPageView {
     }
   }
   updateTotalPrice(totalSum: number) {
-    console.log('updateTotalPrice');
     const totalPrice = document.querySelector('.total__price');
     if (totalPrice) {
       totalPrice.textContent = totalSum.toString() + ' $';
     }
   }
   updateDiscountPrice(discount: number, summ: number) {
-    console.log(summ);
     const discountTotalPrice: HTMLElement | null = document.querySelector('.total__discount');
-    const totalPrice: HTMLElement | null = document.querySelector('.total__price');
-    if (discountTotalPrice) {
-      discountTotalPrice.innerHTML = `Discount price - ${summ * (1 - discount)} $`;
-      console.log(summ * (1 - discount));
+    const totalSummary: HTMLElement | null = document.querySelector('.total__header');
+    if (discountTotalPrice && totalSummary && discount > 0) {
+      const res = Math.floor(summ * (1 - discount));
+      discountTotalPrice.innerHTML = `Discount price - ${res} $`;
+      totalSummary.className = 'total__header line-through';
+    } else if (totalSummary && discountTotalPrice) {
+      totalSummary.className = 'total__header';
+      discountTotalPrice.innerHTML = '';
     }
   }
 }
