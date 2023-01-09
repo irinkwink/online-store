@@ -2,6 +2,7 @@ import CartPageController from '../components/controller/cartPage/cartPageContro
 import CatalogPageController from '../components/controller/catalogPage/catalogPageController';
 import Page404Controller from '../components/controller/page404/page404Controller';
 import ProductPageController from '../components/controller/productPage/productPageController';
+import { FormInputs } from './enums';
 
 export type Routes = {
   404: Page404Controller;
@@ -86,4 +87,11 @@ export type PromoCodes = {
   RSS: number;
   EPAM: number;
   NEWYEAR: number;
+};
+
+export type OrderFormInput = {
+  id: keyof typeof FormInputs;
+  type: string;
+  placeholder: string;
+  label: string;
 };

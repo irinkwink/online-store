@@ -57,6 +57,10 @@ export class CartPageView {
     return this.promoBlockElem;
   }
 
+  public get buyBtn(): HTMLButtonElement | null {
+    return this.buyBtnElem;
+  }
+
   public draw(): void {
     if (this.wrapperElem) {
       this.wrapperElem.append(this.createCartElem());
@@ -172,7 +176,6 @@ export class CartPageView {
     const productDelBtn = document.createElement('button');
     productDelBtn.className = 'item__remove-cart control-btn';
     productDelBtn.id = 'btn-delete';
-    productsNum.textContent = String(product.num);
 
     productDelBtn.innerHTML = `
       <svg width="32" height="32" viewbox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

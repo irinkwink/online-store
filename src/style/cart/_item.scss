@@ -111,53 +111,6 @@
     }
   }
 
-  // &__count {
-  //   display: flex;
-  //   justify-content: space-between;
-  //   align-items: center;
-  //   width: 100%;
-  //   max-width: 120px;
-  //   gap: 10px;
-  //   //margin-right: 70px;
-
-  //   @include tablet {
-  //     max-width: 116px;
-  //   }
-  // }
-
-  // &__btn {
-  //   width: 34px;
-  //   height: 34px;
-  //   border-radius: 50%;
-  //   background-color: transparent;
-  //   border: 1px solid $color-primary;
-  //   font-weight: 400;
-  //   font-size: 30px;
-  //   line-height: 100%;
-
-  //   &:hover {
-  //     border-color: $color-main;
-  //     color: $color-main;
-  //   }
-
-  //   &_dec {
-
-  //   }
-  //   &_inc {
-
-  //   }
-  // }
-  // &__number {
-  //   font-weight: 400;
-  //   font-size: 30px;
-  //   line-height: 37px;
-
-  //   @include tablet {
-  //     font-size: 20px;
-  //     line-height: 24px;
-  //   }
-  // }
-
   &__remove-cart {
     flex-shrink: 0;
     color: $color-grey-light;
@@ -178,6 +131,5 @@
     &:hover {
       color: $color-main;
     }
-
   }
 }

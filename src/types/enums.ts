@@ -22,3 +22,13 @@ export enum PromoCodesDiscount {
   EPAM = 5,
   NEWYEAR = 3,
 }
+
+export enum FormInputs {
+  name = 'name',
+  phone = 'phone',
+  address = 'address',
+  email = 'email',
+  cardNumber = 'cardNumber',
+  validDate = 'validDate',
+  cvvCode = 'cvvCode',
+}

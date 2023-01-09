@@ -1,0 +1,40 @@
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  margin: auto;
+  padding: 30px 28px;
+  border-radius: 20px;
+  background-color: $color-secondary;
+
+  &__content {
+    width: 100%;
+  }
+
+  &__close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: $color-grey-light;
+    width: 32px;
+    height: 32px;
+    background-color: transparent;
+    border: none;
+
+    @include mobile {
+      width: 26px;
+      height: 26px;
+
+    }
+
+    &:hover {
+      color: $color-main;
+    }
+  }
+}
+
+.err {
+display: block;
+width: 100%;
+margin-bottom: 16px;
+}

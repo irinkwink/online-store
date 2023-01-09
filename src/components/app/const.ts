@@ -1,5 +1,13 @@
-import { PromoCodesDiscount } from '../../types/enums';
-import { Developers, FieldRange, FieldSelect, FiltersValues, HeaderCartInfo, SortOption } from '../../types/types';
+import { FormInputs, PromoCodesDiscount } from '../../types/enums';
+import {
+  Developers,
+  FieldRange,
+  FieldSelect,
+  FiltersValues,
+  HeaderCartInfo,
+  OrderFormInput,
+  SortOption,
+} from '../../types/types';
 
 export const THUMB_WIDTH = 80;
 export const THUMBS_GAP = 4;
@@ -152,21 +160,50 @@ export const PROMO_CODES = {
   NEWYEAR: PromoCodesDiscount.NEWYEAR,
 };
 
-// export const PROMO_CODES: PromoCode[] = [
-//   {
-//     code: 'RSS',
-//     discount: 10,
-//   },
-//   {
-//     code: 'STUDENT1',
-//     discount: 15,
-//   },
-//   {
-//     code: 'EPAM',
-//     discount: 5,
-//   },
-//   {
-//     code: 'NEWYEAR',
-//     discount: 3,
-//   },
-// ];
+export const PERSON_DETAILS: OrderFormInput[] = [
+  {
+    id: FormInputs.name,
+    type: 'text',
+    placeholder: 'Name Surname',
+    label: 'should include Name and Surname (at least 3 letters each)',
+  },
+  {
+    id: FormInputs.phone,
+    type: 'tel',
+    placeholder: 'Phone number',
+    label: 'must start with + and include at least 9 digits',
+  },
+  {
+    id: FormInputs.email,
+    type: 'email',
+    placeholder: 'E-mail',
+    label: 'should match the format: mail@example.com',
+  },
+  {
+    id: FormInputs.address,
+    type: 'text',
+    placeholder: 'Address',
+    label: 'must include three words (at least 5 letters each)',
+  },
+];
+
+export const CARD_DETAILS: OrderFormInput[] = [
+  {
+    id: FormInputs.cardNumber,
+    type: 'number',
+    placeholder: 'Card number',
+    label: 'should include 16 digits',
+  },
+  {
+    id: FormInputs.validDate,
+    type: 'text',
+    placeholder: 'Valid thru',
+    label: '**/**',
+  },
+  {
+    id: FormInputs.cvvCode,
+    type: 'number',
+    placeholder: 'CVV',
+    label: '***',
+  },
+];

@@ -1,10 +1,10 @@
 import { FieldRange, FieldSelect, FieldTypes, MinMax } from '../../../types/types';
 import { RANGE_FIELDS, SELECT_FIELDS } from '../../app/const';
-import Overlay from '../overlay/overlay';
+import OverlayView from '../overlay/overlayView';
 
 class FilterView {
   private wrapperElem: HTMLElement | null;
-  private overlay: Overlay;
+  private overlay: OverlayView;
   private formElem: HTMLFormElement | null;
   private titleElem: HTMLElement | null;
   private categorySelectElem: HTMLSelectElement | null;
@@ -18,7 +18,7 @@ class FilterView {
 
   public constructor() {
     this.wrapperElem = null;
-    this.overlay = new Overlay();
+    this.overlay = new OverlayView();
     this.formElem = null;
     this.titleElem = null;
     this.categorySelectElem = null;
@@ -281,7 +281,7 @@ class FilterView {
   }
 
   public showFilters(): void {
-    this.overlay.showOverlay();
+    this.overlay.drawOverlay();
     this.overlay.overlay?.addEventListener('click', () => this.hideFilters());
     this.wrapperElem?.classList.add('filter_show');
   }
