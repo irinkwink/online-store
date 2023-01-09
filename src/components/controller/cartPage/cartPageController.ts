@@ -1,19 +1,23 @@
 import CartPageView from '../../view/cartPage/cartPageView';
 import PageController from '../pageController';
+import { validate, isValid, notValid, phoneRegex, cardNumberRegex, cvvCode, cardDate, mailRegex } from './regex';
 import { ICartProduct, IProduct, IProductLS } from '../../../types/interfaces';
 import TemplatePageController from '../templatePage/templatePageController';
 import { CartTotal, PromoCodes } from '../../../types/types';
 import CartPaginationController from './cartPaginationController';
 import { PROMO_CODES } from '../../app/const';
+import ModalView from '../../view/cartPage/modalView';
 class CartPageController extends PageController {
   public view: CartPageView;
   private pagination: CartPaginationController;
   private appliedPromoCodes: string[];
   private totalDiscount: number;
+  modal: ModalView;
 
   public constructor(templatePage: TemplatePageController) {
     super(templatePage, 'cart');
     this.view = new CartPageView();
+    this.modal = new ModalView();
     this.pagination = new CartPaginationController((products) => this.view.drawProducts(products));
     this.appliedPromoCodes = [];
     this.totalDiscount = 0;
@@ -198,6 +202,191 @@ class CartPageController extends PageController {
       this.header.view.updateCartTotal(cartTotal);
       this.updateDiscount(cartTotal);
     }
+  }
+
+  openModal() {
+    const promoBlock: HTMLElement | null = document.querySelector('.promo-block');
+    promoBlock?.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.id === 'buy-btn') {
+        this.modal.drawModal();
+        this.closeModal();
+        this.submitForm();
+        this.setImageCreditCard();
+        this.setCardDate();
+        this.setPlus();
+      }
+    });
+  }
+
+  closeModal() {
+    const modalWrapper: HTMLElement | null = document.querySelector('.modal__wrapper');
+    const modal = document.querySelector('.modal');
+    const main: HTMLElement | null = document.querySelector('.main');
+    modalWrapper?.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.className === 'modal__wrapper' && main && modal) {
+        main.removeChild(modal);
+      }
+    });
+  }
+
+  submitForm() {
+    const form = this.modal.form;
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      console.log('Проверка полей');
+      this.checkName();
+      this.checkPhone();
+      this.checkAddress();
+      this.checkCreditNumber();
+      this.checkCcv();
+      this.checkDate();
+      this.checkMail();
+    });
+  }
+  check(inp: HTMLInputElement, el: HTMLElement, reg: RegExp, mess: string) {
+    if (inp && el) {
+      if (!validate(reg, inp)) {
+        notValid(inp, el, mess);
+      } else {
+        isValid(inp, el);
+      }
+    }
+  }
+  checkName() {
+    const name = this.modal.fioInp;
+    const fioErr = this.modal.fioErr;
+    if (name && fioErr) {
+      const val = name.value;
+      const fio = val.split(' ');
+      if (fio.length < 2) {
+        notValid(name, fioErr, 'Enter valid name');
+      }
+      const fName = fio[0];
+      const lName = fio[1];
+      if (fName.length < 3 || lName.length < 3) {
+        notValid(name, fioErr, 'Enter valid name');
+      } else {
+        isValid(name, fioErr);
+      }
+    }
+  }
+  checkPhone() {
+    const phone = this.modal.phoneInp;
+    const phoneErr = this.modal.phoneErr;
+    if (phone && phoneErr) {
+      if (!validate(phoneRegex, phone)) {
+        notValid(phone, phoneErr, 'Enter valid phone number');
+      } else {
+        isValid(phone, phoneErr);
+      }
+    }
+  }
+  checkAddress() {
+    const address = this.modal.addressInp;
+    const addressErr = this.modal.addressErr;
+    if (address && addressErr) {
+      const val = address.value;
+      const addr = val.split(' ');
+      addr.forEach((item) => {
+        if (item.length < 5 || addr.length < 3) {
+          notValid(address, addressErr, 'Enter valid address');
+        } else {
+          isValid(address, addressErr);
+        }
+      });
+    }
+  }
+  checkCreditNumber() {
+    const number = this.modal.cardNumInp;
+    const numErr = this.modal.cardNumInpErr;
+
+    if (number && numErr) {
+      if (!validate(cardNumberRegex, number)) {
+        notValid(number, numErr, 'Enter valid card number');
+      } else {
+        isValid(number, numErr);
+      }
+    }
+  }
+  checkCcv() {
+    const ccv = this.modal.ccvInp;
+    const ccvErr = this.modal.ccvInpErr;
+    if (ccv && ccvErr) {
+      if (!validate(cvvCode, ccv)) {
+        notValid(ccv, ccvErr, 'Enter valid card ccv');
+      } else {
+        isValid(ccv, ccvErr);
+      }
+    }
+  }
+  checkDate() {
+    const dateInp = this.modal.dateInt;
+    const dateInpErr = this.modal.dateIntErr;
+    if (dateInp && dateInpErr) {
+      const day = Number(dateInp.value.slice(0, 2));
+      const month = Number(dateInp.value.slice(3));
+      if (!validate(cardDate, dateInp) || month > 12 || month < 0 || day > 31) {
+        notValid(dateInp, dateInpErr, 'Enter valid card date');
+      } else {
+        isValid(dateInp, dateInpErr);
+      }
+    }
+  }
+  checkMail() {
+    const mail = this.modal.mailInp;
+    const mailErr = this.modal.mailInpErr;
+
+    if (mail && mailErr) {
+      if (!validate(mailRegex, mail)) {
+        notValid(mail, mailErr, 'Enter valid e-mail');
+      } else {
+        isValid(mail, mailErr);
+      }
+    }
+  }
+  setImageCreditCard() {
+    const subtitle = document.querySelector('.modal__subtitle');
+    const cardNumInp = this.modal.cardNumInp;
+    cardNumInp?.addEventListener('input', () => {
+      if (cardNumInp && subtitle) {
+        const val = cardNumInp.value[0];
+        if (val === String(4)) {
+          subtitle.classList.remove('modal__subtitle_mastercard', 'modal__subtitle_union');
+          subtitle.classList.add('modal__subtitle_visa');
+        } else if (val === String(5)) {
+          subtitle.classList.remove('modal__subtitle_visa', 'modal__subtitle_union');
+          subtitle.classList.add('modal__subtitle_mastercard');
+        } else if (val === String(1)) {
+          subtitle.classList.remove('modal__subtitle_visa', 'modal__subtitle_mastercard');
+          subtitle.classList.add('modal__subtitle_union');
+        }
+      }
+    });
+  }
+  setCardDate() {
+    const dateInp = this.modal.dateInt;
+    dateInp?.addEventListener('input', () => {
+      if (dateInp) {
+        const val = dateInp.value;
+        if (val.length === 2) {
+          dateInp.value = val + '/';
+        }
+      }
+    });
+  }
+  setPlus() {
+    const phone = this.modal.phoneInp;
+    phone?.addEventListener('input', () => {
+      if (phone) {
+        let val = phone.value;
+        if (val.length === 1) {
+          val = '+';
+          phone.value = val;
+        }
+      }
+    });
   }
 }
 

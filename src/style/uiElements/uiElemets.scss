@@ -56,5 +56,22 @@
 .btn {
   background: none;
   border: none;
-  cursor: pointer;
+  cursor: pointer;  
+}
+
+.input {
+    padding: 4px 8px;
+    display: block;
+    border-radius: 4px;
+    width: 100%;
+    outline: none;
+    margin-bottom: 4px;
+}
+
+.is-invalid {
+    border: 1px solid $color-error;
+}
+
+.is-valid {
+border: 1px solid $color-valid;
 }
