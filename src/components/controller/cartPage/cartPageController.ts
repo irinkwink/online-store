@@ -33,7 +33,7 @@ class CartPageController extends PageController {
     const productsToRender = this.view.identityProducts(cart, products);
     const settings = this.state.getState().onlineStoreSettings.promoСodes;
     this.view.render(productsToRender);
-    this.view.drawTotal();
+    this.view.drawTotal(productsToRender);
     this.view.drawPromo(settings);
     const discount = this.getDiscount(settings);
     const totalPrice = this.view.getTotalPrice(productsToRender);

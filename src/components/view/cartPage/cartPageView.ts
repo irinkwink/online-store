@@ -80,7 +80,17 @@ export class CartPageView {
           const productStock = document.createElement('div');
           productStock.className = 'cart-table-row__stock';
           productStock.innerHTML = `Stock - ${product.stock}`;
-          productInfo.append(productTitle, productDesc, productStock);
+          const ratingElem = document.createElement('div');
+          ratingElem.className = 'goods-item__rating';
+          const ratingActivWidth = Math.round((product.rating * 100) / 5);
+          ratingElem.innerHTML = `
+            <div class="goods-item__stars stars">
+                <div class="stars__row stars__row_inactive"></div>
+                <div class="stars__row stars__row_active" style="width: ${ratingActivWidth.toString()}%"></div>
+            </div>
+            <p class="goods-item__rate">${product.rating.toString()}</p>
+            `;
+          productInfo.append(productTitle, productDesc, productStock, ratingElem);
           productLink.append(productImage, productInfo);
           const productPrice = document.createElement('div');
           productPrice.className = 'cart-table-row__price';
@@ -115,38 +125,40 @@ export class CartPageView {
       }
     }
   }
-  drawTotal() {
-    const cartTableWr: HTMLUListElement | null = document.querySelector('.cart__wr');
-    this.cartTable = cartTableWr;
-    const total = document.createElement('div');
-    total.className = 'total';
-    const totalHead = document.createElement('div');
-    totalHead.className = 'total__head';
-    totalHead.textContent = 'Summary';
-    const totalSummary = document.createElement('div');
-    totalSummary.className = 'total__header';
-    const totalPrice = document.createElement('span');
-    totalPrice.className = 'total__price';
-    totalSummary.append(totalPrice);
-    totalSummary.insertAdjacentHTML(
-      'afterbegin',
-      `
+  drawTotal(products: IProduct[]) {
+    if (products.length > 0) {
+      const cartTableWr: HTMLUListElement | null = document.querySelector('.cart__wr');
+      this.cartTable = cartTableWr;
+      const total = document.createElement('div');
+      total.className = 'total';
+      const totalHead = document.createElement('div');
+      totalHead.className = 'total__head';
+      totalHead.textContent = 'Summary';
+      const totalSummary = document.createElement('div');
+      totalSummary.className = 'total__header';
+      const totalPrice = document.createElement('span');
+      totalPrice.className = 'total__price';
+      totalSummary.append(totalPrice);
+      totalSummary.insertAdjacentHTML(
+        'afterbegin',
+        `
 
             <span class="total-price">Total price</span>
         `
-    );
-    const totalSummaryDiscount = document.createElement('div');
-    totalSummaryDiscount.className = 'total__discount';
-    const totalRow = document.createElement('div');
-    totalRow.className = 'total__row';
-    const totalNum = document.createElement('span');
-    const totalText = document.createElement('span');
-    totalText.textContent = 'Products: ';
-    totalNum.className = 'total-num';
-    totalRow.append(totalText, totalNum);
-    total.append(totalHead, totalRow, totalSummary, totalSummaryDiscount);
-    if (cartTableWr) {
-      cartTableWr.append(total);
+      );
+      const totalSummaryDiscount = document.createElement('div');
+      totalSummaryDiscount.className = 'total__discount';
+      const totalRow = document.createElement('div');
+      totalRow.className = 'total__row';
+      const totalNum = document.createElement('span');
+      const totalText = document.createElement('span');
+      totalText.textContent = 'Products: ';
+      totalNum.className = 'total-num';
+      totalRow.append(totalText, totalNum);
+      total.append(totalHead, totalRow, totalSummary, totalSummaryDiscount);
+      if (cartTableWr) {
+        cartTableWr.append(total);
+      }
     }
   }
 
