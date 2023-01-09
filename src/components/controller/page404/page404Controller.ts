@@ -2,11 +2,11 @@ import PageController from '../pageController';
 import TemplatePageController from '../templatePage/templatePageController';
 
 class Page404Controller extends PageController {
-  constructor(templatePage: TemplatePageController) {
+  public constructor(templatePage: TemplatePageController) {
     super(templatePage, 'catalog');
   }
 
-  start(): void {
+  public start(): void {
     console.log('page 404');
   }
 }

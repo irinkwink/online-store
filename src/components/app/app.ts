@@ -11,7 +11,7 @@ class App {
   private dataController: DataController;
   private templatePage: TemplatePageController;
 
-  constructor() {
+  public constructor() {
     this.state = new State();
     this.dataController = new DataController();
     this.templatePage = new TemplatePageController(this.state);

@@ -1,7 +1,7 @@
 class Overlay {
   private overlayElem: HTMLDivElement;
 
-  constructor() {
+  public constructor() {
     const overlayElem = document.createElement('div');
     overlayElem.className = 'overlay';
 
@@ -12,12 +12,12 @@ class Overlay {
     return this.overlayElem;
   }
 
-  showOverlay(): HTMLDivElement {
+  public showOverlay(): HTMLDivElement {
     document.body.append(this.overlayElem);
     return this.overlayElem;
   }
 
-  hideOverlay(): void {
+  public hideOverlay(): void {
     this.overlayElem.remove();
   }
 }

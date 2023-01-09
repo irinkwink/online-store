@@ -9,7 +9,7 @@ class TemplatePageController {
   private _main: MainController;
   private _footer: FooterController;
 
-  constructor(state: State) {
+  public constructor(state: State) {
     this._state = state;
     this._header = new HeaderController(state);
     this._main = new MainController();

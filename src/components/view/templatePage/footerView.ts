@@ -4,7 +4,7 @@ import logo from '../../../img/logo.svg';
 class FooterView {
   private footerElem: HTMLElement | null;
 
-  constructor() {
+  public constructor() {
     this.footerElem = null;
   }
 

@@ -4,7 +4,7 @@ import PaginationController from '../paginationController';
 class CatalogPaginationController extends PaginationController<IProduct> {
   private type: keyof typeof ProductsPerPage;
 
-  constructor(callback: (data: IProduct[]) => void) {
+  public constructor(callback: (data: IProduct[]) => void) {
     super(callback);
     this.type = 'desktop';
   }

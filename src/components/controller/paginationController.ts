@@ -9,7 +9,7 @@ class PaginationController<T> {
   protected page: number;
   protected limit: number;
 
-  constructor(callback: (data: T[]) => void) {
+  public constructor(callback: (data: T[]) => void) {
     this.view = new PaginationView();
     this.products = [];
     this.cbDrawProducts = callback;

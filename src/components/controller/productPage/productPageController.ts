@@ -12,7 +12,7 @@ class ProductPageController extends PageController {
   private isInCart: boolean;
   private sliderPosition: number;
 
-  constructor(templatePage: TemplatePageController) {
+  public constructor(templatePage: TemplatePageController) {
     super(templatePage, 'product');
     this.view = new ProductPageView();
     this.id = 0;
@@ -22,7 +22,7 @@ class ProductPageController extends PageController {
     this.sliderPosition = 0;
   }
 
-  start(): void {
+  public start(): void {
     super.start();
     this.view.wrapper = this.main.view.main;
 

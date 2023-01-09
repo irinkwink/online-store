@@ -11,7 +11,7 @@ class CartPageController extends PageController {
   private appliedPromoCodes: string[];
   private totalDiscount: number;
 
-  constructor(templatePage: TemplatePageController) {
+  public constructor(templatePage: TemplatePageController) {
     super(templatePage, 'cart');
     this.view = new CartPageView();
     this.pagination = new CartPaginationController((products) => this.view.drawProducts(products));
@@ -19,14 +19,13 @@ class CartPageController extends PageController {
     this.totalDiscount = 0;
   }
 
-  start(): void {
+  public start(): void {
     super.start();
     this.view.wrapper = this.main.view.main;
 
-    const products = this.state.getState().products;
-    const cart = this.state.getState().onlineStoreSettings.cart;
+    const productsToDraw = this.getProductsToDraw();
     const cartTotal: CartTotal = this.state.calculateCartTotal();
-    const productsToDraw = this.identityProducts(cart, products);
+
     this.appliedPromoCodes = this.state.getState().onlineStoreSettings.promoCodes;
 
     this.view.draw();
@@ -57,7 +56,14 @@ class CartPageController extends PageController {
     this.view.promoBlock?.addEventListener('click', (e) => this.handleDropAddBtns(e));
   }
 
-  initDiscount(cartTotal: CartTotal): void {
+  private getProductsToDraw(): IProductLS[] {
+    const products = this.state.getState().products;
+    const cart = this.state.getState().onlineStoreSettings.cart;
+    const productsToDraw = this.identityProducts(cart, products);
+    return productsToDraw;
+  }
+
+  private initDiscount(cartTotal: CartTotal): void {
     if (this.appliedPromoCodes) {
       this.totalDiscount = this.calculateDiscount(this.appliedPromoCodes);
       if (this.totalDiscount > 0) {
@@ -68,12 +74,12 @@ class CartPageController extends PageController {
     }
   }
 
-  updateDiscount(cartTotal: CartTotal): void {
+  private updateDiscount(cartTotal: CartTotal): void {
     const discountPrice = Math.floor(cartTotal.totalPrice * (1 - this.totalDiscount));
     this.view.updateDiscountPrice(discountPrice, this.totalDiscount === 0);
   }
 
-  calculateDiscount(appliedPromoСodes: string[]): number {
+  private calculateDiscount(appliedPromoСodes: string[]): number {
     const discount = appliedPromoСodes.reduce(
       (acc, code) => (code in PROMO_CODES ? acc + PROMO_CODES[code as keyof PromoCodes] : acc),
       0
@@ -132,14 +138,7 @@ class CartPageController extends PageController {
     this.view.updateDiscountPrice(discountPrice, this.totalDiscount === 0);
   }
 
-  getProductsToRender(): IProductLS[] {
-    const products = this.state.getState().products;
-    const cart = this.state.getState().onlineStoreSettings.cart;
-    const productsToRender = this.identityProducts(cart, products);
-    return productsToRender;
-  }
-
-  identityProducts(cart: ICartProduct[], products: IProduct[]): IProductLS[] {
+  private identityProducts(cart: ICartProduct[], products: IProduct[]): IProductLS[] {
     const pickedProducts = [];
     if (cart.length > 0) {
       for (let i = 0; i < cart.length; i++) {
@@ -159,7 +158,7 @@ class CartPageController extends PageController {
     return pickedProducts;
   }
 
-  handleControlCartButtons(target: HTMLElement): void {
+  private handleControlCartButtons(target: HTMLElement): void {
     const controlElem = target.closest('.item__control') as HTMLElement;
     const btnElem = target.closest('.control-btn') as HTMLElement;
     const idData = controlElem.dataset.productId;
@@ -174,7 +173,7 @@ class CartPageController extends PageController {
           this.state.removeProductFromCart(id);
           const limit = this.state.getState().onlineStoreSettings.cart.length || 1;
           this.view.updateMaxLimit(limit);
-          this.pagination.initPagination(this.getProductsToRender(), true);
+          this.pagination.initPagination(this.getProductsToDraw(), true);
           break;
         }
         case 'btn-plus': {

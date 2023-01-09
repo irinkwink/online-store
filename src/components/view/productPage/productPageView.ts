@@ -14,7 +14,7 @@ class ProductPageView {
   private imageElem: HTMLImageElement | null;
   private controlElem: HTMLDivElement | null;
 
-  constructor() {
+  public constructor() {
     this.wrapperElem = null;
     this.btnCartElem = null;
     this.btnDecElem = null;

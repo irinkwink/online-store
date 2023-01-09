@@ -4,7 +4,7 @@ class PaginationView {
   private lastArrowElem: HTMLButtonElement | null;
   private firstArrowElem: HTMLButtonElement | null;
 
-  constructor() {
+  public constructor() {
     this.wrapperElem = null;
     this.pageNumberElems = null;
     this.lastArrowElem = null;

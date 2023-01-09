@@ -3,7 +3,7 @@ import MainView from '../../view/templatePage/mainView';
 class MainController {
   public view: MainView;
 
-  constructor() {
+  public constructor() {
     this.view = new MainView();
   }
 

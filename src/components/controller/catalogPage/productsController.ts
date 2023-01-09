@@ -4,13 +4,13 @@ import ProductsView from '../../view/catalogPage/productsView';
 import CatalogPaginationController from './catalogPaginationController';
 
 class ProductsController {
-  state: State;
-  cbUpdateCount: (number: number) => void;
-  cbUpdateCartTotal: () => void;
-  view: ProductsView;
-  pagination: CatalogPaginationController;
+  private state: State;
+  private cbUpdateCount: (number: number) => void;
+  private cbUpdateCartTotal: () => void;
+  public view: ProductsView;
+  public pagination: CatalogPaginationController;
 
-  constructor(state: State, cbUpdateCount: (number: number) => void, cbUpdateCartTotal: () => void) {
+  public constructor(state: State, cbUpdateCount: (number: number) => void, cbUpdateCartTotal: () => void) {
     this.cbUpdateCount = cbUpdateCount;
     this.cbUpdateCartTotal = cbUpdateCartTotal;
     this.state = state;

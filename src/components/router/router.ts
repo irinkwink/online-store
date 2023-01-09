@@ -14,7 +14,7 @@ class Router {
   private routes: Routes;
   private route: PageController;
 
-  constructor(templatePage: TemplatePageController) {
+  public constructor(templatePage: TemplatePageController) {
     this.catalogPage = new CatalogPageController(templatePage);
     this.productPage = new ProductPageController(templatePage);
     this.cartPage = new CartPageController(templatePage);

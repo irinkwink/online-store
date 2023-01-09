@@ -10,7 +10,7 @@ class HeaderView {
   private searchFormElem: HTMLFormElement | null;
   private searchInputElem: HTMLInputElement | null;
 
-  constructor() {
+  public constructor() {
     this.headerElem = null;
     this.totalNumberElem = null;
     this.totalPriceElem = null;

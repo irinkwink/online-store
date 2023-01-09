@@ -11,7 +11,7 @@ class PageController {
   protected footer: FooterController;
   private page: string;
 
-  constructor(templatePage: TemplatePageController, page: string) {
+  protected constructor(templatePage: TemplatePageController, page: string) {
     this.state = templatePage.state;
     this.header = templatePage.header;
     this.main = templatePage.main;

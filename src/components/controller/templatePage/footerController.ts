@@ -3,7 +3,7 @@ import FooterView from '../../view/templatePage/footerView';
 class FooterController {
   public view: FooterView;
 
-  constructor() {
+  public constructor() {
     this.view = new FooterView();
   }
 

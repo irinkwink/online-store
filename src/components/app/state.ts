@@ -4,7 +4,7 @@ import { CartTotal } from '../../types/types';
 class State {
   private state: IState;
 
-  constructor() {
+  public constructor() {
     this.state = {
       products: [],
       error: '',

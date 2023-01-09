@@ -17,7 +17,7 @@ export class CartPageView {
   private toApplyPromoCodesElem: HTMLDivElement | null;
   private buyBtnElem: HTMLButtonElement | null;
 
-  constructor() {
+  public constructor() {
     this.wrapperElem = null;
     this.paginationElem = null;
     this.limitInputElem = null;

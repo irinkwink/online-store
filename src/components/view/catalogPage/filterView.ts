@@ -16,7 +16,7 @@ class FilterView {
   private copyBtnElem: HTMLButtonElement | null;
   private resetBtnElem: HTMLButtonElement | null;
 
-  constructor() {
+  public constructor() {
     this.wrapperElem = null;
     this.overlay = new Overlay();
     this.formElem = null;

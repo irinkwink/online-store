@@ -3,7 +3,7 @@ import { deleteSearchParamFromUrl } from '../../router/urlController';
 import PaginationController from '../paginationController';
 
 class CartPaginationController extends PaginationController<IProductLS> {
-  constructor(callback: (data: IProductLS[]) => void) {
+  public constructor(callback: (data: IProductLS[]) => void) {
     super(callback);
   }
 

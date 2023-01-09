@@ -1,7 +1,7 @@
 class MainView {
   private mainElem: HTMLElement | null;
 
-  constructor() {
+  public constructor() {
     this.mainElem = null;
   }
 

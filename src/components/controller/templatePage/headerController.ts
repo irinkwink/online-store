@@ -6,7 +6,7 @@ class HeaderController {
   private state: State;
   public view: HeaderView;
 
-  constructor(state: State) {
+  public constructor(state: State) {
     this.state = state;
     this.view = new HeaderView();
   }
@@ -33,7 +33,7 @@ class HeaderController {
     }
   }
 
-  updateHeaderCartTotal(): void {
+  public updateHeaderCartTotal(): void {
     this.view.updateCartTotal(this.state.calculateCartTotal());
   }
 }

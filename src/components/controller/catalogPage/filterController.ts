@@ -11,17 +11,36 @@ import {
 import FilterView from '../../view/catalogPage/filterView';
 
 class FilterController {
-  cbProductsInit: (data: IProduct[]) => void;
-  view: FilterView;
-  filterBtn: HTMLButtonElement | null;
-  searchForm: HTMLFormElement | null;
-  searchInput: HTMLInputElement | null;
-  sortSelect: HTMLSelectElement | null;
-  products: IProduct[];
-  productsFilter: IProduct[];
-  filters: FiltersValues;
+  private cbProductsInit: (data: IProduct[]) => void;
+  public view: FilterView;
+  private filterBtn: HTMLButtonElement | null;
+  private searchForm: HTMLFormElement | null;
+  private searchInput: HTMLInputElement | null;
+  private sortSelect: HTMLSelectElement | null;
+  private products: IProduct[];
+  private productsFilter: IProduct[];
+  private filters: FiltersValues;
 
-  constructor(cbProductsInit: (products: IProduct[]) => void) {
+  public get getProductsFilter(): IProduct[] {
+    return this.productsFilter;
+  }
+
+  public set filterBtnElem(elem: HTMLButtonElement | null) {
+    this.filterBtn = elem;
+  }
+  public set searchFormElem(elem: HTMLFormElement | null) {
+    this.searchForm = elem;
+  }
+
+  public set searchInputElem(elem: HTMLInputElement | null) {
+    this.searchInput = elem;
+  }
+
+  public set sortSelectElem(elem: HTMLSelectElement | null) {
+    this.sortSelect = elem;
+  }
+
+  public constructor(cbProductsInit: (products: IProduct[]) => void) {
     this.cbProductsInit = cbProductsInit;
     this.view = new FilterView();
     this.filterBtn = null;
@@ -33,7 +52,7 @@ class FilterController {
     this.filters = Object.assign({}, INITIAL_FILTERS);
   }
 
-  init(products: IProduct[]): void {
+  public init(products: IProduct[]): void {
     this.products = products;
     this.productsFilter = [...this.products];
 
@@ -185,7 +204,7 @@ class FilterController {
     }
   }
 
-  resetFilters(): void {
+  private resetFilters(): void {
     this.productsFilter = [...this.products];
     this.filters.category = 'all';
     this.filters.brand = 'all';
@@ -195,11 +214,11 @@ class FilterController {
     this.updateStock();
   }
 
-  initFilters(): void {
+  private initFilters(): void {
     this.filters = Object.assign({}, INITIAL_FILTERS);
   }
 
-  checkUrlForFilters(): void {
+  private checkUrlForFilters(): void {
     const searchParams = getSearchParamsFromUrl();
 
     const searchParam = searchParams.find((item) => item.key === 'search');
@@ -242,7 +261,7 @@ class FilterController {
     this.updateStock(false);
   }
 
-  filterProducts(): void {
+  private filterProducts(): void {
     let data = [...this.products];
 
     if (this.filters.category !== 'all') {
@@ -300,17 +319,17 @@ class FilterController {
     this.cbProductsInit(data);
   }
 
-  updateCategories(): void {
+  private updateCategories(): void {
     const categories = new Set(this.products.map((item) => item.category));
     this.view.updateCategories(Array.from(categories), this.filters.category);
   }
 
-  updateBrands(): void {
+  private updateBrands(): void {
     const brands = new Set(this.productsFilter.map((item) => item.brand));
     this.view.updateBrands(Array.from(brands), this.filters.brand);
   }
 
-  updatePrice(changeFiltersValues = true): void {
+  private updatePrice(changeFiltersValues = true): void {
     const prices = this.productsFilter.map((item) => item.price).sort((a, b) => a - b);
     this.filters.price.min = prices[0];
     this.filters.price.max = prices[prices.length - 1];
@@ -329,7 +348,7 @@ class FilterController {
     this.view.updatePriceValues(this.filters.price, this.filters.priceFilter);
   }
 
-  updateStock(changeFilters = true): void {
+  private updateStock(changeFilters = true): void {
     const stocks = this.productsFilter.map((item) => item.stock).sort((a, b) => a - b);
     this.filters.stock.min = stocks[0];
     this.filters.stock.max = stocks[stocks.length - 1];
@@ -348,7 +367,7 @@ class FilterController {
     this.view.updateStockValues(this.filters.stock, this.filters.stockFilter);
   }
 
-  updatePriceFilter(value: string, option: string): void {
+  private updatePriceFilter(value: string, option: string): void {
     let checkValue = +value;
     if (option === 'min') {
       if (checkValue >= this.filters.priceFilter.max) {
@@ -364,7 +383,7 @@ class FilterController {
     this.view.updatePriceValues(this.filters.price, this.filters.priceFilter);
   }
 
-  updateStockFilter(value: string, option: string): void {
+  private updateStockFilter(value: string, option: string): void {
     let checkValue = +value;
     if (option === 'min') {
       if (checkValue >= this.filters.stockFilter.max) {

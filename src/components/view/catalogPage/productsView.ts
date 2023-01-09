@@ -7,7 +7,7 @@ class ProductsView {
   private wrapperElem: HTMLDivElement | null;
   private displayType: string;
 
-  constructor(state: State) {
+  public constructor(state: State) {
     this.state = state;
     this.productsListElem = null;
     this.wrapperElem = null;
@@ -59,7 +59,7 @@ class ProductsView {
     return messageElem;
   }
 
-  updateProductsDisplay(displayType: string): void {
+  public updateProductsDisplay(displayType: string): void {
     if (this.productsList) {
       this.displayType = displayType;
       this.productsList.className = `goods__list goods__${displayType}`;

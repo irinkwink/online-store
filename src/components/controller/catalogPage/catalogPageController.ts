@@ -6,13 +6,13 @@ import FilterController from './filterController';
 import ProductsController from './productsController';
 
 class CatalogPageController extends PageController {
-  view: CatalogPageView;
-  products: ProductsController;
-  filter: FilterController;
-  displayType: string;
-  isCatalogPage: boolean;
+  public view: CatalogPageView;
+  private products: ProductsController;
+  private filter: FilterController;
+  private displayType: string;
+  private isCatalogPage: boolean;
 
-  constructor(templatePage: TemplatePageController) {
+  public constructor(templatePage: TemplatePageController) {
     super(templatePage, 'catalog');
     this.view = new CatalogPageView();
     this.products = new ProductsController(
@@ -28,7 +28,7 @@ class CatalogPageController extends PageController {
   public start(): void {
     const pageValue = getSearchParamValueFromUrl('page');
     if (this.isCatalogPage && pageValue) {
-      this.products.pagination.initPagination(this.filter.productsFilter);
+      this.products.pagination.initPagination(this.filter.getProductsFilter);
     } else {
       super.start();
       this.view.wrapper = this.main.view.main;
@@ -41,10 +41,10 @@ class CatalogPageController extends PageController {
         this.products.view.wrapper = this.view.productsWrapper;
         this.products.pagination.view.wrapper = this.view.pagination;
         this.filter.view.wrapper = this.view.filter;
-        this.filter.filterBtn = this.view.filterBtn;
-        this.filter.searchForm = this.header.view.searchForm;
-        this.filter.searchInput = this.header.view.searchInput;
-        this.filter.sortSelect = this.view.sortSelect;
+        this.filter.filterBtnElem = this.view.filterBtn;
+        this.filter.searchFormElem = this.header.view.searchForm;
+        this.filter.searchInputElem = this.header.view.searchInput;
+        this.filter.sortSelectElem = this.view.sortSelect;
 
         this.filter.init(this.state.getState().products);
 
@@ -53,7 +53,7 @@ class CatalogPageController extends PageController {
     }
   }
 
-  initDisplayType(): void {
+  private initDisplayType(): void {
     const displatValue = getSearchParamValueFromUrl('display');
     if (displatValue && displatValue !== this.displayType) {
       this.displayType = displatValue;
@@ -77,7 +77,7 @@ class CatalogPageController extends PageController {
     });
   }
 
-  initSortInput(): void {
+  private initSortInput(): void {
     const sortValue = getSearchParamValueFromUrl('sort');
     if (sortValue && sortValue !== 'none') {
       this.view.updateSortInput(sortValue);

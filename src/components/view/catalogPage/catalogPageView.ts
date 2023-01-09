@@ -11,7 +11,7 @@ class CatalogPageView {
   private filterElem: HTMLElement | null;
   private sortSelectElem: HTMLSelectElement | null;
 
-  constructor() {
+  public constructor() {
     this.wrapperElem = null;
     this.productsCountElem = null;
     this.productsElem = null;

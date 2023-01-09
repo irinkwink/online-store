@@ -2,7 +2,7 @@
 // export class LocalStorageUtility {
 //   keyName: string;
 
-//   constructor() {
+//   protected constructor() {
 //     this.keyName = 'products';
 //   }
 // //   getProducts(): IProductInLS[] {
