@@ -104,6 +104,7 @@ class CartPageController extends PageController {
         this.view.updateToApplyPromoCodes(code);
       }
     }
+    return res;
   }
 
   private handleDropAddBtns(e: Event): void {
@@ -204,6 +205,11 @@ class CartPageController extends PageController {
       this.header.view.updateCartTotal(cartTotal);
       this.updateDiscount(cartTotal);
     }
+  }
+  redirect() {
+    setTimeout(function () {
+      window.location.href = '/';
+    }, 3000);
   }
 }
 

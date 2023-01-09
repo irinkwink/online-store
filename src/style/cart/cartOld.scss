@@ -29,16 +29,20 @@
     &__img {
         max-width: 138px;
         width: 100%;
+        height: 130px;
+        object-fit: cover;
     }
 
     &__controls {
         margin-left: 1.5rem;
     }
 
-    &__info {
+    &__link {
         max-width: 360px;
         width: 100%;
         margin-left: 1.5rem;
+        display: flex;
+        gap: 16px;
     }
 
     &__btn {
@@ -71,6 +75,10 @@
     &__controls {
         display: flex;
         align-items: center;
+    }
+    &__number {
+        font-size: 16px;
+        margin-right: 8px;
     }
 }
 
@@ -163,6 +171,9 @@
         border-radius: 8px;
         background-color: #fff;
         box-shadow: 0 0 20px rgb(0 0 0 / 16%);
+        &_center {
+            text-align: center;
+        }
     }
     &__btn {
         display: flex;
@@ -199,6 +210,14 @@
                 background-image: url('img/visa.png');
             }
         }
+    }
+    &__close {
+        background: transparent url('img/close.svg');
+        width: 32px;
+        height: 32px;
+        position: absolute;
+        top: 16px;
+        right: 16px;
     }
 }
 
