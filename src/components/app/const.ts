@@ -5,9 +5,12 @@ import {
   FieldSelect,
   FiltersValues,
   HeaderCartInfo,
+  Messages,
   OrderFormInput,
   SortOption,
 } from '../../types/types';
+
+export const REDIRECT_TIMIOUT = 2000;
 
 export const THUMB_WIDTH = 80;
 export const THUMBS_GAP = 4;
@@ -16,6 +19,9 @@ export const WIDTH_TWO_ELEMS = THUMB_WIDTH * 2 + THUMBS_GAP;
 export const WIDTH_THREE_ELEMS = THUMB_WIDTH * 3 + THUMBS_GAP * 2;
 
 export const SLIDER_MOVE = THUMB_WIDTH + THUMBS_GAP;
+
+export const FORM_LINK =
+  'https://docs.google.com/forms/d/e/1FAIpQLSdALk64QGdQjeHWrgYWn2IcteB8lwY_rufDUi13-ucneo7hLw/viewform?usp=pp_url';
 
 export const DEVELOPERS: Developers[] = [
   {
@@ -29,6 +35,30 @@ export const DEVELOPERS: Developers[] = [
     githubName: 'devbublik',
   },
 ];
+
+export const MESSAGES: Messages = {
+  emptyFilter: [
+    "Sorry, we couldn't find products with these parameters.",
+    'Try to set less restrictive filters or to change your search request.',
+  ],
+  emptyCart: ['Please, go shopping!'],
+  page404: [
+    'Page 404',
+    'Sorry, we did not find such a page',
+    'Try to go to the main page using the link on the logo in the header',
+  ],
+  orderSuccess: [
+    'You made it!',
+    'Your order is accepted.',
+    'Thanks a lot for checking out our work!!!',
+    'We hope for the highest score.',
+    'If you like our work, please fill out the form.',
+    'And we will be glad to any comments.',
+    `* this popup will close in ${Math.ceil(
+      REDIRECT_TIMIOUT / 100
+    )} seconds and you will be redirected to the main page`,
+  ],
+};
 
 export const HEADER_CART_INFO: HeaderCartInfo[] = [
   {
@@ -198,7 +228,7 @@ export const CARD_DETAILS: OrderFormInput[] = [
     id: FormInputs.validDate,
     type: 'text',
     placeholder: 'Valid thru',
-    label: '**/**',
+    label: 'MM/YY',
   },
   {
     id: FormInputs.cvvCode,

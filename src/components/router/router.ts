@@ -56,8 +56,10 @@ class Router {
 
   private handleLocation(): void {
     const fullPath = window.location.pathname;
+    console.log('fullPath: ', fullPath);
     // const path = `/${fullPath.split('/')[1]}`;
     this.route = fullPath in this.routes ? this.routes[fullPath as keyof Routes] : this.routes[404];
+    console.log('this.route: ', this.route);
     this.route.start();
   }
 }

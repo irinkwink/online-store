@@ -1,14 +1,27 @@
 import { FormInputs } from '../../../types/enums';
-import CartModalView from '../../view/cartPage/cartModalView';
 import OverlayView from '../../view/overlay/overlayView';
-import { regexCardDate, regexCardNumber, regexCvvCode, regexEmail, regexPhone, validate } from '../../app/regex';
+import {
+  regexCardDate,
+  regexCardNumber,
+  regexCvvCode,
+  regexEmail,
+  regexName,
+  regexPhone,
+  validate,
+  validateLength,
+  validateString,
+} from '../../app/regex';
+import CartModalView from '../../view/cartPage/cartModalView';
+import { REDIRECT_TIMIOUT } from '../../app/const';
 
 class CartModalController {
+  private cbClearCart: () => void;
   public view: CartModalView;
   private overlay: OverlayView;
   private prevDate: string;
 
-  public constructor() {
+  public constructor(callback: () => void) {
+    this.cbClearCart = callback;
     this.view = new CartModalView();
     this.overlay = new OverlayView();
     this.prevDate = '';
@@ -43,104 +56,137 @@ class CartModalController {
 
   private handleSubmitForm(e: Event): void {
     e.preventDefault();
-    console.log('Проверка полей');
+    const phone = this.view.phoneInput;
+    const cardNumber = this.view.cardNumberInput;
+    const ccvCode = this.view.cvvCodeInput;
+    const email = this.view.emailInput;
+    if (
+      phone &&
+      cardNumber &&
+      ccvCode &&
+      email &&
+      this.checkName() &&
+      this.check(phone, regexPhone) &&
+      this.checkAddress() &&
+      this.check(email, regexEmail) &&
+      this.check(cardNumber, regexCardNumber) &&
+      this.checkDate() &&
+      this.check(ccvCode, regexCvvCode)
+    ) {
+      if (this.view.nameInput?.value) {
+        this.view.drawMessage(this.view.nameInput.value);
+      } else {
+        this.view.drawMessage();
+      }
+      this.redirectToMainPage();
+      this.cbClearCart();
+    }
   }
 
   private validateInputValue(e: Event): void {
     const target = e.target as HTMLElement;
-    if (target && target instanceof HTMLInputElement) {
-      console.log('target: ', target);
-      console.log('target.id: ', target.id);
-      console.log('target.value: ', target.value);
-      switch (target.id) {
-        case FormInputs.name: {
-          this.checkName(target);
-          break;
-        }
-        case FormInputs.phone: {
-          this.check(target, regexPhone);
-          // this.checkPhone();
-          break;
-        }
-        case FormInputs.email: {
-          this.check(target, regexEmail);
-          // this.checkEmail();
-          break;
-        }
-        case FormInputs.address: {
-          this.checkAddress(target);
-          break;
-        }
-        case FormInputs.cardNumber: {
-          this.check(target, regexCardNumber);
-          // this.checkCreditNumber();
-          break;
-        }
-        case FormInputs.validDate: {
-          this.check(target, regexCardDate);
-          // this.checkDate();
-          break;
-        }
-        case FormInputs.cvvCode: {
-          this.check(target, regexCvvCode);
-          // this.checkCcv();
-          break;
-        }
-      }
+    switch (target.id) {
+      case FormInputs.name:
+        this.checkName();
+        break;
+      case FormInputs.phone:
+        if (this.view.phoneInput) this.check(this.view.phoneInput, regexPhone);
+        break;
+      case FormInputs.email:
+        if (this.view.emailInput) this.check(this.view.emailInput, regexEmail);
+        break;
+      case FormInputs.address:
+        this.checkAddress();
+        break;
+      case FormInputs.cardNumber:
+        if (this.view.cardNumberInput) this.check(this.view.cardNumberInput, regexCardNumber);
+        break;
+      case FormInputs.validDate:
+        this.checkDate();
+        break;
+      case FormInputs.cvvCode:
+        if (this.view.cvvCodeInput) this.check(this.view.cvvCodeInput, regexCvvCode);
+        break;
     }
   }
 
-  private check(inputElem: HTMLInputElement, regex: RegExp): void {
+  private check(inputElem: HTMLInputElement, regex: RegExp): boolean {
     if (validate(regex, inputElem)) {
       this.view.showValidMessage(inputElem);
-    } else {
-      this.view.showNotValidMessage(inputElem);
+      return true;
     }
+    this.view.showNotValidMessage(inputElem);
+    return false;
   }
 
-  private checkName(inputElem: HTMLInputElement): void {
-    const value = inputElem.value;
-    const fio = value.trim().split(' ');
-    if (fio.length < 2) {
-      this.view.showNotValidMessage(inputElem);
-    } else {
-      const fName = fio[0];
-      const lName = fio[1];
-      if (fName.length < 3 || lName.length < 3) {
-        this.view.showNotValidMessage(inputElem);
+  private checkName(): boolean {
+    if (this.view.nameInput) {
+      const value = this.view.nameInput.value;
+      const fio = value.trim().split(' ');
+      if (fio.length < 2) {
+        this.view.showNotValidMessage(this.view.nameInput);
+        return false;
       } else {
-        this.view.showValidMessage(inputElem);
+        const fName = fio[0];
+        const lName = fio[1];
+        if (
+          !validateString(regexName, fName) ||
+          !validateString(regexName, lName) ||
+          !validateLength(fName, 3) ||
+          !validateLength(lName, 3)
+        ) {
+          this.view.showNotValidMessage(this.view.nameInput);
+          return false;
+        } else {
+          this.view.showValidMessage(this.view.nameInput);
+          return true;
+        }
       }
     }
+    return false;
   }
 
-  private checkAddress(inputElem: HTMLInputElement): void {
-    const value = inputElem.value;
-    const address = value.split(' ');
-    const isInvalid = address
-      .map((item) => {
-        if (item.length < 5 || address.length < 3) {
-          return 'invalid';
+  private checkAddress(): boolean {
+    if (this.view.addressInput) {
+      const value = this.view.addressInput.value;
+      const address = value.split(' ');
+      if (address.length < 3) {
+        this.view.showNotValidMessage(this.view.addressInput);
+      } else {
+        const isInvalid = address
+          .map((item) => {
+            if (validateLength(item, 5)) {
+              return 'valid';
+            }
+            return 'invalid';
+          })
+          .some((item) => item === 'invalid');
+        if (isInvalid) {
+          this.view.showNotValidMessage(this.view.addressInput);
+          return false;
+        } else {
+          this.view.showValidMessage(this.view.addressInput);
+          return true;
         }
-        return 'valid';
-      })
-      .some((item) => item === 'invalid');
-
-    isInvalid ? this.view.showNotValidMessage(inputElem) : this.view.showValidMessage(inputElem);
+      }
+    }
+    return false;
   }
 
-  private checkDate(): void {
-    // const dateInp = this.view.dateInt;
-    // const dateInpErr = this.view.dateIntErr;
-    // if (dateInp && dateInpErr) {
-    //   const day = Number(dateInp.value.slice(0, 2));
-    //   const month = Number(dateInp.value.slice(3));
-    //   if (!validate(cardDate, dateInp) || month > 12 || month < 0 || day > 31) {
-    //     notValid(dateInp, dateInpErr, 'Enter valid card date');
-    //   } else {
-    //     isValid(dateInp, dateInpErr);
-    //   }
-    // }
+  private checkDate(): boolean {
+    if (this.view.dateInput) {
+      const value = this.view.dateInput.value;
+      const month = Number(value.slice(0, 2));
+      const year = Number(value.slice(3, 5));
+      if (!validate(regexCardDate, this.view.dateInput) || month > 12 || month < 1 || year < 23) {
+        this.view.showNotValidMessage(this.view.dateInput);
+        return false;
+      } else {
+        this.view.showValidMessage(this.view.dateInput);
+        return true;
+      }
+    }
+    return false;
   }
 
   private handlePhoneInput(): void {
@@ -193,6 +239,13 @@ class CartModalController {
         this.view.cvvCodeInput.value = value.slice(0, 4);
       }
     }
+  }
+
+  redirectToMainPage() {
+    setTimeout(() => {
+      this.overlay.hideOverlay();
+      window.location.href = '/';
+    }, REDIRECT_TIMIOUT);
   }
 }
 

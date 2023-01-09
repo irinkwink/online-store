@@ -22,6 +22,12 @@
       height: 35px;
     }
 
+    &_inactive {
+      pointer-events: none;
+      cursor: default;
+      border-color: $color-grey;
+    }
+
     &:focus {
       outline-color: $color-main;
     }
@@ -54,17 +60,6 @@
     @include mobile {
       font-size: 1.6rem;
       margin-bottom: 7px;
-    }
-  }
-
-
-  &__codes {
-
-    &_drop {
-    }
- 
-    &_apply {
-    
     }
   }
 

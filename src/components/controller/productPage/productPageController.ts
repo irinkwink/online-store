@@ -34,11 +34,12 @@ class ProductPageController extends PageController {
     if (id) {
       this.id = +id;
       const product = this.state.getState().products.find((item) => item.id === this.id);
-      this.isInCart = this.state.getState().onlineStoreSettings.cart.find((item) => item.id === this.id) !== undefined;
-
+      const cartProductInfo = this.state.getState().onlineStoreSettings.cart.find((item) => item.id === this.id);
+      const numInCart = cartProductInfo ? cartProductInfo.num : 0;
       if (product) {
         this.stock = product.stock;
-        this.view.drawCard(product, this.isInCart);
+        this.count = numInCart ? numInCart : 1;
+        this.view.draw(product, numInCart);
         this.controlCardSlider();
         this.controlCardButtons();
       }
@@ -77,10 +78,6 @@ class ProductPageController extends PageController {
         }
         case 'cardBtnToCart': {
           this.updateCart();
-          break;
-        }
-        case 'cardBtnOneClick': {
-          // this.buyInOneClick(this.id);
           break;
         }
       }

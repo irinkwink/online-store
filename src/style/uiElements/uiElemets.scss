@@ -96,10 +96,50 @@
   }
 }
 
-.is-invalid {
-    border: 1px solid $color-error;
-}
+.message {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border: 2px solid $color-main;
+  gap: 5px;
 
-.is-valid {
-border: 1px solid $color-valid;
+  &__text {
+    text-align: center;
+    font-size: 2rem;
+
+    @include mobile {
+      font-size: 1.6rem;
+    }
+
+    &_small{
+      font-size: 1.6rem;
+
+      @include mobile {
+        font-size: 1.4rem;
+      }
+    }
+
+    &_footnote {
+      max-width: 80%;
+      color: $color-main;
+      font-size: 1.2rem;
+
+      @include mobile {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  &__link {
+    color: $color-main;
+    @include transition(color);
+
+    &:hover {
+      color: $color-main-dark;
+    }
+  }
+
+
 }

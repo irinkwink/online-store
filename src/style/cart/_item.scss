@@ -1,9 +1,10 @@
 .item {
   display: grid;
   grid-template-columns: 200px 1fr max-content max-content;
-  grid-template-rows: min-content 1fr;
+  grid-template-rows: min-content min-content 1fr;
   grid-template-areas: 
     'image title price control'
+    'image rating price control'
     'image description price control';
   align-items: center;
   gap: 10px 15px;
@@ -14,9 +15,10 @@
 
   @include mobile {
     grid-template-columns: 120px 1fr max-content;
-    grid-template-rows: min-content max-content max-content;
+    grid-template-rows: min-content min-content max-content max-content;
     grid-template-areas: 
       'image title title'
+      'image rating rating'
       'image price control'
       'description description description';
     position: relative;
@@ -47,12 +49,12 @@
 
   &__image {
     object-fit: cover;
-    aspect-ratio: 2/1.2;
+    aspect-ratio: 2/1.4;
     width: 100%;
     height: 100%;
 
     @include mobile {
-      // aspect-ratio: 1/1;
+      aspect-ratio: 1/1;
     }
   }
 
@@ -62,6 +64,23 @@
 
     @include tablet {
       font-size: 1.6rem;
+    }
+  }
+
+  &__rating {
+    grid-area: rating;
+    place-self: start start;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  &__rate {
+    font-weight: 500;
+    font-size: 1.2rem;
+
+    @include mobile {
+      font-size: 1rem;
     }
   }
 

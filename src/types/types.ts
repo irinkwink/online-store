@@ -20,6 +20,13 @@ export type Developers = {
   githubName: string;
 };
 
+export type Messages = {
+  emptyFilter: string[];
+  emptyCart: string[];
+  page404: string[];
+  orderSuccess: string[];
+};
+
 export type MinMax = {
   min: number;
   max: number;

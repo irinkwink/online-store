@@ -1,6 +1,6 @@
 import { IProductLS } from '../../../types/interfaces';
 import { CartTotal, PromoCodes } from '../../../types/types';
-import { PROMO_CODES } from '../../app/const';
+import { MESSAGES, PROMO_CODES } from '../../app/const';
 
 export class CartPageView {
   private wrapperElem: HTMLElement | null;
@@ -135,6 +135,17 @@ export class CartPageView {
     titleElem.className = 'item__title';
     titleElem.innerHTML = `${product.title}`;
 
+    const ratingElem = document.createElement('div');
+    ratingElem.className = 'item__rating';
+    const ratingActivWidth = Math.round((product.rating * 100) / 5);
+    ratingElem.innerHTML = `
+      <div class="card__stars stars">
+        <div class="stars__row stars__row_inactive"></div>
+        <div class="stars__row stars__row_active" style="width: ${ratingActivWidth.toString()}%"></div>
+      </div>
+      <p class="item__rate">${product.rating.toString()}</p>
+    `;
+
     const descriptionElem = document.createElement('div');
     descriptionElem.className = 'item__description';
     descriptionElem.innerHTML = `${product.description}`;
@@ -187,7 +198,7 @@ export class CartPageView {
     linkTitleElem.append(titleElem);
     countElem.append(btnDecElem, countNumberElem, btnIncElem);
     controlElem.append(countElem, productDelBtn);
-    liElem.append(linkImageElem, linkTitleElem, descriptionElem, priceElem, controlElem);
+    liElem.append(linkImageElem, linkTitleElem, ratingElem, descriptionElem, priceElem, controlElem);
 
     return liElem;
   }
@@ -199,12 +210,25 @@ export class CartPageView {
         const liElems = productsInCart.map((product) => this.createProductElem(product));
         this.cartListElem.append(...liElems);
       } else {
-        const emptyMessageElem = document.createElement('p');
-        emptyMessageElem.className = 'cart__empty';
-        emptyMessageElem.textContent = 'Please, go shopping!';
-        this.cartListElem.append(emptyMessageElem);
+        this.cartListElem.append(this.drawCartEmptyMessage());
       }
     }
+  }
+
+  private drawCartEmptyMessage(): HTMLDivElement {
+    const messageElem = document.createElement('div');
+    messageElem.className = 'message';
+
+    const textElems = MESSAGES.emptyCart.map((text) => {
+      const textElem = document.createElement('p');
+      textElem.className = 'message__text';
+      textElem.textContent = text;
+      return textElem;
+    });
+
+    messageElem.append(...textElems);
+
+    return messageElem;
   }
 
   private createTotalElem(): HTMLElement {
@@ -398,6 +422,13 @@ export class CartPageView {
     }
     if (this.priceTotalElem) {
       this.priceTotalElem.textContent = `${cartTotal.totalPrice}$`;
+    }
+    if (cartTotal.totalPrice === 0) {
+      this.buyBtnElem?.classList.add('total__buy_inactive');
+      this.promoInputElem?.classList.add('promo__input_inactive');
+    } else {
+      this.buyBtnElem?.classList.remove('total__buy_inactive');
+      this.promoInputElem?.classList.remove('promo__input_inactive');
     }
   }
 

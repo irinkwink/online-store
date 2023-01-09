@@ -1,11 +1,15 @@
 import { OrderFormInput } from '../../../types/types';
-import { CARD_DETAILS, PERSON_DETAILS } from '../../app/const';
+import { CARD_DETAILS, FORM_LINK, MESSAGES, PERSON_DETAILS } from '../../app/const';
 import { FormInputs } from '../../../types/enums';
 
 export class CartModalView {
   private main: HTMLElement | null;
+  private contentElem: HTMLDivElement | null;
   private formElem: HTMLFormElement | null;
+  private nameInputElem: HTMLInputElement | null;
   private phoneInputElem: HTMLInputElement | null;
+  private emailInputElem: HTMLInputElement | null;
+  private addressInputElem: HTMLInputElement | null;
   private cardNumberInputElem: HTMLInputElement | null;
   private dateInputElem: HTMLInputElement | null;
   private cvvCodeInputElem: HTMLInputElement | null;
@@ -13,8 +17,12 @@ export class CartModalView {
 
   constructor() {
     this.main = null;
+    this.contentElem = null;
     this.formElem = null;
     this.phoneInputElem = null;
+    this.emailInputElem = null;
+    this.nameInputElem = null;
+    this.addressInputElem = null;
     this.cardNumberInputElem = null;
     this.dateInputElem = null;
     this.cardTitleElem = null;
@@ -29,8 +37,20 @@ export class CartModalView {
     return this.formElem;
   }
 
+  public get nameInput() {
+    return this.nameInputElem;
+  }
+
   public get phoneInput() {
     return this.phoneInputElem;
+  }
+
+  public get emailInput() {
+    return this.emailInputElem;
+  }
+
+  public get addressInput() {
+    return this.addressInputElem;
   }
 
   public get cardNumberInput() {
@@ -50,11 +70,8 @@ export class CartModalView {
       const modalElem = document.createElement('div');
       modalElem.className = 'modal';
 
-      const modalComponent = document.createElement('div');
-      modalComponent.className = 'modal__component';
-
-      const modalContent = document.createElement('div');
-      modalContent.className = 'modal__content';
+      const contentElem = document.createElement('div');
+      contentElem.className = 'modal__content';
 
       const formElem = document.createElement('form');
       formElem.className = 'modal__form form';
@@ -95,13 +112,13 @@ export class CartModalView {
       personFieldElem.append(personTitleElem, ...personInputElems);
       cardFieldElem.append(cardTitleElem, ...cardInputElems);
       formElem.append(personFieldElem, cardFieldElem, submitBtnElem);
-      modalContent.append(formElem);
-      modalComponent.append(modalContent);
-      modalElem.append(modalComponent, closeBtnElem);
+      contentElem.append(formElem);
+      modalElem.append(contentElem, closeBtnElem);
 
       overlayElem.append(modalElem);
       this.main.append(overlayElem);
 
+      this.contentElem = contentElem;
       this.formElem = formElem;
       this.cardTitleElem = cardTitleElem;
     }
@@ -132,7 +149,10 @@ export class CartModalView {
     labelElem.textContent = item.label;
     labelElem.htmlFor = item.id;
 
+    if (item.id === FormInputs.name) this.nameInputElem = inputElem;
     if (item.id === FormInputs.phone) this.phoneInputElem = inputElem;
+    if (item.id === FormInputs.email) this.emailInputElem = inputElem;
+    if (item.id === FormInputs.address) this.addressInputElem = inputElem;
     if (item.id === FormInputs.validDate) this.dateInputElem = inputElem;
     if (item.id === FormInputs.cardNumber) this.cardNumberInputElem = inputElem;
     if (item.id === FormInputs.cvvCode) this.cvvCodeInputElem = inputElem;
@@ -141,6 +161,46 @@ export class CartModalView {
     inputWrapperElem.append(inputElem, hintElem);
 
     return inputWrapperElem;
+  }
+
+  public drawMessage(name = '') {
+    if (this.contentElem) {
+      this.contentElem.innerHTML = '';
+      this.contentElem?.append(this.createMessageElem(name));
+    }
+  }
+
+  private createMessageElem(name = ''): HTMLDivElement {
+    const messageElem = document.createElement('div');
+    messageElem.className = 'message';
+
+    const messages = [...MESSAGES.orderSuccess];
+
+    if (name) {
+      messages[0] = `${name}, ${messages[0].toLowerCase()}`;
+    }
+
+    const textElems = messages.map((text, index) => {
+      const footnoteClass = index === messages.length - 1 ? 'message__text_footnote' : '';
+      const textElem = document.createElement('p');
+      textElem.className = `message__text message__text_small ${footnoteClass}`;
+      textElem.textContent = text;
+
+      if (text.includes('form')) {
+        const linkElem = document.createElement('a');
+        linkElem.className = 'message__link';
+        linkElem.href = FORM_LINK;
+        linkElem.target = '_blank';
+        linkElem.append(textElem);
+
+        return linkElem;
+      }
+
+      return textElem;
+    });
+
+    messageElem.append(...textElems);
+    return messageElem;
   }
 
   public updateCardImage(cardType: string) {

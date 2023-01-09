@@ -29,18 +29,6 @@
     }
   }
 
-  &__empty {
-    text-align: center;
-    padding: 16px;
-    border: 2px solid $color-main;
-    font-size: 2rem;
-    line-height: 1.6;
-
-    @include mobile {
-      font-size: 1.6rem;
-    }
-  }
-
   &__preload {
     grid-column: 1 / 5;
     display: flex;

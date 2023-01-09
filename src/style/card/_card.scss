@@ -345,6 +345,18 @@
     }
   }
 
+  &__link {
+    grid-area: oneclick;
+    margin: auto;
+    text-align: center;
+    line-height: 36px;
+
+
+    @include mobile {
+      line-height: 20px;
+    }
+  }
+
   &__discount {
     position: absolute;
     top: 10px;

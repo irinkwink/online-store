@@ -6,6 +6,7 @@ import { CartTotal, PromoCodes } from '../../../types/types';
 import CartPaginationController from './cartPaginationController';
 import { PROMO_CODES } from '../../app/const';
 import CartModalController from './cartModalController';
+import { getSearchParamValueFromUrl } from '../../router/urlController';
 class CartPageController extends PageController {
   public view: CartPageView;
   private pagination: CartPaginationController;
@@ -16,7 +17,7 @@ class CartPageController extends PageController {
   public constructor(templatePage: TemplatePageController) {
     super(templatePage, 'cart');
     this.view = new CartPageView();
-    this.modal = new CartModalController();
+    this.modal = new CartModalController(() => this.state.clearCart());
     this.pagination = new CartPaginationController((products) => this.view.drawProducts(products));
     this.appliedPromoCodes = [];
     this.totalDiscount = 0;
@@ -26,6 +27,12 @@ class CartPageController extends PageController {
     super.start();
     this.view.wrapper = this.main.view.main;
     this.modal.view.setMain = this.main.view.main;
+
+    const buyIdValue = getSearchParamValueFromUrl('buyId');
+
+    if (buyIdValue) {
+      this.state.checkAndAddProductToCart(+buyIdValue);
+    }
 
     const productsToDraw = this.getProductsToDraw();
     const cartTotal: CartTotal = this.state.calculateCartTotal();
@@ -42,6 +49,10 @@ class CartPageController extends PageController {
     this.view.drawPromoElem();
 
     this.initDiscount(cartTotal);
+
+    if (buyIdValue) {
+      this.modal.init();
+    }
 
     this.view.cartList?.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
@@ -104,7 +115,6 @@ class CartPageController extends PageController {
         this.view.updateToApplyPromoCodes(code);
       }
     }
-    return res;
   }
 
   private handleDropAddBtns(e: Event): void {
@@ -146,7 +156,7 @@ class CartPageController extends PageController {
   }
 
   private identityProducts(cart: ICartProduct[], products: IProduct[]): IProductLS[] {
-    const pickedProducts = [];
+    const pickedProducts: IProductLS[] = [];
     if (cart.length > 0) {
       for (let i = 0; i < cart.length; i++) {
         const fined = products.filter((item) => item.id == cart[i].id);

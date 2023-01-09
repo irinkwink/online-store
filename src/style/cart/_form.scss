@@ -159,8 +159,7 @@
     color: $color-secondary;
 
     &_inactive {
-      background-color: $color-grey-light;
-      cursor: default;
+      background-color: $color-grey;
       pointer-events: none;
     }
 

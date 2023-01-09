@@ -48,6 +48,14 @@ class State {
     this.saveState();
   }
 
+  public checkAndAddProductToCart(id: number): void {
+    const index: number = this.state.onlineStoreSettings.cart.findIndex((cartItem) => cartItem.id === id);
+    if (index === -1) {
+      this.state.onlineStoreSettings.cart.push({ id: id, num: 1 });
+    }
+    this.saveState();
+  }
+
   public deleteItemFromCart(id: number, count = 1): void {
     const index: number = this.state.onlineStoreSettings.cart.findIndex((cartItem) => cartItem.id === id);
     if (index !== -1 && this.state.onlineStoreSettings.cart[index].num !== 1) {
@@ -100,14 +108,15 @@ class State {
     appliedPromoCodes.splice(index, 1);
     this.saveState();
   }
-  private clear() {
+
+  private clearSettings() {
     const settings = this.getState().onlineStoreSettings;
     settings.cart = [];
-    settings.promoСodes = [];
+    settings.promoCodes = [];
     this.saveState();
   }
   public clearCart() {
-    this.clear();
+    this.clearSettings();
   }
 }
 

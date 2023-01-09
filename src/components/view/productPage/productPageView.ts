@@ -40,9 +40,9 @@ class ProductPageView {
     return this.controlElem;
   }
 
-  public drawCard(product: IProduct, isInCart: boolean): void {
+  public draw(product: IProduct, numInCart: number): void {
     if (this.wrapperElem) {
-      const cardElem = this.createCardArticleElem(product, isInCart);
+      const cardElem = this.createCardArticleElem(product, numInCart);
       const containerElem = this.createContainerElem();
       containerElem.append(cardElem);
       this.wrapperElem.append(containerElem);
@@ -108,7 +108,7 @@ class ProductPageView {
     return cardSliderElem;
   }
 
-  private createCardArticleElem(product: IProduct, isInCart: boolean): HTMLElement {
+  private createCardArticleElem(product: IProduct, numInCart: number): HTMLElement {
     const cardArticleElem = document.createElement('article');
     cardArticleElem.className = 'card';
 
@@ -171,13 +171,13 @@ class ProductPageView {
     cardCountElem.className = 'card__count count';
 
     const cardBtnDecElem = document.createElement('button');
-    cardBtnDecElem.className = 'count__btn inactive';
+    cardBtnDecElem.className = `count__btn ${numInCart > 1 ? '' : 'inactive'}`;
     cardBtnDecElem.textContent = '–';
     cardBtnDecElem.id = 'cardBtnDec';
 
     const cardCountNumberElem = document.createElement('output');
     cardCountNumberElem.className = 'count__number';
-    cardCountNumberElem.value = '1';
+    cardCountNumberElem.value = numInCart ? numInCart.toString() : '1';
 
     const cardBtnIncElem = document.createElement('button');
     cardBtnIncElem.className = 'count__btn';
@@ -205,19 +205,26 @@ class ProductPageView {
 
     const toCartBtnElem = document.createElement('button');
     toCartBtnElem.className = 'btn card__button card__button_to-cart';
-    toCartBtnElem.textContent = isInCart ? 'Remove from Cart' : 'Add to Cart';
+    toCartBtnElem.textContent = numInCart ? 'Add to Cart' : 'Remove from Cart';
     toCartBtnElem.dataset.idGoods = product.id.toString();
     toCartBtnElem.id = 'cardBtnToCart';
 
-    const oneClickBtnElem = document.createElement('button');
-    oneClickBtnElem.className = 'btn card__button card__button_one-click';
+    const oneClickLinkElem = document.createElement('a');
+    oneClickLinkElem.className = 'card__link';
+    oneClickLinkElem.href = `cart.html?buyId=${product.id.toString()}`;
+
+    const oneClickBtnElem = document.createElement('a');
+    oneClickBtnElem.className = 'card__link card__button';
     oneClickBtnElem.textContent = 'Buy in One Click';
+    oneClickBtnElem.type = 'button';
     oneClickBtnElem.dataset.idGoods = product.id.toString();
     oneClickBtnElem.id = 'cardBtnOneClick';
+    oneClickBtnElem.href = `cart.html?buyId=${product.id.toString()}`;
 
     cardCountElem.append(cardBtnDecElem, cardCountNumberElem, cardBtnIncElem);
     priceRowElem.append(priceNewElem, priceOldElem);
 
+    oneClickLinkElem.append(oneClickBtnElem);
     cardControlElem.append(cardCountElem, priceRowElem, stockElem, toCartBtnElem, oneClickBtnElem);
 
     cardInfoElem.append(cardTitleElem, ratingElem, cardDescriptionElem, cardControlElem);

@@ -1,4 +1,5 @@
 import { IProduct } from '../../../types/interfaces';
+import { MESSAGES } from '../../app/const';
 import State from '../../app/state';
 
 class ProductsView {
@@ -52,10 +53,19 @@ class ProductsView {
     return productsListElem;
   }
 
-  private drawProductsEmptyMessage(): HTMLParagraphElement {
-    const messageElem = document.createElement('p');
-    messageElem.className = 'goods__empty';
-    messageElem.textContent = `Sorry, we couldn't find products with these parameters. Try to set less restrictive filters or to change your search request.`;
+  private drawProductsEmptyMessage(): HTMLDivElement {
+    const messageElem = document.createElement('div');
+    messageElem.className = 'message';
+
+    const textElems = MESSAGES.emptyFilter.map((text) => {
+      const textElem = document.createElement('p');
+      textElem.className = 'message__text';
+      textElem.textContent = text;
+      return textElem;
+    });
+
+    messageElem.append(...textElems);
+
     return messageElem;
   }
 
