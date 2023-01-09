@@ -15,7 +15,7 @@ export class CartModalView {
   private cvvCodeInputElem: HTMLInputElement | null;
   private cardTitleElem: HTMLLegendElement | null;
 
-  constructor() {
+  public constructor() {
     this.main = null;
     this.contentElem = null;
     this.formElem = null;
@@ -33,35 +33,35 @@ export class CartModalView {
     this.main = elem;
   }
 
-  public get form() {
+  public get form(): HTMLFormElement | null {
     return this.formElem;
   }
 
-  public get nameInput() {
+  public get nameInput(): HTMLInputElement | null {
     return this.nameInputElem;
   }
 
-  public get phoneInput() {
+  public get phoneInput(): HTMLInputElement | null {
     return this.phoneInputElem;
   }
 
-  public get emailInput() {
+  public get emailInput(): HTMLInputElement | null {
     return this.emailInputElem;
   }
 
-  public get addressInput() {
+  public get addressInput(): HTMLInputElement | null {
     return this.addressInputElem;
   }
 
-  public get cardNumberInput() {
+  public get cardNumberInput(): HTMLInputElement | null {
     return this.cardNumberInputElem;
   }
 
-  public get dateInput() {
+  public get dateInput(): HTMLInputElement | null {
     return this.dateInputElem;
   }
 
-  public get cvvCodeInput() {
+  public get cvvCodeInput(): HTMLInputElement | null {
     return this.cvvCodeInputElem;
   }
 
@@ -163,7 +163,7 @@ export class CartModalView {
     return inputWrapperElem;
   }
 
-  public drawMessage(name = '') {
+  public drawMessage(name = ''): void {
     if (this.contentElem) {
       this.contentElem.innerHTML = '';
       this.contentElem?.append(this.createMessageElem(name));
@@ -203,13 +203,13 @@ export class CartModalView {
     return messageElem;
   }
 
-  public updateCardImage(cardType: string) {
+  public updateCardImage(cardType: string): void {
     if (this.cardTitleElem) {
       this.cardTitleElem.className = `form__subtitle form__subtitle_${cardType}`;
     }
   }
 
-  public showNotValidMessage(inputElem: HTMLInputElement) {
+  public showNotValidMessage(inputElem: HTMLInputElement): void {
     inputElem.classList.add('form__input_invalid');
     inputElem.classList.remove('form__input_valid');
     if (this.formElem) {
@@ -218,7 +218,7 @@ export class CartModalView {
     }
   }
 
-  public showValidMessage(inputElem: HTMLInputElement) {
+  public showValidMessage(inputElem: HTMLInputElement): void {
     inputElem.classList.remove('form__input_invalid');
     inputElem.classList.add('form__input_valid');
     if (this.formElem) {

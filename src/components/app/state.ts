@@ -109,13 +109,14 @@ class State {
     this.saveState();
   }
 
-  private clearSettings() {
+  private clearSettings(): void {
     const settings = this.getState().onlineStoreSettings;
     settings.cart = [];
     settings.promoCodes = [];
     this.saveState();
   }
-  public clearCart() {
+
+  public clearCart(): void {
     this.clearSettings();
   }
 }

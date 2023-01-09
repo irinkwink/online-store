@@ -241,7 +241,7 @@ class CartModalController {
     }
   }
 
-  redirectToMainPage() {
+  private redirectToMainPage(): void {
     setTimeout(() => {
       this.overlay.hideOverlay();
       window.location.href = '/';

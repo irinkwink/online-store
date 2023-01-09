@@ -11,7 +11,7 @@ class Page404View {
     this.wrapperElem = elem;
   }
 
-  public draw() {
+  public draw(): void {
     if (this.wrapperElem) {
       this.wrapperElem.innerHTML = '';
       this.wrapperElem.append(this.createMessageElem());

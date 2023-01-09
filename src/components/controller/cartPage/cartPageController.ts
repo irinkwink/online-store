@@ -216,11 +216,6 @@ class CartPageController extends PageController {
       this.updateDiscount(cartTotal);
     }
   }
-  redirect() {
-    setTimeout(function () {
-      window.location.href = '/';
-    }, 3000);
-  }
 }
 
 export default CartPageController;

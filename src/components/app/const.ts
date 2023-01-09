@@ -10,7 +10,7 @@ import {
   SortOption,
 } from '../../types/types';
 
-export const REDIRECT_TIMIOUT = 2000;
+export const REDIRECT_TIMIOUT = 20000;
 
 export const THUMB_WIDTH = 80;
 export const THUMBS_GAP = 4;
@@ -55,7 +55,7 @@ export const MESSAGES: Messages = {
     'If you like our work, please fill out the form.',
     'And we will be glad to any comments.',
     `* this popup will close in ${Math.ceil(
-      REDIRECT_TIMIOUT / 100
+      REDIRECT_TIMIOUT / 1000
     )} seconds and you will be redirected to the main page`,
   ],
 };
