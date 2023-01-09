@@ -129,10 +129,31 @@ export class ModalView {
       const submit = document.createElement('button');
       submit.textContent = 'submit';
       submit.className = 'btn submit-btn';
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'modal__close';
       btnWr.append(submit);
       creditCardWr.append(cardNumberInput, cardNumErr, cardValidInput, dateErr, cardCodeInput, ccvdNumErr);
       formBlock.append(modalTitle, inputWr, subtitle, creditCardWr, btnWr);
-      modalComponent.append(formBlock);
+      modalComponent.append(formBlock, closeBtn);
+      modalWrapper.append(modalComponent);
+      modal.append(modalBackdrop, modalWrapper);
+      main.append(modal);
+    }
+  }
+  drawMessage() {
+    const main: HTMLElement | null = document.querySelector('.main');
+    if (main) {
+      const modal = document.createElement('div');
+      const modalBackdrop = document.createElement('div');
+      modalBackdrop.className = 'modal__backdrop';
+      const modalWrapper = document.createElement('div');
+      modalWrapper.className = 'modal__wrapper';
+      const modalComponent = document.createElement('div');
+      modalComponent.className = 'modal__component modal__component_center';
+      modalComponent.innerHTML = '<h2>Thank you for your order!</h2>';
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'modal__close';
+      modalComponent.append(closeBtn);
       modalWrapper.append(modalComponent);
       modal.append(modalBackdrop, modalWrapper);
       main.append(modal);

@@ -90,6 +90,15 @@ class State {
     promocodes.splice(index, 1);
     this.saveState();
   }
+  private clear() {
+    const settings = this.getState().onlineStoreSettings;
+    settings.cart = [];
+    settings.promoСodes = [];
+    this.saveState();
+  }
+  public clearCart() {
+    this.clear();
+  }
 }
 
 export default State;

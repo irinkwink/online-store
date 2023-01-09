@@ -1,8 +1,20 @@
 import State from '../../app/state';
-import { validate, isValid, notValid, phoneRegex, cardNumberRegex, cvvCode, cardDate, mailRegex } from './regex';
+import {
+  validate,
+  isValid,
+  notValid,
+  phoneRegex,
+  cardNumberRegex,
+  cvvCode,
+  cardDate,
+  mailRegex,
+  checkLength,
+  validateString,
+  nameRegex,
+} from './regex';
 import CartPageView from '../../view/cartPage/cartPageView';
 import PageController from '../pageController';
-import { IProductInLS, IProductLS } from '../../../types/interfaces';
+import { ICartProduct, IProductInLS, IProductLS } from '../../../types/interfaces';
 import ModalView from '../../view/cartPage/modalView';
 class CartPageController extends PageController {
   view: CartPageView;
@@ -44,6 +56,7 @@ class CartPageController extends PageController {
     this.view.updateDiscountPrice(discount, totalPrice);
     this.deletePromocode();
     this.openModal();
+    this.checkBuyBtn(cart);
   }
 
   public getInputValue() {
@@ -91,6 +104,7 @@ class CartPageController extends PageController {
     const totalPrice = this.view.getTotalPrice(productsToRender);
     this.view.drawPromo(settings.promoСodes);
     this.view.updateDiscountPrice(discount, totalPrice);
+    this.checkBuyBtn(cart);
   }
 
   getProductsToRender(): IProductLS[] {
@@ -155,7 +169,7 @@ class CartPageController extends PageController {
     const main: HTMLElement | null = document.querySelector('.main');
     modalWrapper?.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
-      if (target.className === 'modal__wrapper' && main && modal) {
+      if ((target.className === 'modal__wrapper' || target.className === 'modal__close') && main && modal) {
         main.removeChild(modal);
       }
     });
@@ -204,120 +218,135 @@ class CartPageController extends PageController {
       }
     }
   }
+  checkBuyBtn(cart: ICartProduct[]) {
+    const toBuyBtn = document.querySelector('#buy-btn');
+    if (toBuyBtn && cart.length > 0) {
+      toBuyBtn.classList.remove('inactive');
+    } else if (toBuyBtn) {
+      toBuyBtn.classList.add('inactive');
+    }
+  }
   submitForm() {
     const form = this.modal.form;
     form?.addEventListener('submit', (e) => {
       e.preventDefault();
       console.log('Проверка полей');
-      this.checkName();
-      this.checkPhone();
-      this.checkAddress();
-      this.checkCreditNumber();
-      this.checkCcv();
-      this.checkDate();
-      this.checkMail();
+      const phone = this.modal.phoneInp;
+      const phoneErr = this.modal.phoneErr;
+      const number = this.modal.cardNumInp;
+      const numErr = this.modal.cardNumInpErr;
+      const ccv = this.modal.ccvInp;
+      const ccvErr = this.modal.ccvInpErr;
+      const mail = this.modal.mailInp;
+      const mailErr = this.modal.mailInpErr;
+      if (
+        phone &&
+        phoneErr &&
+        number &&
+        numErr &&
+        ccv &&
+        ccvErr &&
+        mail &&
+        mailErr &&
+        this.checkName() &&
+        this.check(phone, phoneErr, phoneRegex, 'Enter valid phone number') &&
+        this.checkAddress() &&
+        this.check(mail, mailErr, mailRegex, 'Enter valid e-mail') &&
+        this.check(number, numErr, cardNumberRegex, 'Enter valid card number') &&
+        this.checkDate() &&
+        this.check(ccv, ccvErr, cvvCode, 'Enter valid card ccv')
+      ) {
+        console.log('ok');
+        const modal = document.querySelector('.modal');
+        const main: HTMLElement | null = document.querySelector('.main');
+        if (modal && main) {
+          main.removeChild(modal);
+          this.modal.drawMessage();
+          this.closeModal();
+          this.redirect();
+          this.state.clearCart();
+        }
+      } else {
+        console.log('not ok');
+      }
     });
   }
   check(inp: HTMLInputElement, el: HTMLElement, reg: RegExp, mess: string) {
+    let res = false;
     if (inp && el) {
       if (!validate(reg, inp)) {
         notValid(inp, el, mess);
       } else {
         isValid(inp, el);
+        res = true;
       }
     }
+    return res;
   }
-  checkName() {
+  checkName(): boolean {
     const name = this.modal.fioInp;
     const fioErr = this.modal.fioErr;
+    let res = false;
     if (name && fioErr) {
       const val = name.value;
       const fio = val.split(' ');
+      console.log(fio.length);
       if (fio.length < 2) {
         notValid(name, fioErr, 'Enter valid name');
       }
       const fName = fio[0];
       const lName = fio[1];
-      if (fName.length < 3 || lName.length < 3) {
+      if (
+        !validateString(nameRegex, fName) ||
+        !validateString(nameRegex, lName) ||
+        !checkLength(fName, 3) ||
+        !checkLength(lName, 3)
+      ) {
         notValid(name, fioErr, 'Enter valid name');
       } else {
+        res = true;
         isValid(name, fioErr);
       }
     }
+    return res;
   }
-  checkPhone() {
-    const phone = this.modal.phoneInp;
-    const phoneErr = this.modal.phoneErr;
-    if (phone && phoneErr) {
-      if (!validate(phoneRegex, phone)) {
-        notValid(phone, phoneErr, 'Enter valid phone number');
-      } else {
-        isValid(phone, phoneErr);
-      }
-    }
-  }
-  checkAddress() {
+  checkAddress(): boolean {
     const address = this.modal.addressInp;
     const addressErr = this.modal.addressErr;
+    let res = false;
     if (address && addressErr) {
       const val = address.value;
       const addr = val.split(' ');
+      console.log(addr);
+      if (addr.length < 3) {
+        notValid(address, addressErr, 'Address must consist of 3 words');
+      }
       addr.forEach((item) => {
-        if (item.length < 5 || addr.length < 3) {
+        if (!checkLength(item, 5) || !validateString(nameRegex, item)) {
           notValid(address, addressErr, 'Enter valid address');
         } else {
+          res = true;
           isValid(address, addressErr);
         }
       });
     }
+    return res;
   }
-  checkCreditNumber() {
-    const number = this.modal.cardNumInp;
-    const numErr = this.modal.cardNumInpErr;
-
-    if (number && numErr) {
-      if (!validate(cardNumberRegex, number)) {
-        notValid(number, numErr, 'Enter valid card number');
-      } else {
-        isValid(number, numErr);
-      }
-    }
-  }
-  checkCcv() {
-    const ccv = this.modal.ccvInp;
-    const ccvErr = this.modal.ccvInpErr;
-    if (ccv && ccvErr) {
-      if (!validate(cvvCode, ccv)) {
-        notValid(ccv, ccvErr, 'Enter valid card ccv');
-      } else {
-        isValid(ccv, ccvErr);
-      }
-    }
-  }
-  checkDate() {
+  checkDate(): boolean {
     const dateInp = this.modal.dateInt;
     const dateInpErr = this.modal.dateIntErr;
+    let res = false;
     if (dateInp && dateInpErr) {
       const day = Number(dateInp.value.slice(0, 2));
       const month = Number(dateInp.value.slice(3));
       if (!validate(cardDate, dateInp) || month > 12 || month < 0 || day > 31) {
         notValid(dateInp, dateInpErr, 'Enter valid card date');
       } else {
+        res = true;
         isValid(dateInp, dateInpErr);
       }
     }
-  }
-  checkMail() {
-    const mail = this.modal.mailInp;
-    const mailErr = this.modal.mailInpErr;
-
-    if (mail && mailErr) {
-      if (!validate(mailRegex, mail)) {
-        notValid(mail, mailErr, 'Enter valid e-mail');
-      } else {
-        isValid(mail, mailErr);
-      }
-    }
+    return res;
   }
   setImageCreditCard() {
     const subtitle = document.querySelector('.modal__subtitle');
@@ -360,6 +389,11 @@ class CartPageController extends PageController {
         }
       }
     });
+  }
+  redirect() {
+    setTimeout(function () {
+      window.location.href = '/';
+    }, 3000);
   }
 }
 

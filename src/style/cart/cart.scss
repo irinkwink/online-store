@@ -163,6 +163,9 @@
         border-radius: 8px;
         background-color: #fff;
         box-shadow: 0 0 20px rgb(0 0 0 / 16%);
+        &_center {
+            text-align: center;
+        }
     }
     &__btn {
         display: flex;
@@ -199,6 +202,14 @@
                 background-image: url('img/visa.png');
             }
         }
+    }
+    &__close {
+        background: transparent url('img/close.svg');
+        width: 32px;
+        height: 32px;
+        position: absolute;
+        top: 16px;
+        right: 16px;
     }
 }
 
