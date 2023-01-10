@@ -203,7 +203,7 @@ class ProductPageView {
 
     const cardCountNumberElem = document.createElement('output');
     cardCountNumberElem.className = 'count__number';
-    cardCountNumberElem.value = numInCart ? numInCart.toString() : '1';
+    cardCountNumberElem.value = numInCart > 0 ? numInCart.toString() : '1';
 
     const cardBtnIncElem = document.createElement('button');
     cardBtnIncElem.className = 'count__btn';
@@ -231,7 +231,7 @@ class ProductPageView {
 
     const toCartBtnElem = document.createElement('button');
     toCartBtnElem.className = 'btn card__button card__button_to-cart';
-    toCartBtnElem.textContent = numInCart ? 'Remove from Cart' : 'Add to Cart';
+    toCartBtnElem.textContent = numInCart > 0 ? 'Remove from Cart' : 'Add to Cart';
     toCartBtnElem.dataset.idGoods = product.id.toString();
     toCartBtnElem.id = 'cardBtnToCart';
 
