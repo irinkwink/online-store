@@ -143,7 +143,7 @@ class FilterController {
               addSearchParamToUrl({ key: 'category', value: this.filters.category });
             }
             this.filters.brand = 'all';
-            const params = ['brand', 'minPrice', 'maxPrice', 'minStock', 'maxStock'];
+            const params = ['brand', 'minPrice', 'maxPrice', 'minStock', 'maxStock', 'page'];
             deleteSearchParamsFromUrl(params);
             this.updateBrands();
             this.updatePrice();
@@ -160,7 +160,7 @@ class FilterController {
               this.productsFilter = this.products.filter((item) => item.brand === this.filters.brand);
               addSearchParamToUrl({ key: 'brand', value: this.filters.brand });
             }
-            const params = ['minPrice', 'maxPrice', 'minStock', 'maxStock'];
+            const params = ['minPrice', 'maxPrice', 'minStock', 'maxStock', 'page'];
             deleteSearchParamsFromUrl(params);
             this.updatePrice();
             this.updateStock();
@@ -315,7 +315,7 @@ class FilterController {
     }
 
     this.productsFilter = [...data];
-
+    deleteSearchParamFromUrl('page');
     this.cbProductsInit(data);
   }
 
