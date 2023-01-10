@@ -20,7 +20,7 @@ class Router {
     this.cartPage = new CartPageController(templatePage);
     this.page404 = new Page404Controller(templatePage);
     this.routes = {
-      404: this.page404,
+      '/page404': this.page404,
       '/': this.catalogPage,
       '/product': this.productPage,
       '/cart': this.cartPage,
@@ -49,7 +49,9 @@ class Router {
   private handleLocation(): void {
     const fullPath = window.location.pathname;
     const path = `/${fullPath.split('/')[1]}`;
-    this.route = path in this.routes ? this.routes[path as keyof Routes] : this.routes[404];
+    this.route = ['/', '/product', '/cart'].includes(path)
+      ? this.routes[path as keyof Routes]
+      : this.routes['/page404'];
     this.route.start();
   }
 }

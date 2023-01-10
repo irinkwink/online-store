@@ -5,7 +5,7 @@ import ProductPageController from '../components/controller/productPage/productP
 import { FormInputs } from './enums';
 
 export type Routes = {
-  404: Page404Controller;
+  '/page404': Page404Controller;
   '/': CatalogPageController;
   '/product': ProductPageController;
   '/cart': CartPageController;
