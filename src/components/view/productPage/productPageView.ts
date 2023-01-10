@@ -1,6 +1,6 @@
 import { DeviceWindowWidth } from '../../../types/enums';
 import { IProduct } from '../../../types/interfaces';
-import { WIDTH_THREE_ELEMS, WIDTH_TWO_ELEMS } from '../../app/const';
+import { MESSAGES, WIDTH_THREE_ELEMS, WIDTH_TWO_ELEMS } from '../../app/const';
 class ProductPageView {
   private wrapperElem: HTMLElement | null;
   private btnCartElem: HTMLButtonElement | null;
@@ -52,11 +52,36 @@ class ProductPageView {
     }
   }
 
+  public drawMessage(): void {
+    if (this.wrapperElem) {
+      this.wrapperElem.innerHTML = '';
+      const containerElem = this.createContainerElem();
+      containerElem.append(this.createMessageElem());
+      this.wrapperElem.append(containerElem);
+    }
+  }
+
   private createContainerElem(): HTMLDivElement {
     const containerElem = document.createElement('div');
     containerElem.className = 'container';
 
     return containerElem;
+  }
+
+  private createMessageElem(): HTMLDivElement {
+    const messageElem = document.createElement('div');
+    messageElem.className = 'message';
+
+    const textElems = MESSAGES.emptyProduct.map((text) => {
+      const textElem = document.createElement('p');
+      textElem.className = `message__text`;
+      textElem.textContent = text;
+
+      return textElem;
+    });
+
+    messageElem.append(...textElems);
+    return messageElem;
   }
 
   private createImageItem(url: string): HTMLImageElement {

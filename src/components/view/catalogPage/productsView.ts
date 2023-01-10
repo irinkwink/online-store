@@ -90,7 +90,7 @@ class ProductsView {
 
     const linkImageElem = document.createElement('a');
     linkImageElem.className = 'goods-item__link goods-item__link_image';
-    linkImageElem.href = `product?id=${product.id.toString()}`;
+    linkImageElem.href = `product/${product.id.toString()}`;
 
     const imageElem = new Image();
     imageElem.className = 'goods-item__image';
@@ -103,7 +103,7 @@ class ProductsView {
 
     const linkTitleElem = document.createElement('a');
     linkTitleElem.className = 'goods-item__link goods-item__link_title';
-    linkTitleElem.href = `product?id=${product.id.toString()}`;
+    linkTitleElem.href = `product/${product.id.toString()}`;
 
     const titleElem = document.createElement('h3');
     titleElem.className = 'goods-item__title';
@@ -136,8 +136,6 @@ class ProductsView {
 
     `;
 
-    // <p class="goods-item__rate">${product.rating.toString()}</p>
-
     const stockElem = document.createElement('p');
     stockElem.className = 'goods-item__stock';
     stockElem.innerHTML = `
@@ -153,7 +151,6 @@ class ProductsView {
     toCartBtnElem.textContent = isInCart ? 'Remove from Cart' : 'Add to Cart';
     toCartBtnElem.dataset.productId = product.id.toString();
     toCartBtnElem.dataset.isInCart = isInCart.toString();
-    // toCartBtnElem.addEventListener('click', defineIdProduct);
 
     linkImageElem.append(imageElem, discountElem);
     linkTitleElem.append(titleElem);

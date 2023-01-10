@@ -202,11 +202,6 @@
     &::-moz-range-thumb:hover {
       background-color: $color-main-sub;
     }
-    
-    // &::-webkit-slider-thumb:active {
-    //   box-shadow: inset 0 0 3px $color-main, 0 0 9px $color-main;
-    //   -webkit-box-shadow: inset 0 0 3px $color-main, 0 0 9px $color-main;
-    // }
   }
 
   &__select-label {

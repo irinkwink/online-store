@@ -11,9 +11,6 @@ export type Routes = {
   '/cart': CartPageController;
 };
 
-export type Controllers = [CatalogPageController, ProductPageController, CartPageController, Page404Controller];
-// export type Controller = CatalogPageController | ProductPageController | CartPageController | Page404Controller;
-
 export type Developers = {
   name: string;
   githubUrl: string;
@@ -22,6 +19,7 @@ export type Developers = {
 
 export type Messages = {
   emptyFilter: string[];
+  emptyProduct: string[];
   emptyCart: string[];
   page404: string[];
   orderSuccess: string[];

@@ -46,20 +46,10 @@ class Router {
     });
   }
 
-  // public router(e: Event) {
-  //   e.preventDefault();
-  //   if (e.target instanceof HTMLLinkElement && e.target.href) {
-  //     history.pushState({}, '', e.target.href);
-  //     this.handleLocation();
-  //   }
-  // }
-
   private handleLocation(): void {
     const fullPath = window.location.pathname;
-    console.log('fullPath: ', fullPath);
-    // const path = `/${fullPath.split('/')[1]}`;
-    this.route = fullPath in this.routes ? this.routes[fullPath as keyof Routes] : this.routes[404];
-    console.log('this.route: ', this.route);
+    const path = `/${fullPath.split('/')[1]}`;
+    this.route = path in this.routes ? this.routes[path as keyof Routes] : this.routes[404];
     this.route.start();
   }
 }

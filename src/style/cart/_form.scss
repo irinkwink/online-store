@@ -20,7 +20,6 @@
       'validDate . ccvCode';
       max-width: 300px;
       background-color: $color-grey-light;
-      // border: 1px solid $color-primary;
       padding: 10px 12px;
       border-radius: 10px;
       display: grid;
@@ -135,16 +134,7 @@
     @include mobile {
       font-size: 1rem;
     } 
-    
-    &_error {
-    }
-
-    &_hint {
-
-    }
   }
-
-
 
   &__submit {
     text-transform: capitalize;

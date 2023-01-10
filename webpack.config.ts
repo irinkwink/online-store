@@ -3,9 +3,6 @@ import { merge } from 'webpack-merge';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import EslintPlugin from 'eslint-webpack-plugin';
-// import FontPreloadPlugin from 'webpack-font-preload-plugin';
-
-// const PAGES = ['index', 'cart', 'product', 'page404'];
 
 const baseConfig = {
   entry: path.resolve(__dirname, 'src/index'),
@@ -98,22 +95,10 @@ const baseConfig = {
     new EslintPlugin({
       extensions: ['ts'],
     }),
-    // new FontPreloadPlugin({
-    //   extensions: ['woff2', 'woff'],
-    //   crossorigin: true,
-    //   loadType: 'preload',
-    // }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, `src/index.html`),
       filename: `index.html`,
     }),
-    // ...PAGES.map(
-    //   (page) =>
-    //     new HtmlWebpackPlugin({
-    //       template: path.resolve(__dirname, `src/${page}.html`),
-    //       filename: `${page}.html`,
-    //     })
-    // ),
     new CleanWebpackPlugin(),
   ],
 };

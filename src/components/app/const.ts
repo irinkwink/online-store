@@ -41,11 +41,16 @@ export const MESSAGES: Messages = {
     "Sorry, we couldn't find products with these parameters.",
     'Try to set less restrictive filters or to change your search request.',
   ],
+  emptyProduct: [
+    "Sorry, we couldn't find the product along this path.",
+    'Try to go to the main page using the link in the logo.',
+    'And select a product from the catalog.',
+  ],
   emptyCart: ['Please, go shopping!'],
   page404: [
     'Page 404',
-    'Sorry, we did not find such a page',
-    'Try to go to the main page using the link on the logo in the header',
+    'Sorry, we did not find such a page.',
+    'Try to go to the main page using the link on the logo in the header.',
   ],
   orderSuccess: [
     'You made it!',
