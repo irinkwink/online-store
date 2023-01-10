@@ -164,22 +164,13 @@
   &__control {
     max-width: 360px;
     margin-left: auto;
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    grid-template-rows: repeat(4, max-content);
-    grid-template-areas: 
-      'count price'
-      'stock stock'
-      'tocart tocart'
-      'oneclick oneclick';
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
     gap: 10px;
 
     @include mobile {
-      grid-template-areas: 
-      'count price'
-      'tocart tocart'
-      'oneclick oneclick'
-      'stock stock';
+      align-items: center;
       gap: 15px;
     }
   }
@@ -197,8 +188,6 @@
     }
 
     &_price {
-      grid-area: price;
-      place-self: center end;
       align-items: baseline;
     }
   }
@@ -246,29 +235,17 @@
   }
 
   &__stock {
-    grid-area: stock;
-    place-self: end end;
     position: relative;
     top: 5px;
-    display: flex;
-    gap: 5px;
+    font-size: 1.2rem;
 
     @include mobile {
       top: -5px;
-      place-self: end center;
+      order: 1;
     }
   }
 
-  &__stock-text {
-    font-size: 1.2rem;
-  }
-
-  &__stock-count {
-    font-size: 1.2rem;
-  }
-
   &__button {
-    place-self: start end;
     display: block;
     font-weight: 700;
     font-size: 2rem;
@@ -281,19 +258,13 @@
 
 
     @include mobile {
-      place-self: start center;
       font-size: 1.4rem;
       max-width: 200px;
       height: 40px;
     }
 
     &_to-cart {
-      grid-area: tocart;
       background-color: $color-main-dark;
-    }
-
-    &_one-click {
-      grid-area: oneclick;
     }
 
     &:hover {
@@ -302,7 +273,6 @@
   }
 
   &__link {
-    grid-area: oneclick;
     margin: auto;
     text-align: center;
     line-height: 36px;

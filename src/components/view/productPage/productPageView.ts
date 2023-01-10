@@ -4,28 +4,20 @@ import { MESSAGES, WIDTH_THREE_ELEMS, WIDTH_TWO_ELEMS } from '../../app/const';
 class ProductPageView {
   private wrapperElem: HTMLElement | null;
   private btnCartElem: HTMLButtonElement | null;
-  private btnIncElem: HTMLButtonElement | null;
-  private btnDecElem: HTMLButtonElement | null;
-  private countNumberElem: HTMLOutputElement | null;
   private sliderElem: HTMLDivElement | null;
   private btnArrowPrev: HTMLButtonElement | null;
   private btnArrowNext: HTMLButtonElement | null;
   private thumbsElem: HTMLDivElement | null;
   private imageElem: HTMLImageElement | null;
-  private controlElem: HTMLDivElement | null;
 
   public constructor() {
     this.wrapperElem = null;
     this.btnCartElem = null;
-    this.btnDecElem = null;
-    this.btnIncElem = null;
-    this.countNumberElem = null;
     this.sliderElem = null;
     this.btnArrowPrev = null;
     this.btnArrowNext = null;
     this.thumbsElem = null;
     this.imageElem = null;
-    this.controlElem = null;
   }
 
   public set wrapper(element: HTMLElement | null) {
@@ -36,14 +28,14 @@ class ProductPageView {
     return this.sliderElem;
   }
 
-  public get cardControlElem(): HTMLDivElement | null {
-    return this.controlElem;
+  public get btnCart(): HTMLButtonElement | null {
+    return this.btnCartElem;
   }
 
-  public draw(product: IProduct, numInCart: number): void {
+  public draw(product: IProduct, isInCart: boolean): void {
     if (this.wrapperElem) {
       this.wrapperElem.innerHTML = '';
-      const cardElem = this.createCardArticleElem(product, numInCart);
+      const cardElem = this.createCardArticleElem(product, isInCart);
       const containerElem = this.createContainerElem();
       containerElem.append(cardElem);
       this.wrapperElem.append(containerElem);
@@ -134,7 +126,7 @@ class ProductPageView {
     return cardSliderElem;
   }
 
-  private createCardArticleElem(product: IProduct, numInCart: number): HTMLElement {
+  private createCardArticleElem(product: IProduct, isInCart: boolean): HTMLElement {
     const cardArticleElem = document.createElement('article');
     cardArticleElem.className = 'card';
 
@@ -193,23 +185,6 @@ class ProductPageView {
     const cardControlElem = document.createElement('div');
     cardControlElem.className = 'card__control';
 
-    const cardCountElem = document.createElement('div');
-    cardCountElem.className = 'card__count count';
-
-    const cardBtnDecElem = document.createElement('button');
-    cardBtnDecElem.className = `count__btn ${numInCart > 1 ? '' : 'inactive'}`;
-    cardBtnDecElem.textContent = '–';
-    cardBtnDecElem.id = 'cardBtnDec';
-
-    const cardCountNumberElem = document.createElement('output');
-    cardCountNumberElem.className = 'count__number';
-    cardCountNumberElem.value = numInCart > 0 ? numInCart.toString() : '1';
-
-    const cardBtnIncElem = document.createElement('button');
-    cardBtnIncElem.className = 'count__btn';
-    cardBtnIncElem.textContent = '+';
-    cardBtnIncElem.id = 'cardBtnInc';
-
     const priceRowElem = document.createElement('div');
     priceRowElem.className = 'card__row card__row_price';
 
@@ -224,14 +199,11 @@ class ProductPageView {
 
     const stockElem = document.createElement('p');
     stockElem.className = 'card__stock';
-    stockElem.innerHTML = `
-      <span class="card__stock-text">goods in stock:</span> 
-      <span class="card__stock-count">${product.stock.toString()}</span>
-    `;
+    stockElem.innerHTML = `Goods in stock: ${product.stock.toString()}`;
 
     const toCartBtnElem = document.createElement('button');
     toCartBtnElem.className = 'btn card__button card__button_to-cart';
-    toCartBtnElem.textContent = numInCart > 0 ? 'Remove from Cart' : 'Add to Cart';
+    toCartBtnElem.textContent = isInCart ? 'Remove from Cart' : 'Add to Cart';
     toCartBtnElem.dataset.idGoods = product.id.toString();
     toCartBtnElem.id = 'cardBtnToCart';
 
@@ -243,10 +215,9 @@ class ProductPageView {
     oneClickBtnElem.id = 'cardBtnOneClick';
     oneClickBtnElem.href = `/cart?buyId=${product.id.toString()}`;
 
-    cardCountElem.append(cardBtnDecElem, cardCountNumberElem, cardBtnIncElem);
     priceRowElem.append(priceNewElem, priceOldElem);
 
-    cardControlElem.append(cardCountElem, priceRowElem, stockElem, toCartBtnElem, oneClickBtnElem);
+    cardControlElem.append(priceRowElem, stockElem, toCartBtnElem, oneClickBtnElem);
 
     cardInfoElem.append(cardTitleElem, ratingElem, cardDescriptionElem, cardControlElem);
 
@@ -254,11 +225,7 @@ class ProductPageView {
     cardArticleElem.append(cardBreadcrumbsElem, cardDetailsElem);
 
     this.imageElem = cardImageElem;
-    this.btnDecElem = cardBtnDecElem;
-    this.btnIncElem = cardBtnIncElem;
-    this.countNumberElem = cardCountNumberElem;
     this.btnCartElem = toCartBtnElem;
-    this.controlElem = cardControlElem;
 
     return cardArticleElem;
   }
@@ -307,24 +274,6 @@ class ProductPageView {
           this.btnArrowNext?.classList.remove('inactive');
         }
         break;
-    }
-  }
-
-  public updateCountNumber(count: number, isMax = false): void {
-    if (this.countNumberElem) {
-      this.countNumberElem.value = count.toString();
-    }
-
-    if (count === 1) {
-      this.btnDecElem?.classList.add('inactive');
-    } else {
-      this.btnDecElem?.classList.remove('inactive');
-    }
-
-    if (isMax) {
-      this.btnIncElem?.classList.add('inactive');
-    } else {
-      this.btnIncElem?.classList.remove('inactive');
     }
   }
 

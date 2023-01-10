@@ -6,18 +6,14 @@ import TemplatePageController from '../templatePage/templatePageController';
 class ProductPageController extends PageController {
   public view: ProductPageView;
   private id: number;
-  private count: number;
-  private stock: number;
-  private numInCart: number;
+  private isInCart: boolean;
   private sliderPosition: number;
 
   public constructor(templatePage: TemplatePageController) {
     super(templatePage, 'product');
     this.view = new ProductPageView();
     this.id = 0;
-    this.count = 1;
-    this.stock = 1;
-    this.numInCart = 0;
+    this.isInCart = false;
     this.sliderPosition = 0;
   }
 
@@ -32,13 +28,11 @@ class ProductPageController extends PageController {
       this.id = +id;
       const product = this.state.getState().products.find((item) => item.id === this.id);
       const cartProductInfo = this.state.getState().onlineStoreSettings.cart.find((item) => item.id === this.id);
-      this.numInCart = cartProductInfo ? cartProductInfo.num : 0;
+      this.isInCart = cartProductInfo ? true : false;
       if (product) {
-        this.stock = product.stock;
-        this.count = this.numInCart ? this.numInCart : 1;
-        this.view.draw(product, this.numInCart);
+        this.view.draw(product, this.isInCart);
         this.controlCardSlider();
-        this.controlCardButtons();
+        this.view.btnCart?.addEventListener('click', () => this.updateCart());
       } else {
         this.view.drawMessage();
       }
@@ -63,55 +57,15 @@ class ProductPageController extends PageController {
     });
   }
 
-  private controlCardButtons(): void {
-    this.view.cardControlElem?.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-      switch (target.id) {
-        case 'cardBtnDec': {
-          this.changeCount('dec');
-          break;
-        }
-        case 'cardBtnInc': {
-          this.changeCount('inc');
-          break;
-        }
-        case 'cardBtnToCart': {
-          this.updateCart();
-          break;
-        }
-      }
-    });
-  }
-
   private updateCart(): void {
     this.view.updateBtnToCart();
-    if (this.numInCart > 0) {
+    if (this.isInCart) {
       this.state.removeProductFromCart(this.id);
-      this.numInCart = 0;
     } else {
-      this.state.addProductToCart(this.id, this.count);
-      this.numInCart = this.count;
+      this.state.addProductToCart(this.id);
     }
     this.header.updateHeaderCartTotal();
-  }
-
-  private changeCount(operation: string): void {
-    switch (operation) {
-      case 'dec': {
-        if (this.count > 1) {
-          this.count -= 1;
-          this.view.updateCountNumber(this.count);
-        }
-        break;
-      }
-      case 'inc': {
-        if (this.count < this.stock) {
-          this.count += 1;
-          this.view.updateCountNumber(this.count, this.count === this.stock);
-        }
-        break;
-      }
-    }
+    this.isInCart = !this.isInCart;
   }
 }
 
