@@ -205,7 +205,7 @@ class ProductPageView {
 
     const toCartBtnElem = document.createElement('button');
     toCartBtnElem.className = 'btn card__button card__button_to-cart';
-    toCartBtnElem.textContent = numInCart ? 'Add to Cart' : 'Remove from Cart';
+    toCartBtnElem.textContent = numInCart ? 'Remove from Cart' : 'Add to Cart';
     toCartBtnElem.dataset.idGoods = product.id.toString();
     toCartBtnElem.id = 'cardBtnToCart';
 
