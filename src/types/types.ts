@@ -7,8 +7,8 @@ import { FormInputs } from './enums';
 export type Routes = {
   404: Page404Controller;
   '/': CatalogPageController;
-  '/product.html': ProductPageController;
-  '/cart.html': CartPageController;
+  '/product': ProductPageController;
+  '/cart': CartPageController;
 };
 
 export type Controllers = [CatalogPageController, ProductPageController, CartPageController, Page404Controller];

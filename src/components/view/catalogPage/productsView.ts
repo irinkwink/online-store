@@ -90,7 +90,7 @@ class ProductsView {
 
     const linkImageElem = document.createElement('a');
     linkImageElem.className = 'goods-item__link goods-item__link_image';
-    linkImageElem.href = `product.html?id=${product.id.toString()}`;
+    linkImageElem.href = `product?id=${product.id.toString()}`;
 
     const imageElem = new Image();
     imageElem.className = 'goods-item__image';
@@ -103,7 +103,7 @@ class ProductsView {
 
     const linkTitleElem = document.createElement('a');
     linkTitleElem.className = 'goods-item__link goods-item__link_title';
-    linkTitleElem.href = `product.html?id=${product.id.toString()}`;
+    linkTitleElem.href = `product?id=${product.id.toString()}`;
 
     const titleElem = document.createElement('h3');
     titleElem.className = 'goods-item__title';

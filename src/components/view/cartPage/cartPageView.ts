@@ -63,6 +63,7 @@ export class CartPageView {
 
   public draw(): void {
     if (this.wrapperElem) {
+      this.wrapperElem.innerHTML = '';
       this.wrapperElem.append(this.createCartElem());
     }
   }
@@ -120,7 +121,7 @@ export class CartPageView {
 
     const linkImageElem = document.createElement('a');
     linkImageElem.className = 'item__link item__link_image';
-    linkImageElem.href = `product.html?id=${product.id.toString()}`;
+    linkImageElem.href = `product?id=${product.id.toString()}`;
 
     const imageElem = new Image();
     imageElem.className = 'item__image';
@@ -129,7 +130,7 @@ export class CartPageView {
 
     const linkTitleElem = document.createElement('a');
     linkTitleElem.className = 'item__link item__link_title';
-    linkTitleElem.href = `product.html?id=${product.id.toString()}`;
+    linkTitleElem.href = `product?id=${product.id.toString()}`;
 
     const titleElem = document.createElement('h3');
     titleElem.className = 'item__title';

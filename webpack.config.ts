@@ -5,7 +5,7 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import EslintPlugin from 'eslint-webpack-plugin';
 // import FontPreloadPlugin from 'webpack-font-preload-plugin';
 
-const PAGES = ['index', 'cart', 'product', 'page404'];
+// const PAGES = ['index', 'cart', 'product', 'page404'];
 
 const baseConfig = {
   entry: path.resolve(__dirname, 'src/index'),
@@ -103,17 +103,17 @@ const baseConfig = {
     //   crossorigin: true,
     //   loadType: 'preload',
     // }),
-    // new HtmlWebpackPlugin({
-    //   template: path.resolve(__dirname, `src/index.html`),
-    //   filename: `index.html`,
-    // }),
-    ...PAGES.map(
-      (page) =>
-        new HtmlWebpackPlugin({
-          template: path.resolve(__dirname, `src/${page}.html`),
-          filename: `${page}.html`,
-        })
-    ),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, `src/index.html`),
+      filename: `index.html`,
+    }),
+    // ...PAGES.map(
+    //   (page) =>
+    //     new HtmlWebpackPlugin({
+    //       template: path.resolve(__dirname, `src/${page}.html`),
+    //       filename: `${page}.html`,
+    //     })
+    // ),
     new CleanWebpackPlugin(),
   ],
 };

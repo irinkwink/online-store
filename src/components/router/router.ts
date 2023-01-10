@@ -22,8 +22,8 @@ class Router {
     this.routes = {
       404: this.page404,
       '/': this.catalogPage,
-      '/product.html': this.productPage,
-      '/cart.html': this.cartPage,
+      '/product': this.productPage,
+      '/cart': this.cartPage,
     };
     this.route = this.catalogPage;
   }

@@ -42,6 +42,7 @@ class ProductPageView {
 
   public draw(product: IProduct, numInCart: number): void {
     if (this.wrapperElem) {
+      this.wrapperElem.innerHTML = '';
       const cardElem = this.createCardArticleElem(product, numInCart);
       const containerElem = this.createContainerElem();
       containerElem.append(cardElem);
@@ -211,7 +212,7 @@ class ProductPageView {
 
     const oneClickLinkElem = document.createElement('a');
     oneClickLinkElem.className = 'card__link';
-    oneClickLinkElem.href = `cart.html?buyId=${product.id.toString()}`;
+    oneClickLinkElem.href = `cart?buyId=${product.id.toString()}`;
 
     const oneClickBtnElem = document.createElement('a');
     oneClickBtnElem.className = 'card__link card__button';
@@ -219,7 +220,7 @@ class ProductPageView {
     oneClickBtnElem.type = 'button';
     oneClickBtnElem.dataset.idGoods = product.id.toString();
     oneClickBtnElem.id = 'cardBtnOneClick';
-    oneClickBtnElem.href = `cart.html?buyId=${product.id.toString()}`;
+    oneClickBtnElem.href = `cart?buyId=${product.id.toString()}`;
 
     cardCountElem.append(cardBtnDecElem, cardCountNumberElem, cardBtnIncElem);
     priceRowElem.append(priceNewElem, priceOldElem);
