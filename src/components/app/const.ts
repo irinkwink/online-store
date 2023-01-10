@@ -42,7 +42,7 @@ export const MESSAGES: Messages = {
     'Try to set less restrictive filters or to change your search request.',
   ],
   emptyProduct: [
-    "Sorry, we couldn't find the product along this path.",
+    "Sorry, we couldn't find such product.",
     'Try to go to the main page using the link in the logo.',
     'And select a product from the catalog.',
   ],
@@ -206,7 +206,7 @@ export const PERSON_DETAILS: OrderFormInput[] = [
     id: FormInputs.phone,
     type: 'tel',
     placeholder: 'Phone number',
-    label: 'must start with + and include at least 9 digits',
+    label: 'must start with + and include from 9 to 11 digits',
   },
   {
     id: FormInputs.email,

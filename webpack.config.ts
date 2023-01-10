@@ -11,8 +11,9 @@ const baseConfig = {
     extensions: ['.ts', '.js'],
   },
   output: {
+    publicPath: '/',
     filename: 'index.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, './dist'),
     assetModuleFilename: 'assets/[name][ext]',
   },
   module: {

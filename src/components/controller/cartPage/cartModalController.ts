@@ -54,25 +54,32 @@ class CartModalController {
     }
   }
 
-  private handleSubmitForm(e: Event): void {
-    e.preventDefault();
+  private checkInputs(): boolean {
     const phone = this.view.phoneInput;
     const cardNumber = this.view.cardNumberInput;
     const ccvCode = this.view.cvvCodeInput;
     const email = this.view.emailInput;
-    if (
-      phone &&
-      cardNumber &&
-      ccvCode &&
-      email &&
-      this.checkName() &&
-      this.check(phone, regexPhone) &&
-      this.checkAddress() &&
-      this.check(email, regexEmail) &&
-      this.check(cardNumber, regexCardNumber) &&
-      this.checkDate() &&
-      this.check(ccvCode, regexCvvCode)
-    ) {
+
+    if (phone && cardNumber && ccvCode && email) {
+      const checkName = this.checkName();
+      const checkPhone = this.check(phone, regexPhone);
+      const checkAddress = this.checkAddress();
+      const checkEmail = this.check(email, regexEmail);
+      const checkCardNumber = this.check(cardNumber, regexCardNumber);
+      const checkDate = this.checkDate();
+      const checkCcvCode = this.check(ccvCode, regexCvvCode);
+
+      return checkName && checkPhone && checkAddress && checkEmail && checkCardNumber && checkDate && checkCcvCode;
+    }
+
+    return false;
+  }
+
+  private handleSubmitForm(e: Event): void {
+    e.preventDefault();
+    const isSubmit = this.checkInputs();
+
+    if (isSubmit) {
       if (this.view.nameInput?.value) {
         this.view.drawMessage(this.view.nameInput.value);
       } else {

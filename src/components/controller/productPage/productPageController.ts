@@ -8,7 +8,7 @@ class ProductPageController extends PageController {
   private id: number;
   private count: number;
   private stock: number;
-  private isInCart: boolean;
+  private numInCart: number;
   private sliderPosition: number;
 
   public constructor(templatePage: TemplatePageController) {
@@ -17,7 +17,7 @@ class ProductPageController extends PageController {
     this.id = 0;
     this.count = 1;
     this.stock = 1;
-    this.isInCart = false;
+    this.numInCart = 0;
     this.sliderPosition = 0;
   }
 
@@ -32,11 +32,11 @@ class ProductPageController extends PageController {
       this.id = +id;
       const product = this.state.getState().products.find((item) => item.id === this.id);
       const cartProductInfo = this.state.getState().onlineStoreSettings.cart.find((item) => item.id === this.id);
-      const numInCart = cartProductInfo ? cartProductInfo.num : 0;
+      this.numInCart = cartProductInfo ? cartProductInfo.num : 0;
       if (product) {
         this.stock = product.stock;
-        this.count = numInCart ? numInCart : 1;
-        this.view.draw(product, numInCart);
+        this.count = this.numInCart ? this.numInCart : 1;
+        this.view.draw(product, this.numInCart);
         this.controlCardSlider();
         this.controlCardButtons();
       } else {
@@ -85,13 +85,14 @@ class ProductPageController extends PageController {
 
   private updateCart(): void {
     this.view.updateBtnToCart();
-    if (this.isInCart) {
+    if (this.numInCart > 0) {
       this.state.removeProductFromCart(this.id);
+      this.numInCart = 0;
     } else {
       this.state.addProductToCart(this.id, this.count);
+      this.numInCart = this.count;
     }
     this.header.updateHeaderCartTotal();
-    this.isInCart = !this.isInCart;
   }
 
   private changeCount(operation: string): void {

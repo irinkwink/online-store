@@ -1,31 +1,21 @@
 import { Routes } from '../../types/types';
+import { checkPage, regexProductPage } from '../app/regex';
 import CartPageController from '../controller/cartPage/cartPageController';
 import CatalogPageController from '../controller/catalogPage/catalogPageController';
 import Page404Controller from '../controller/page404/page404Controller';
-import PageController from '../controller/pageController';
 import ProductPageController from '../controller/productPage/productPageController';
 import TemplatePageController from '../controller/templatePage/templatePageController';
 
 class Router {
-  private catalogPage: CatalogPageController;
-  private cartPage: CartPageController;
-  private productPage: ProductPageController;
-  private page404: Page404Controller;
   private routes: Routes;
-  private route: PageController;
 
   public constructor(templatePage: TemplatePageController) {
-    this.catalogPage = new CatalogPageController(templatePage);
-    this.productPage = new ProductPageController(templatePage);
-    this.cartPage = new CartPageController(templatePage);
-    this.page404 = new Page404Controller(templatePage);
     this.routes = {
-      '/page404': this.page404,
-      '/': this.catalogPage,
-      '/product': this.productPage,
-      '/cart': this.cartPage,
+      '/page404': new Page404Controller(templatePage),
+      '/': new CatalogPageController(templatePage),
+      '/product': new ProductPageController(templatePage),
+      '/cart': new CartPageController(templatePage),
     };
-    this.route = this.catalogPage;
   }
 
   public start(): void {
@@ -47,12 +37,23 @@ class Router {
   }
 
   private handleLocation(): void {
-    const fullPath = window.location.pathname;
-    const path = `/${fullPath.split('/')[1]}`;
-    this.route = ['/', '/product', '/cart'].includes(path)
-      ? this.routes[path as keyof Routes]
-      : this.routes['/page404'];
-    this.route.start();
+    const path = window.location.pathname;
+
+    if (path === '/') {
+      this.routes['/'].start();
+      return;
+    }
+    if (path === '/cart') {
+      this.routes['/cart'].start();
+      return;
+    }
+    if (checkPage(regexProductPage, path)) {
+      this.routes['/product'].start();
+      return;
+    }
+
+    this.routes['/page404'].start();
+    return;
   }
 }
 
