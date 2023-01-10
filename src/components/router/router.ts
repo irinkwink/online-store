@@ -22,8 +22,8 @@ class Router {
     this.routes = {
       404: this.page404,
       '/': this.catalogPage,
-      '/product.html': this.productPage,
-      '/cart.html': this.cartPage,
+      '/product': this.productPage,
+      '/cart': this.cartPage,
     };
     this.route = this.catalogPage;
   }
@@ -46,18 +46,10 @@ class Router {
     });
   }
 
-  // public router(e: Event) {
-  //   e.preventDefault();
-  //   if (e.target instanceof HTMLLinkElement && e.target.href) {
-  //     history.pushState({}, '', e.target.href);
-  //     this.handleLocation();
-  //   }
-  // }
-
   private handleLocation(): void {
     const fullPath = window.location.pathname;
-    // const path = `/${fullPath.split('/')[1]}`;
-    this.route = fullPath in this.routes ? this.routes[fullPath as keyof Routes] : this.routes[404];
+    const path = `/${fullPath.split('/')[1]}`;
+    this.route = path in this.routes ? this.routes[path as keyof Routes] : this.routes[404];
     this.route.start();
   }
 }

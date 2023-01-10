@@ -14,7 +14,11 @@ class Page404View {
   public draw(): void {
     if (this.wrapperElem) {
       this.wrapperElem.innerHTML = '';
-      this.wrapperElem.append(this.createMessageElem());
+      const containerElem = document.createElement('div');
+      containerElem.className = 'container';
+
+      containerElem.append(this.createMessageElem());
+      this.wrapperElem.append(containerElem);
     }
   }
 
