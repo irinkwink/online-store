@@ -63,6 +63,7 @@ export class CartPageView {
 
   public draw(): void {
     if (this.wrapperElem) {
+      this.wrapperElem.innerHTML = '';
       this.wrapperElem.append(this.createCartElem());
     }
   }
@@ -120,7 +121,7 @@ export class CartPageView {
 
     const linkImageElem = document.createElement('a');
     linkImageElem.className = 'item__link item__link_image';
-    linkImageElem.href = `product.html?id=${product.id.toString()}`;
+    linkImageElem.href = `/product/${product.id.toString()}`;
 
     const imageElem = new Image();
     imageElem.className = 'item__image';
@@ -129,7 +130,7 @@ export class CartPageView {
 
     const linkTitleElem = document.createElement('a');
     linkTitleElem.className = 'item__link item__link_title';
-    linkTitleElem.href = `product.html?id=${product.id.toString()}`;
+    linkTitleElem.href = `/product/${product.id.toString()}`;
 
     const titleElem = document.createElement('h3');
     titleElem.className = 'item__title';
@@ -166,7 +167,6 @@ export class CartPageView {
     const btnDecElem = document.createElement('button');
     btnDecElem.className = 'count__btn count__btn_dec control-btn';
     btnDecElem.textContent = '–';
-    // btnDecElem.id = 'cardBtnDec';
     btnDecElem.id = 'btn-minus';
 
     if (product.num === 1) btnDecElem.classList.add('inactive');
@@ -178,7 +178,6 @@ export class CartPageView {
     const btnIncElem = document.createElement('button');
     btnIncElem.className = 'count__btn count__btn_inc control-btn';
     btnIncElem.textContent = '+';
-    // btnIncElem.id = 'cardBtnInc';
     btnIncElem.id = 'btn-plus';
 
     const productsNum = document.createElement('span');

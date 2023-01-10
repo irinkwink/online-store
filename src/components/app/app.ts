@@ -1,5 +1,4 @@
 import DataController from '../controller/dataController';
-//import LocalStorageUtility from '../view/localStorage/LocalStorage';
 import State from './state';
 import Router from '../router/router';
 import TemplatePageController from '../controller/templatePage/templatePageController';

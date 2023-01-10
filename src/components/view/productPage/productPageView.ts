@@ -1,6 +1,6 @@
 import { DeviceWindowWidth } from '../../../types/enums';
 import { IProduct } from '../../../types/interfaces';
-import { WIDTH_THREE_ELEMS, WIDTH_TWO_ELEMS } from '../../app/const';
+import { MESSAGES, WIDTH_THREE_ELEMS, WIDTH_TWO_ELEMS } from '../../app/const';
 class ProductPageView {
   private wrapperElem: HTMLElement | null;
   private btnCartElem: HTMLButtonElement | null;
@@ -42,6 +42,7 @@ class ProductPageView {
 
   public draw(product: IProduct, numInCart: number): void {
     if (this.wrapperElem) {
+      this.wrapperElem.innerHTML = '';
       const cardElem = this.createCardArticleElem(product, numInCart);
       const containerElem = this.createContainerElem();
       containerElem.append(cardElem);
@@ -51,11 +52,36 @@ class ProductPageView {
     }
   }
 
+  public drawMessage(): void {
+    if (this.wrapperElem) {
+      this.wrapperElem.innerHTML = '';
+      const containerElem = this.createContainerElem();
+      containerElem.append(this.createMessageElem());
+      this.wrapperElem.append(containerElem);
+    }
+  }
+
   private createContainerElem(): HTMLDivElement {
     const containerElem = document.createElement('div');
     containerElem.className = 'container';
 
     return containerElem;
+  }
+
+  private createMessageElem(): HTMLDivElement {
+    const messageElem = document.createElement('div');
+    messageElem.className = 'message';
+
+    const textElems = MESSAGES.emptyProduct.map((text) => {
+      const textElem = document.createElement('p');
+      textElem.className = `message__text`;
+      textElem.textContent = text;
+
+      return textElem;
+    });
+
+    messageElem.append(...textElems);
+    return messageElem;
   }
 
   private createImageItem(url: string): HTMLImageElement {
@@ -209,22 +235,17 @@ class ProductPageView {
     toCartBtnElem.dataset.idGoods = product.id.toString();
     toCartBtnElem.id = 'cardBtnToCart';
 
-    const oneClickLinkElem = document.createElement('a');
-    oneClickLinkElem.className = 'card__link';
-    oneClickLinkElem.href = `cart.html?buyId=${product.id.toString()}`;
-
     const oneClickBtnElem = document.createElement('a');
     oneClickBtnElem.className = 'card__link card__button';
     oneClickBtnElem.textContent = 'Buy in One Click';
     oneClickBtnElem.type = 'button';
     oneClickBtnElem.dataset.idGoods = product.id.toString();
     oneClickBtnElem.id = 'cardBtnOneClick';
-    oneClickBtnElem.href = `cart.html?buyId=${product.id.toString()}`;
+    oneClickBtnElem.href = `/cart?buyId=${product.id.toString()}`;
 
     cardCountElem.append(cardBtnDecElem, cardCountNumberElem, cardBtnIncElem);
     priceRowElem.append(priceNewElem, priceOldElem);
 
-    oneClickLinkElem.append(oneClickBtnElem);
     cardControlElem.append(cardCountElem, priceRowElem, stockElem, toCartBtnElem, oneClickBtnElem);
 
     cardInfoElem.append(cardTitleElem, ratingElem, cardDescriptionElem, cardControlElem);

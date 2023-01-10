@@ -57,6 +57,7 @@ class CatalogPageView {
 
   public draw(): void {
     if (this.wrapperElem) {
+      this.wrapperElem.innerHTML = '';
       this.wrapperElem.append(this.createCatalogElem());
     }
   }
