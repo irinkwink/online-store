@@ -136,16 +136,23 @@ export class CartPageView {
     titleElem.className = 'item__title';
     titleElem.innerHTML = `${product.title}`;
 
+    const infoElem = document.createElement('div');
+    infoElem.className = 'item__info';
+
     const ratingElem = document.createElement('div');
     ratingElem.className = 'item__rating';
     const ratingActivWidth = Math.round((product.rating * 100) / 5);
     ratingElem.innerHTML = `
-      <div class="card__stars stars">
+      <div class="item__stars stars">
         <div class="stars__row stars__row_inactive"></div>
         <div class="stars__row stars__row_active" style="width: ${ratingActivWidth.toString()}%"></div>
       </div>
       <p class="item__rate">${product.rating.toString()}</p>
     `;
+
+    const stockElem = document.createElement('p');
+    stockElem.className = 'item__stock';
+    stockElem.innerHTML = `Goods in stock: ${product.stock.toString()}`;
 
     const descriptionElem = document.createElement('div');
     descriptionElem.className = 'item__description';
@@ -194,10 +201,11 @@ export class CartPageView {
     `;
 
     linkImageElem.append(imageElem);
+    infoElem.append(ratingElem, stockElem);
     linkTitleElem.append(titleElem);
     countElem.append(btnDecElem, countNumberElem, btnIncElem);
     controlElem.append(countElem, productDelBtn);
-    liElem.append(linkImageElem, linkTitleElem, ratingElem, descriptionElem, priceElem, controlElem);
+    liElem.append(linkImageElem, linkTitleElem, infoElem, descriptionElem, priceElem, controlElem);
 
     return liElem;
   }
