@@ -121,7 +121,7 @@ export class CartPageView {
 
     const linkImageElem = document.createElement('a');
     linkImageElem.className = 'item__link item__link_image';
-    linkImageElem.href = `product/${product.id.toString()}`;
+    linkImageElem.href = `/product/${product.id.toString()}`;
 
     const imageElem = new Image();
     imageElem.className = 'item__image';
@@ -130,7 +130,7 @@ export class CartPageView {
 
     const linkTitleElem = document.createElement('a');
     linkTitleElem.className = 'item__link item__link_title';
-    linkTitleElem.href = `product/${product.id.toString()}`;
+    linkTitleElem.href = `/product/${product.id.toString()}`;
 
     const titleElem = document.createElement('h3');
     titleElem.className = 'item__title';
