@@ -164,6 +164,7 @@ class CartPageController extends PageController {
         const res: IProductLS[] = JSON.parse(JSON.stringify(fined));
         res.forEach((item) => {
           item.num = num;
+          item.index = i + 1;
         });
         if (res.length > 0) {
           pickedProducts.push(...res);

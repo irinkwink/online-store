@@ -119,6 +119,10 @@ export class CartPageView {
     const liElem = document.createElement('li');
     liElem.className = 'item';
 
+    const numberElem = document.createElement('p');
+    numberElem.className = 'item__number';
+    numberElem.textContent = product.index.toString();
+
     const linkImageElem = document.createElement('a');
     linkImageElem.className = 'item__link item__link_image';
     linkImageElem.href = `/product/${product.id.toString()}`;
@@ -132,9 +136,20 @@ export class CartPageView {
     linkTitleElem.className = 'item__link item__link_title';
     linkTitleElem.href = `/product/${product.id.toString()}`;
 
+    const titleWrapperElem = document.createElement('div');
+    titleWrapperElem.className = 'item__title-wrapper';
+
     const titleElem = document.createElement('h3');
     titleElem.className = 'item__title';
     titleElem.innerHTML = `${product.title}`;
+
+    const categoryElem = document.createElement('p');
+    categoryElem.className = 'item__title-text';
+    categoryElem.textContent = `Category: ${product.category}`;
+
+    const brandElem = document.createElement('p');
+    brandElem.className = 'item__title-text';
+    brandElem.textContent = `Brand: ${product.brand}`;
 
     const infoElem = document.createElement('div');
     infoElem.className = 'item__info';
@@ -203,9 +218,10 @@ export class CartPageView {
     linkImageElem.append(imageElem);
     infoElem.append(ratingElem, stockElem);
     linkTitleElem.append(titleElem);
+    titleWrapperElem.append(linkTitleElem, categoryElem, brandElem);
     countElem.append(btnDecElem, countNumberElem, btnIncElem);
     controlElem.append(countElem, productDelBtn);
-    liElem.append(linkImageElem, linkTitleElem, infoElem, descriptionElem, priceElem, controlElem);
+    liElem.append(numberElem, linkImageElem, titleWrapperElem, infoElem, descriptionElem, priceElem, controlElem);
 
     return liElem;
   }

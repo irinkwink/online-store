@@ -14,6 +14,7 @@ export interface IProduct {
 
 export interface IProductLS extends IProduct {
   num: number;
+  index: number;
 }
 
 export interface IProductsData {
