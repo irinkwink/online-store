@@ -1,0 +1,228 @@
+.cart {
+    &__title {
+        font-size: 3.25rem;
+        margin-bottom: 2.5rem;
+    }
+    &__wr {
+        display: flex;
+        justify-content: space-between;
+
+        @include laptop {
+            flex-direction: column;
+            gap: 2rem;
+        }
+    }
+}
+ .cart-table {
+    width: 100%;
+    &__info {
+        font-size: 3rem;
+    }
+}
+.cart-table-row {
+    display: flex;
+    max-width: 848px;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    &__img {
+        max-width: 138px;
+        width: 100%;
+        height: 130px;
+        object-fit: cover;
+    }
+
+    &__controls {
+        margin-left: 1.5rem;
+    }
+
+    &__link {
+        max-width: 360px;
+        width: 100%;
+        margin-left: 1.5rem;
+        display: flex;
+        gap: 16px;
+    }
+
+    &__btn {
+        width: 3.125rem;
+        height: 3.125rem;
+        border-radius: 50%;
+        border: 1px solid $color-primary;
+        font-size: 1.5rem;
+    }
+
+    &__num {
+        font-size: 1.5rem;
+        margin: 0 20px;
+    }
+
+    &__price {
+        margin-left: 3.25rem;
+        font-size: 2.2rem;
+        color: $color-main-sub;
+        font-weight: 700;
+    }
+
+    &__delete {
+        margin-left: 1rem;
+        background-image: url('/src/img/close.svg');
+        width: 32px;
+        height: 32px;
+        background-size: cover;
+    }
+    &__controls {
+        display: flex;
+        align-items: center;
+    }
+    &__number {
+        font-size: 16px;
+        margin-right: 8px;
+    }
+}
+
+
+.total {
+    font-weight: 700;
+    font-size: 2rem;
+    padding: 1rem;
+    border: 1px solid black;
+    border-radius: 8px;
+    &__head {
+        text-align: center;
+        font-size: 3rem;
+        margin-bottom: 2rem;
+    }
+    &__to-buy {
+        text-align: center;
+        width: 100%;
+    }
+    &__row {
+        margin-bottom: 16px;
+    }
+    &__header {
+        margin-bottom: 16px;
+    }
+}
+
+.promo-block {
+    &__container {
+        margin: 1rem 0;;
+    }
+    &__title {
+        color: orange;
+        margin: 0.5rem 0;
+    }
+    &__row {
+        display: flex;
+        justify-content: space-between;
+        margin: 1rem 0;
+    }
+    &__input {
+        margin-bottom: 16px;
+    }
+    p {
+        margin-bottom: 16px;
+    }
+}
+
+.modal {
+    &__input-wr,
+    &__credit-wr {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+    }
+    &__backdrop{
+        z-index: 100;
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        left: 0;
+        -webkit-tap-highlight-color: transparent;
+        background-color: rgba(0,0,0,.6);
+    }
+    &__wrapper {
+        z-index: 100;
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        left: 0;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 40px;
+        padding-bottom: 40px;
+        outline: 0;
+    }
+    &__component {
+        position: relative;
+        max-width: 840px;
+        width: 100%;
+        flex-shrink: 0;
+        margin: auto;
+        padding: 48px 40px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 0 20px rgb(0 0 0 / 16%);
+        &_center {
+            text-align: center;
+        }
+    }
+    &__btn {
+        display: flex;
+        justify-content: center;
+    }
+    h2 {
+        margin-bottom: 32px;
+        text-align: center;
+        font-size: 24px;
+    }
+    &__subtitle {
+        position: relative;
+        &::after {
+            position: absolute;
+            content: '';
+            width: 40px;
+            height: 30px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        &_mastercard {
+            &::after {
+                background-image: url('img/mastercard.svg');
+            }
+        }
+        &_union {
+            &::after {
+                background-image: url('img/union.png');
+            }
+        }
+        &_visa {
+            &::after {
+                background-image: url('img/visa.png');
+            }
+        }
+    }
+    &__close {
+        background: transparent url('img/close.svg');
+        width: 32px;
+        height: 32px;
+        position: absolute;
+        top: 16px;
+        right: 16px;
+    }
+}
+
+.err {
+    display: block;
+    width: 100%;
+    margin-bottom: 16px;
+}

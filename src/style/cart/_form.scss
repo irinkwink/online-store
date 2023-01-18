@@ -1,0 +1,165 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &__field {
+    width: 100%;
+    gap: 10px;
+
+    &_person {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &_card {
+      grid-template-columns: 100px 1fr 60px;
+      grid-template-areas: 
+      'title title title'
+      'number number number'
+      'validDate . ccvCode';
+      max-width: 300px;
+      background-color: $color-grey-light;
+      padding: 10px 12px;
+      border-radius: 10px;
+      display: grid;
+      margin: 0 auto;
+    
+    }
+  }
+
+  &__title {
+    font-weight: 500;
+    font-size: 2rem;
+
+    @include mobile {
+      font-size: 1.6rem;
+    }
+  }
+
+  &__subtitle {
+    grid-area: title;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    font-size: 1.6rem;
+
+    &::after {
+        content: '';
+        width: 40px;
+        height: 30px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    &_mir {
+      &::after {
+          background-image: url('img/mir.png');
+      }
+    }
+    &_mastercard {
+        &::after {
+            background-image: url('img/mastercard.svg');
+        }
+    }
+    &_union {
+        &::after {
+            background-image: url('img/union.png');
+        }
+    }
+    &_visa {
+        &::after {
+            background-image: url('img/visa.png');
+        }
+    }
+  }
+
+
+  &__input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    &_cardNumber {
+      grid-area: number;
+    }
+
+    &_validDate {
+      grid-area: validDate;
+    }
+
+    &_cvvCode {
+      grid-area: ccvCode;
+    }
+  }
+
+  &__input {
+
+    &_invalid {
+      border-color: $color-error;
+    }
+
+    &_valid {
+      border-color: $color-valid;
+    }
+
+    &::-webkit-inner-spin-button {
+      display: none;
+    }
+
+  }
+
+  &__hint {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: $color-primary;
+
+    .form__input_invalid ~ & {
+      color: $color-error;
+    }
+
+    .form__input_valid ~ & {
+      color: $color-valid;
+    }
+
+  }
+
+  &__label {
+    font-weight: 500;
+    font-size: 1.2rem; 
+  
+    @include mobile {
+      font-size: 1rem;
+    } 
+  }
+
+  &__submit {
+    text-transform: capitalize;
+    display: block;
+    margin: 0 auto;
+    max-width: 300px;
+    width: 100%;
+    height: 57px;
+    font-weight: 700;
+    font-size: 2rem;
+    background-color: $color-main-sub;
+    color: $color-secondary;
+
+    &_inactive {
+      background-color: $color-grey;
+      pointer-events: none;
+    }
+
+    @include mobile {
+      height: 50px;
+      font-size: 1.6rem;
+    }
+
+    &:hover {
+      background-color: $color-main;
+    }
+  }
+}

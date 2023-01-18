@@ -1,0 +1,106 @@
+.cart {
+  &__container {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    justify-content: space-between;
+    gap: 70px 30px;
+
+    @include laptop {
+      grid-template-columns: 1fr;
+      row-gap: 50px;
+    }
+
+    @include tablet {
+
+    }
+
+    @include mobile {
+
+    }
+  }
+
+  &__panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    gap: 10px 20px;
+
+    @include mobile {
+      flex-wrap: wrap;
+    }
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: 4rem;
+    margin-bottom: 5px;
+
+    @include laptop {
+      font-size: 3.6rem;
+    }
+
+    @include mobile {
+      font-size: 3rem;
+    }
+  }
+
+  &__pagination {
+    @include mobile {
+      order: 1;
+      width: 100%;
+    }
+  }
+
+  &__limit {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  &__limit-label {
+    font-weight: 400;
+    font-size: 1.6rem;
+    color: $color-primary;
+
+    @include mobile {
+      font-size: 1.4rem;
+    }
+  }
+
+  &__limit-input {
+    font-weight: 400;
+    font-size: 1.6rem;
+    padding: 0 10px;
+    border: 1px solid $color-primary;
+    border-radius: 0;
+    height: 28px;
+    color: $color-grey;
+
+    @include mobile {
+      font-size: 1.4rem;
+      height: 24px;
+    }
+
+    &:focus {
+      outline-color: $color-main;
+    }
+  }
+
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  &__total {
+    padding-top: 60px;
+
+    @include laptop {
+      padding-top: 0;
+      order: 1;
+    }
+  }
+
+}

@@ -1,0 +1,50 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  &__list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__btn {
+    transition: all 0.2s ease-in-out;
+
+    &_number {
+      width: 36px;
+      height: 36px;
+      flex: 0 0 36px;
+      font-size: 1.8rem;
+      border: 2px solid transparent;
+      border-radius: 2px;
+
+      @include laptop {
+        width: 30px;
+        height: 30px;
+        flex: 0 0 30px;
+      }
+
+
+      @include mobile {
+        width: 26px;
+        height: 26px;
+        flex: 0 0 26px;
+        font-size: 1.6rem;
+      }
+    }
+
+    &:hover {
+      color: $color-main;
+    }
+
+    &_active {
+      border-color: $color-main;
+      cursor: default;
+      pointer-events: none;
+    }
+  }
+}

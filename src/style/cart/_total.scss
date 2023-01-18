@@ -1,0 +1,162 @@
+.total {
+  &__wrapper {
+    position: relative;
+    border: 1px solid $color-grey;
+    border-radius: 20px;
+    padding: 30px 24px;
+    margin: 0 auto;
+
+    @include desktop {
+      max-width: 460px;
+      padding-bottom: 28px;
+    }
+
+    @include mobile {
+      border: none;
+      padding: 15px 0 25px;
+
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: calc((100vw - 100%) / -2);
+        display: block;
+        width: 100vw;
+        height: 1px;
+        background-color: $color-grey;
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: calc((100vw - 100%) / -2);
+        display: block;
+        width: 100vw;
+        height: 1px;
+        background-color: $color-grey;
+      }
+    }
+
+  }
+
+  &__section {
+    padding-bottom: 9px;
+    border-bottom: 1px solid $color-grey-light;
+    margin-bottom: 27px;
+
+    @include mobile {
+      position: relative;
+      margin-bottom: 14px;
+      border-bottom: none;
+      padding-bottom: 9px;
+
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: calc((100vw - 100%) / -2);
+        display: block;
+        width: 100vw;
+        height: 1px;
+        background-color: $color-grey-light;
+      }
+    }
+  }
+
+  &__title {
+    font-weight: 700;
+    font-size: 2.2rem;
+  
+    @include mobile {
+      font-size: 1.8rem;
+    }
+  }
+
+  &__table {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+
+    @include mobile {
+      padding: 0;
+    }
+
+    &_hide {
+      display: none;
+    }
+  }
+
+  &__text {
+    font-weight: 500;
+    font-size: 1.8rem;
+
+    @include mobile {
+      font-size: 1.4rem;
+    }
+
+    &_discount {
+      font-weight: 700;
+      color: $color-main-sub;
+      font-size: 2rem;
+
+      @include mobile {
+        font-size: 1.6rem;
+      }
+    }
+
+    &_line {
+      position: relative;
+      color: $color-grey;
+
+      &::after {
+        content: '';
+        width: calc(100% + 6px);
+        height: 3px;
+        background-color: $color-main-dark;
+        position: absolute;
+        top: 50%;
+        left: -3px;
+        transform: translateY(-50%);
+      }
+  
+      @include mobile {
+        font-size: 1.4rem;
+      }
+    }
+  }
+
+  &__buy {
+    display: block;
+    margin: 0 auto;
+    max-width: 300px;
+    width: 100%;
+    height: 57px;
+    font-weight: 700;
+    font-size: 2rem;
+    background-color: $color-main-sub;
+    color: $color-secondary;
+
+    &_inactive {
+      background-color: $color-grey;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    @include mobile {
+      height: 50px;
+      font-size: 1.6rem;
+    }
+
+    &:hover {
+      background-color: $color-main;
+    }
+  }
+}
